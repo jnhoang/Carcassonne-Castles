@@ -37,7 +37,7 @@ var cardArr = [
 	{ top: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
 	right: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
 	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 0}, 
-	left: { type: 'castle', occupied: false, occupant: '', pointValue: 0}, 
+	left: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
 	type: 'normal', sidesConnect: true},
 
 	{ top: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
@@ -104,7 +104,14 @@ $('document').ready(function() {
 	console.log('ready');
 
 	initHTMLArray();
+
+	nextCard() 
+
 	console.log(gameBoardArr);
+
+	function nextCard(){
+		
+	}
 	function initHTMLArray() {
 		gameBoardArr = [];
 
