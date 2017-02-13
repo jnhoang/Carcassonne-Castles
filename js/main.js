@@ -3,6 +3,7 @@ var gameBoardArr = [];
 var tileSquare = '<div class="tile"><div class="top">top</div><div class="center">\
 				  <div class="left">left</div><div class="right">right</div></div>\
 				  <div class="bottom">bottom</div></div>';
+var cardIndex = 0;
 var cardArr = [
 	{ top: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
 	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
@@ -110,7 +111,15 @@ $('document').ready(function() {
 	console.log(gameBoardArr);
 
 	function nextCard(){
-		
+		var cardValues = ['top', 'right', 'bottom', 'left'];
+		for (var i = 0; i < cardValues.length; i++) {	
+			var value = cardArr[0][cardValues[i]].type							
+			if (i == 1 || i == 3) {	
+				$('#displayCard > .center' + '> .' + cardValues[i]).text(value);
+			} else {
+				$('#displayCard > .' + cardValues[i]).text(value);
+			}
+		}
 	}
 	function initHTMLArray() {
 		gameBoardArr = [];
