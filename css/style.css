@@ -2,6 +2,8 @@
 #gameBoard {
 	width: 50%;
 	height: auto;
+	border: 1px solid red;
+	text-align: center;
 }
 .row {
 	display: inline-block;

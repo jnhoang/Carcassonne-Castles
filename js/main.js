@@ -3,11 +3,108 @@ var gameBoardArr = [];
 var tileSquare = '<div class="tile"><div class="top">top</div><div class="center">\
 				  <div class="left">left</div><div class="right">right</div></div>\
 				  <div class="bottom">bottom</div></div>';
+var cardArr = [
+	{ top: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
+	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
+	bottom: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
+	left: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
+	type: 'normal', sidesConnect: false},
+
+	{ top: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
+	right: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
+	bottom: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
+	left: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
+	type: 'normal', sidesConnect: false},
+
+	{ top: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
+	right: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
+	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 0}, 
+	left: { type: 'castle', occupied: false, occupant: '', pointValue: 0}, 
+	type: 'normal', sidesConnect: true},
+
+	{ top: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
+	right: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
+	bottom: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
+	left: { type: 'castle', occupied: false, occupant: '', pointValue: 0}, 
+	type: 'normal', sidesConnect: true},
+
+	{ top: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
+	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
+	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
+	left: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
+	type: 'normal', sidesConnect: false},
+
+	{ top: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
+	right: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
+	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 0}, 
+	left: { type: 'castle', occupied: false, occupant: '', pointValue: 0}, 
+	type: 'normal', sidesConnect: true},
+
+	{ top: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
+	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
+	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
+	left: { type: 'castle', occupied: false, occupant: '', pointValue: 0}, 
+	type: 'normal', sidesConnect: true},
+
+	{ top: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
+	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
+	bottom: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
+	left: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
+	type: 'normal', sidesConnect: false},
+
+	{ top: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
+	right: { type: 'castle', occupied: false, occupant: '', pointValue: 0}, 
+	bottom: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
+	left: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
+	type: 'shield', sidesConnect: true},
+
+	{ top: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
+	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
+	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 0}, 
+	left: { type: 'castle', occupied: false, occupant: '', pointValue: 0}, 
+	type: 'normal', sidesConnect: true},
+
+	{ top: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
+	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
+	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 0}, 
+	left: { type: 'castle', occupied: false, occupant: '', pointValue: 0}, 
+	type: 'normal', sidesConnect: true},
+
+	{ top: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
+	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
+	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
+	left: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
+	type: 'normal', sidesConnect: false},	
+
+	{ top: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
+	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
+	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
+	left: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
+	type: 'normal', sidesConnect: false},
+
+	{ top: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
+	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
+	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
+	left: { type: 'castle', occupied: false, occupant: '', pointValue: 0}, 
+	type: 'shield', sidesConnect: true},
+
+	{ top: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
+	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
+	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 0}, 
+	left: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
+	type: 'shield', sidesConnect: true},
+
+	{ top: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
+	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
+	bottom: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
+	left: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
+	type: 'normal', sidesConnect: false},
+];
 $('document').ready(function() {
 	console.log('ready');
 
 	initHTMLArray();
-
+	console.log(gameBoardArr);
 	function initHTMLArray() {
 		gameBoardArr = [];
 
