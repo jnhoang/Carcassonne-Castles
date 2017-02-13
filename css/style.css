@@ -1,0 +1,22 @@
+
+#gameBoard {
+	width: 50%;
+	height: auto;
+}
+.row {
+	display: inline-block;
+}
+.tile {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	margin: 10px;
+	height: 100px;
+	width: 100px;
+	border: 1px solid black;
+}
+.center {
+	display: flex;
+	flex: 1 100%;
+	justify-content: space-between;
+}
