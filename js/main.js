@@ -1,9 +1,8 @@
 var ARRAYSIZE = 4;
 var gameBoardArr = [];
-var tileSquare = '<div class="tile square ui-droppable"><div class="top">top</div><div class="center">\
-				  <div class="left">left</div><div class="right">right</div></div>\
-				  <div class="bottom">bottom</div></div>';
+
 var cardIndex = 0;
+var playerTurn = 0;
 var cardArr = [
 	{ top: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
 	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
@@ -103,11 +102,9 @@ var cardArr = [
 ];
 $('document').ready(function() {
 	console.log('ready');
-	$('.draggable').draggable();
 
 
 	initHTMLArray();
-
 	nextCard() 
 
 	function nextCard(){
@@ -115,11 +112,13 @@ $('document').ready(function() {
 		for (var i = 0; i < cardValues.length; i++) {	
 			var value = cardArr[0][cardValues[i]].type							
 			if (i == 1 || i == 3) {	
-				$('#displayCard > .center' + '> .' + cardValues[i]).text(value);
+				$('.displayCard > .center' + '> .' + cardValues[i]).text(value);
 			} else {
-				$('#displayCard > .' + cardValues[i]).text(value);
+				$('.displayCard > .' + cardValues[i]).text(value);
 			}
 		}
+
+		$('.draggable').draggable();
 	}
 	function initHTMLArray() {
 		gameBoardArr = [];
@@ -127,13 +126,17 @@ $('document').ready(function() {
 		for (var i = 0; i < ARRAYSIZE; i++) {
 			gameBoardArr.push([]);
 			for (var j = 0; j < ARRAYSIZE; j++) {
+				// JS side
 				gameBoardArr[i].push(new Tile('"'+ i + ',' + j + '"'));
 			}
+			// HTML side
 			addRow(i);
 		}
 		$('.square').droppable({ drop: function(event, ui) {
 			$(this).addClass("ui-state-highlight");
 		}});
+		console.log(gameBoardArr);
+
 	}
 
 	function addRow(rowNumber) {
@@ -143,6 +146,9 @@ $('document').ready(function() {
 	}
 	function addTile(rowNumber) {
 		for (var i = 0; i < ARRAYSIZE; i++) {
+			var tileSquare = '<div class="tile square ui-droppable"' + rowNumber + ',' + i + '><div class="top">top</div>\
+							  <div class="center"><div class="left">left</div><div class="right">\
+							  right</div></div><div class="bottom">bottom</div></div>';
 			$('.row' + rowNumber).append(tileSquare);
 		}
 	}

@@ -3,6 +3,7 @@
 	display: flex;
 	flex-wrap: nowrap;
 }
+
 .side {
 	display: flex;
 	flex-wrap: wrap;
@@ -30,7 +31,7 @@
 #tileToPlace {
 	border: 1px solid red;
 }
-#displayCard {
+.displayCard {
 	height: 100px;
 	width: 100px;
 	border: 1px solid red;
@@ -42,7 +43,7 @@
 	text-align: center;
 }
 .row {
-	display: inline-block;
+	display: flex;
 }
 .tile {
 	display: flex;
