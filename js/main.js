@@ -1,6 +1,6 @@
 var ARRAYSIZE = 4;
 var gameBoardArr = [];
-var tileSquare = '<div class="tile"><div class="top">top</div><div class="center">\
+var tileSquare = '<div class="tile square ui-droppable"><div class="top">top</div><div class="center">\
 				  <div class="left">left</div><div class="right">right</div></div>\
 				  <div class="bottom">bottom</div></div>';
 var cardIndex = 0;
@@ -103,12 +103,12 @@ var cardArr = [
 ];
 $('document').ready(function() {
 	console.log('ready');
+	$('.draggable').draggable();
+
 
 	initHTMLArray();
 
 	nextCard() 
-
-	console.log(gameBoardArr);
 
 	function nextCard(){
 		var cardValues = ['top', 'right', 'bottom', 'left'];
@@ -131,6 +131,9 @@ $('document').ready(function() {
 			}
 			addRow(i);
 		}
+		$('.square').droppable({ drop: function(event, ui) {
+			$(this).addClass("ui-state-highlight");
+		}});
 	}
 
 	function addRow(rowNumber) {
