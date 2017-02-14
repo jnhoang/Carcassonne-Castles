@@ -36,6 +36,11 @@
 	width: 100px;
 	border: 1px solid red;
 }
+.rotate {
+	transition: transform 300ms ease-in-out;
+	transform-origin: 50% 50%;
+	transform: rotate(0deg);
+}
 #gameBoard {
 	width: 50%;
 	height: auto;

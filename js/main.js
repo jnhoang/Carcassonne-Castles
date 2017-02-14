@@ -5,8 +5,12 @@ var gameBoardArr = [];
 var cardCount = 0;
 var playerTurn = 0;
 
-var currentIndex = 0; //placeholder at 0, to change to dynamic after shuffle ()
-var currentMove;
+//var currentIndex = 0; placeholder at 0, to change to dynamic after shuffle ()
+var tileDroppedOn;
+
+var displayTile = '<div class="tile draggable displayCard"><div class="top"></div>\
+				  <div class="center"><div class="left"></div><div class="right"></div></div>\
+				  <div class="bottom"></div></div>';
 var cardArr = [
 	{ top: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
 	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
@@ -110,28 +114,37 @@ $('document').ready(function() {
 
 	initHTMLArray();
 	nextCard() 
-	
-	$('#submitBtn').on('click', function() {
-		//now match cardIndex with currentMove
-		arrId = currentMove.split(',');
-		var arrTile = gameBoardArr[arrId[0]][arrId[1]];
-		arrTile = cardArr[currentIndex];
-		console.log(arrTile); // debug code
-		updateBoard(arrTile);
-	})
+	submitBtnListener()
+
+	function submitBtnListener() {
+		$('#submitBtn').on('click', function() {
+			//now match cardIndex with currentMove
+			arrId = tileDroppedOn.split(',');
+			var arrTile = gameBoardArr[arrId[0]][arrId[1]];
+			arrTile = cardArr[cardCount];
+			updateBoard(arrTile);
+		});
+	}
 	function updateBoard(arrTile) {
-		var arrId = document.getElementById(currentMove) //jQuery does not like $('# + varName');
-		console.log(arrId.childNodes[2].childNodes)
+		//updates board where tile was placed
+		var arrId = document.getElementById(tileDroppedOn); //jQuery does not like $('# + varName');
 
 		arrId.childNodes[1].innerText = arrTile.top.type;
 		arrId.childNodes[2].childNodes[0].innerText = arrTile.left.type;
 		arrId.childNodes[2].childNodes[1].innerText = arrTile.right.type;
 		arrId.childNodes[3].innerText = arrTile.bottom.type;
+		//add background image for arrId
+
+		$('.displayCard').remove();
+		$('.nextBox').append(displayTile);
+		cardCount += 1;
+
+		nextCard();
 	}
 	function nextCard(){
 		var cardValues = ['top', 'right', 'bottom', 'left'];
 		for (var i = 0; i < cardValues.length; i++) {	
-			var value = cardArr[0][cardValues[i]].type							
+			var value = cardArr[cardCount][cardValues[i]].type							
 			if (i == 1 || i == 3) {	
 				$('.displayCard > .center' + '> .' + cardValues[i]).text(value);
 			} else {
@@ -143,6 +156,16 @@ $('document').ready(function() {
 		}
 
 		$('.draggable').draggable();
+		rotateBtnListener();
+	}
+	var rotateDeg = 0;
+	function rotateBtnListener() {
+		$('#rotateBtn').on('click', function() {
+			console.log('rotate clicked');
+			rotateDeg = (rotateDeg + 90) % 360;
+			$('.displayCard.rotate').css('transform', 'rotate(' + rotateDeg + 'deg)');
+			console.log(rotateDeg);
+		})
 	}
 	function initHTMLArray() {
 		gameBoardArr = [];
@@ -157,23 +180,19 @@ $('document').ready(function() {
 			addRow(i);
 		}
 		
-		// droppable object manipulation here!
+		activateDrop();
+
+		
+	}
+	// droppable object manipulation here!
+	function activateDrop() {
 		$('.square').droppable({ drop: function(event, ui) {
-			currentMove = $(this).attr('id');
+			tileDroppedOn = $(this).attr('id');
 			//console.log(gameBoardArr[squareId[0]][squareId[1]]);
 
 			$(this).addClass("ui-state-highlight"); //debug code
 			
 		}});
-
-		
-		console.log(gameBoardArr); //debug code
-
-		// var squareSelected = gameBoardArr[squareId[0]][squareId[1]];
-		// squareSelected.player = playerTurn;
-		// squareSelected.filled = true;
-
-
 	}
 
 	function addRow(rowNumber) {
