@@ -7,6 +7,7 @@ var playerTurn = 0;
 
 //var currentIndex = 0; placeholder at 0, to change to dynamic after shuffle ()
 var tileDroppedOn;
+var rotateDeg = 0;
 
 var displayTile = '<div class="tile draggable displayCard"><div class="top"></div>\
 				  <div class="center"><div class="left"></div><div class="right"></div></div>\
@@ -116,15 +117,6 @@ $('document').ready(function() {
 	nextCard() 
 	submitBtnListener()
 
-	function submitBtnListener() {
-		$('#submitBtn').on('click', function() {
-			//now match cardIndex with currentMove
-			arrId = tileDroppedOn.split(',');
-			var arrTile = gameBoardArr[arrId[0]][arrId[1]];
-			arrTile = cardArr[cardCount];
-			updateBoard(arrTile);
-		});
-	}
 	function updateBoard(arrTile) {
 		//updates board where tile was placed
 		var arrId = document.getElementById(tileDroppedOn); //jQuery does not like $('# + varName');
@@ -155,17 +147,45 @@ $('document').ready(function() {
 			$('.displayCard').attr('id', cardCount);
 		}
 
-		$('.draggable').draggable();
+		$('.draggable').draggable({ snap: ".square"});
 		rotateBtnListener();
 	}
-	var rotateDeg = 0;
+	function submitBtnListener() {
+		$('#submitBtn').on('click', function() {
+			//now match cardIndex with currentMove
+			arrId = tileDroppedOn.split(',');
+			var arrTile = gameBoardArr[arrId[0]][arrId[1]];
+			arrTile = cardArr[cardCount];
+			updateBoard(arrTile);
+			//reset of global variables
+			tiledDroppedOn = '';
+			rotateDeg = 0;
+		});
+	}
 	function rotateBtnListener() {
 		$('#rotateBtn').on('click', function() {
-			console.log('rotate clicked');
 			rotateDeg = (rotateDeg + 90) % 360;
 			$('.displayCard.rotate').css('transform', 'rotate(' + rotateDeg + 'deg)');
-			console.log(rotateDeg);
+			rotateTileValues();
 		})
+	}
+	function rotateTileValues() {
+		console.log(cardCount);
+		
+		var temp = cardArr[cardCount].top.type;
+		
+		cardArr[cardCount].top.type = cardArr[cardCount].left.type;
+		cardArr[cardCount].left.type = cardArr[cardCount].bottom.type;
+		cardArr[cardCount].bottom.type = cardArr[cardCount].right.type;
+		cardArr[cardCount].right.type = temp;
+
+		
+		// unending loop -> figure out later
+		// for (var i = 1, j = 0; i <= .length; i++, j++) {
+		// 	[i] = [j];
+		// }
+
+
 	}
 	function initHTMLArray() {
 		gameBoardArr = [];
