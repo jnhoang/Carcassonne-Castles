@@ -7,6 +7,7 @@ var playerTurn = 0;
 
 //var currentIndex = 0; placeholder at 0, to change to dynamic after shuffle ()
 var tileDroppedOn;
+var tileToMeeple;
 var rotateDeg = 0;
 
 var displayTile = '<div class="tile draggable displayCard"><div class="top"></div>\
@@ -138,8 +139,8 @@ $('document').ready(function() {
 	nextCard();
 	submitBtnListener();
 	rotateBtnListener();
-	updatePlayerInfo()
-
+	submitMeepleBtn();
+	updatePlayerInfo();
 
 	function updatePlayerInfo() {
 		$('#pOneScore').text(playerOne.points);
@@ -152,7 +153,6 @@ $('document').ready(function() {
 	function updateBoard(arrTile) {
 		//updates board where tile was placed
 		var arrId = document.getElementById(tileDroppedOn); //jQuery does not like $('# + varName');
-
 		arrId.childNodes[1].innerText = arrTile.top.type;
 		arrId.childNodes[2].childNodes[0].innerText = arrTile.left.type;
 		arrId.childNodes[2].childNodes[1].innerText = arrTile.right.type;
@@ -184,29 +184,40 @@ $('document').ready(function() {
 	function submitBtnListener() {
 		$('#submitBtn').on('click', function() {
 			//now match cardIndex with currentMove
+			//console.log(tileDroppedOn)
 			var tileId = document.getElementById(tileDroppedOn);
 			arrId = tileDroppedOn.split(',');
-			var arrTile = gameBoardArr[arrId[0]][arrId[1]];
+			var arrTile = gameBoardArr[arrId[1]][arrId[2]];
 			arrTile = cardArr[cardCount];
 			
 			updateBoard(arrTile);
 			
 			//JS d/t JQuery issues
-			tileId.childNodes[1].addEventListener('click', addMeeple);
-			tileId.childNodes[2].childNodes[0].addEventListener('click', addMeeple);
-			tileId.childNodes[2].childNodes[1].addEventListener('click', addMeeple);
-			tileId.childNodes[3].addEventListener('click', addMeeple);			
+			tileId.childNodes[1].addEventListener('click', function() {addMeeple(this)});
+			tileId.childNodes[2].childNodes[0].addEventListener('click', function() {addMeeple(this)});
+			tileId.childNodes[2].childNodes[1].addEventListener('click', function() {addMeeple(this)});
+			tileId.childNodes[3].addEventListener('click', function() {addMeeple(this)});			
 			
 			//reset of global variables
-			tileDroppedOn = '';
 			rotateDeg = 0; // move this eventually
 		});
 	}
-	function submitMeepleBtn() {
-		$('#meepleBtn').on('click')
+	function addMeeple(clicked) {
+		tileToMeeple = $(clicked).context;
+		//tileToMeeple = tileToMeeple.context;
+
+		console.log(tileToMeeple);
 	}
-	function addMeeple() {
-		$(this).append('<div class="meepleImage"></div>');
+	function submitMeepleBtn() {
+		$('#meepleBtn').on('click', function() {
+			$(tileToMeeple).append('<div class="meepleImage"></div>');
+			var tileId = document.getElementById(tileDroppedOn);
+			tileId.childNodes[1].removeEventListener('click', addMeeple);
+			tileId.childNodes[2].childNodes[0].removeEventListener('click', addMeeple);
+			tileId.childNodes[2].childNodes[1].removeEventListener('click', addMeeple);
+			tileId.childNodes[3].removeEventListener('click', addMeeple);
+		})
+		tileDroppedOn = '';
 	}
 	function rotateBtnListener() {
 		$('#rotateBtn').on('click', function() {
@@ -275,13 +286,6 @@ function addHTMLRow(row) {
 
 }
 
-function generateArray() {
-	for (var i = 0; i < ARRAYSIZE; i++) {
-		for (var j = 0; j < ARRAYSIZE; j++) {
-			
-		}
-	}
-}
 
 
 
