@@ -15,11 +15,16 @@
 #playerInfo {
 	border: 1px solid red;
 }
-.playersBox {
+.playersBox *{
+	border: 1px solid red;
+}
+.playersBox p {
+	display: inline-block;
+}
+.nextBox * {
 	border: 1px solid red;
 }
 .nextBox {
-	border: 1px solid red;
 	display: flex;
 	justify-content: center;
 	flex-wrap: wrap;
@@ -37,9 +42,9 @@
 	border: 1px solid red;
 	transform-origin: 50% 50%;
 	transform: rotate(0deg);
+	transition: transform 300ms ease-in-out;
 }
 .rotate {
-	transition: transform 300ms ease-in-out;
 }
 #gameBoard {
 	width: 50%;

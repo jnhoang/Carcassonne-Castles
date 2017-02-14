@@ -12,6 +12,27 @@ var rotateDeg = 0;
 var displayTile = '<div class="tile draggable displayCard"><div class="top"></div>\
 				  <div class="center"><div class="left"></div><div class="right"></div></div>\
 				  <div class="bottom"></div></div>';
+
+var playerOne = {
+	meeples: 7,
+	points: 0,
+}
+var playerTwo = {
+	meeples: 7,
+	points: 0,
+}
+function Tile(name, point) {
+	this.id = name;
+	this.type = '';
+	this.top = {};
+	this.right = {};
+	this.bottom = {};
+	this.left = {};
+	this.valueType = '';
+	this.sidesConnected = null;
+	//connected
+	//completed
+}
 var cardArr = [
 	{ top: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
 	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
@@ -114,8 +135,19 @@ $('document').ready(function() {
 
 
 	initHTMLArray();
-	nextCard() 
-	submitBtnListener()
+	nextCard();
+	submitBtnListener();
+	rotateBtnListener();
+	updatePlayerInfo()
+
+
+	function updatePlayerInfo() {
+		$('#pOneScore').text(playerOne.points);
+		$('#pOneMeeps').text(playerOne.meeples);
+		$('#pTwoScore').text(playerTwo.points);
+		$('#pTwoMeeps').text(playerTwo.meeples);
+
+	}
 
 	function updateBoard(arrTile) {
 		//updates board where tile was placed
@@ -148,7 +180,6 @@ $('document').ready(function() {
 		}
 
 		$('.draggable').draggable({ snap: ".square"});
-		rotateBtnListener();
 	}
 	function submitBtnListener() {
 		$('#submitBtn').on('click', function() {
@@ -163,15 +194,14 @@ $('document').ready(function() {
 		});
 	}
 	function rotateBtnListener() {
+		console.log('rotate clicked');
 		$('#rotateBtn').on('click', function() {
 			rotateDeg = (rotateDeg + 90) % 360;
-			$('.displayCard.rotate').css('transform', 'rotate(' + rotateDeg + 'deg)');
+			$('.displayCard').css('transform', 'rotate(' + rotateDeg + 'deg)');
 			rotateTileValues();
 		})
 	}
-	function rotateTileValues() {
-		console.log(cardCount);
-		
+	function rotateTileValues() {		
 		var temp = cardArr[cardCount].top.type;
 		
 		cardArr[cardCount].top.type = cardArr[cardCount].left.type;
@@ -242,18 +272,7 @@ function generateArray() {
 	}
 }
 
-function Tile(name, point) {
-	this.id = name;
-	this.type = '';
-	this.top = {};
-	this.right = {};
-	this.bottom = {};
-	this.left = {};
-	this.valueType = '';
-	this.sidesConnected = null;
-	//connected
-	//completed
-}
+
 
 
 
