@@ -69,3 +69,11 @@
 	flex: 1 100%;
 	justify-content: space-between;
 }
+.meepleImage {
+	border: 1px red solid;
+	background-image: url('./../img/meepleRed.png');
+	height: 25px;
+	width: 25px;
+	background-size: contain;
+
+}

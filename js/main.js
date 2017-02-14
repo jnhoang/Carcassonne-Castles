@@ -134,7 +134,7 @@ $('document').ready(function() {
 	console.log('ready');
 
 
-	initHTMLArray();
+	initArrays();
 	nextCard();
 	submitBtnListener();
 	rotateBtnListener();
@@ -184,17 +184,31 @@ $('document').ready(function() {
 	function submitBtnListener() {
 		$('#submitBtn').on('click', function() {
 			//now match cardIndex with currentMove
+			var tileId = document.getElementById(tileDroppedOn);
 			arrId = tileDroppedOn.split(',');
 			var arrTile = gameBoardArr[arrId[0]][arrId[1]];
 			arrTile = cardArr[cardCount];
+			
 			updateBoard(arrTile);
+			
+			//JS d/t JQuery issues
+			tileId.childNodes[1].addEventListener('click', addMeeple);
+			tileId.childNodes[2].childNodes[0].addEventListener('click', addMeeple);
+			tileId.childNodes[2].childNodes[1].addEventListener('click', addMeeple);
+			tileId.childNodes[3].addEventListener('click', addMeeple);			
+			
 			//reset of global variables
-			tiledDroppedOn = '';
-			rotateDeg = 0;
+			tileDroppedOn = '';
+			rotateDeg = 0; // move this eventually
 		});
 	}
+	function submitMeepleBtn() {
+		$('#meepleBtn').on('click')
+	}
+	function addMeeple() {
+		$(this).append('<div class="meepleImage"></div>');
+	}
 	function rotateBtnListener() {
-		console.log('rotate clicked');
 		$('#rotateBtn').on('click', function() {
 			rotateDeg = (rotateDeg + 90) % 360;
 			$('.displayCard').css('transform', 'rotate(' + rotateDeg + 'deg)');
@@ -217,7 +231,7 @@ $('document').ready(function() {
 
 
 	}
-	function initHTMLArray() {
+	function initArrays() {
 		gameBoardArr = [];
 
 		for (var i = 0; i < ARRAYSIZE; i++) {
@@ -234,14 +248,11 @@ $('document').ready(function() {
 
 		
 	}
-	// droppable object manipulation here!
+							// droppable object manipulation here!
 	function activateDrop() {
 		$('.square').droppable({ drop: function(event, ui) {
 			tileDroppedOn = $(this).attr('id');
-			//console.log(gameBoardArr[squareId[0]][squareId[1]]);
-
-			$(this).addClass("ui-state-highlight"); //debug code
-			
+			$(this).addClass("ui-state-highlight"); //debug code	
 		}});
 	}
 
