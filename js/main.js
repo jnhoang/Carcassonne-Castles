@@ -1,104 +1,106 @@
 var ARRAYSIZE = 4;
 var gameBoardArr = [];
 
-var cardIndex = 0;
+var cardCount = 0;
 var playerTurn = 0;
+
+var currentIndex;
 var cardArr = [
 	{ top: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
 	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
 	bottom: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
 	left: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
-	type: 'normal', sidesConnect: false},
+	valueType: 'normal', sidesConnect: false},
 
 	{ top: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
 	right: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
 	bottom: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
 	left: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
-	type: 'normal', sidesConnect: false},
+	valueType: 'normal', sidesConnect: false},
 
 	{ top: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
 	right: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
 	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 0}, 
 	left: { type: 'castle', occupied: false, occupant: '', pointValue: 0}, 
-	type: 'normal', sidesConnect: true},
+	valueType: 'normal', sidesConnect: true},
 
 	{ top: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
 	right: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
 	bottom: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
 	left: { type: 'castle', occupied: false, occupant: '', pointValue: 0}, 
-	type: 'normal', sidesConnect: true},
+	valueType: 'normal', sidesConnect: true},
 
 	{ top: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
 	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
 	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
 	left: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
-	type: 'normal', sidesConnect: false},
+	valueType: 'normal', sidesConnect: false},
 
 	{ top: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
 	right: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
 	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 0}, 
 	left: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
-	type: 'normal', sidesConnect: true},
+	valueType: 'normal', sidesConnect: true},
 
 	{ top: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
 	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
 	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
 	left: { type: 'castle', occupied: false, occupant: '', pointValue: 0}, 
-	type: 'normal', sidesConnect: true},
+	valueType: 'normal', sidesConnect: true},
 
 	{ top: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
 	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
 	bottom: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
 	left: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
-	type: 'normal', sidesConnect: false},
+	valueType: 'normal', sidesConnect: false},
 
 	{ top: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
 	right: { type: 'castle', occupied: false, occupant: '', pointValue: 0}, 
 	bottom: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
 	left: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
-	type: 'shield', sidesConnect: true},
+	valueType: 'double', sidesConnect: true},
 
 	{ top: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
 	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
 	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 0}, 
 	left: { type: 'castle', occupied: false, occupant: '', pointValue: 0}, 
-	type: 'normal', sidesConnect: true},
+	valueType: 'normal', sidesConnect: true},
 
 	{ top: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
 	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
 	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 0}, 
 	left: { type: 'castle', occupied: false, occupant: '', pointValue: 0}, 
-	type: 'normal', sidesConnect: true},
+	valueType: 'normal', sidesConnect: true},
 
 	{ top: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
 	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
 	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
 	left: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
-	type: 'normal', sidesConnect: false},	
+	valueType: 'normal', sidesConnect: false},	
 
 	{ top: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
 	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
 	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
 	left: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
-	type: 'normal', sidesConnect: false},
+	valueType: 'normal', sidesConnect: false},
 
 	{ top: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
 	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
 	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
 	left: { type: 'castle', occupied: false, occupant: '', pointValue: 0}, 
-	type: 'shield', sidesConnect: true},
+	valueType: 'double', sidesConnect: true},
 
 	{ top: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
 	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
 	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 0}, 
 	left: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
-	type: 'shield', sidesConnect: true},
+	valueType: 'double', sidesConnect: true},
 
 	{ top: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
 	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
 	bottom: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
 	left: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
-	type: 'normal', sidesConnect: false},
+	valueType: 'normal', sidesConnect: false},
 ];
 $('document').ready(function() {
 	console.log('ready');
@@ -116,6 +118,9 @@ $('document').ready(function() {
 			} else {
 				$('.displayCard > .' + cardValues[i]).text(value);
 			}
+			//eventually change cardCount when shuffle() implemented
+			//assign that value to currentIndex to be passed onto placed square
+			$('.displayCard').attr('id', cardCount);
 		}
 
 		$('.draggable').draggable();
@@ -132,10 +137,32 @@ $('document').ready(function() {
 			// HTML side
 			addRow(i);
 		}
+		// droppable object manipulation here!
 		$('.square').droppable({ drop: function(event, ui) {
-			$(this).addClass("ui-state-highlight");
+			var squareId = $(this).attr('id').split(',');
+			console.log(gameBoardArr[squareId[0]][squareId[1]]);
+
+			$(this).addClass("ui-state-highlight"); //debug code
+			console.log('droppable id:' + squareId);// debug code
+			console.log(ui.draggable.attr('id')); //debug code
+			
+			$('#submitBtn').on('click', function(squareId) {
+				///$(thisSquare).append('<div>test</div>');
+				//console.log(squareId);
+				console.log('submitBtn clicked'); //debug code
+			})
 		}});
-		console.log(gameBoardArr);
+		console.log(gameBoardArr); //debug code
+
+		// var squareSelected = gameBoardArr[squareId[0]][squareId[1]];
+		// squareSelected.player = playerTurn;
+		// squareSelected.filled = true;
+		// square.removeEventListener('click', clickSquare);
+		// if (playerTurn === 0) {
+		// 	square.className += ' ' + playerOneTheme + ' blocks';
+		// } else if (playerTurn === 1) {
+		// 	square.className += ' ' + playerTwoTheme + ' blocks';
+		// }
 
 	}
 
@@ -146,9 +173,10 @@ $('document').ready(function() {
 	}
 	function addTile(rowNumber) {
 		for (var i = 0; i < ARRAYSIZE; i++) {
-			var tileSquare = '<div class="tile square ui-droppable"' + rowNumber + ',' + i + '><div class="top">top</div>\
-							  <div class="center"><div class="left">left</div><div class="right">\
-							  right</div></div><div class="bottom">bottom</div></div>';
+			var tileSquare = '<div class="tile square ui-droppable" id="' + rowNumber + ',' + i + '">\
+							  <div class="top">top</div><div class="center"><div class="left">\
+							  left</div><div class="right">right</div></div><div class="bottom">bottom\
+							  </div></div>';
 			$('.row' + rowNumber).append(tileSquare);
 		}
 	}
