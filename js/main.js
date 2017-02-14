@@ -1,10 +1,12 @@
 var ARRAYSIZE = 4;
+var CARDSIDES = 4;
 var gameBoardArr = [];
 
 var cardCount = 0;
 var playerTurn = 0;
 
-var currentIndex;
+var currentIndex = 0; //placeholder at 0, to change to dynamic after shuffle ()
+var currentMove;
 var cardArr = [
 	{ top: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
 	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
@@ -108,7 +110,24 @@ $('document').ready(function() {
 
 	initHTMLArray();
 	nextCard() 
+	
+	$('#submitBtn').on('click', function() {
+		//now match cardIndex with currentMove
+		arrId = currentMove.split(',');
+		var arrTile = gameBoardArr[arrId[0]][arrId[1]];
+		arrTile = cardArr[currentIndex];
+		console.log(arrTile); // debug code
+		updateBoard(arrTile);
+	})
+	function updateBoard(arrTile) {
+		var arrId = document.getElementById(currentMove) //jQuery does not like $('# + varName');
+		console.log(arrId.childNodes[2].childNodes)
 
+		arrId.childNodes[1].innerText = arrTile.top.type;
+		arrId.childNodes[2].childNodes[0].innerText = arrTile.left.type;
+		arrId.childNodes[2].childNodes[1].innerText = arrTile.right.type;
+		arrId.childNodes[3].innerText = arrTile.bottom.type;
+	}
 	function nextCard(){
 		var cardValues = ['top', 'right', 'bottom', 'left'];
 		for (var i = 0; i < cardValues.length; i++) {	
@@ -137,32 +156,23 @@ $('document').ready(function() {
 			// HTML side
 			addRow(i);
 		}
+		
 		// droppable object manipulation here!
 		$('.square').droppable({ drop: function(event, ui) {
-			var squareId = $(this).attr('id').split(',');
-			console.log(gameBoardArr[squareId[0]][squareId[1]]);
+			currentMove = $(this).attr('id');
+			//console.log(gameBoardArr[squareId[0]][squareId[1]]);
 
 			$(this).addClass("ui-state-highlight"); //debug code
-			console.log('droppable id:' + squareId);// debug code
-			console.log(ui.draggable.attr('id')); //debug code
 			
-			$('#submitBtn').on('click', function(squareId) {
-				///$(thisSquare).append('<div>test</div>');
-				//console.log(squareId);
-				console.log('submitBtn clicked'); //debug code
-			})
 		}});
+
+		
 		console.log(gameBoardArr); //debug code
 
 		// var squareSelected = gameBoardArr[squareId[0]][squareId[1]];
 		// squareSelected.player = playerTurn;
 		// squareSelected.filled = true;
-		// square.removeEventListener('click', clickSquare);
-		// if (playerTurn === 0) {
-		// 	square.className += ' ' + playerOneTheme + ' blocks';
-		// } else if (playerTurn === 1) {
-		// 	square.className += ' ' + playerTwoTheme + ' blocks';
-		// }
+
 
 	}
 
@@ -194,15 +204,14 @@ function generateArray() {
 }
 
 function Tile(name, point) {
-	this.name = name;
+	this.id = name;
 	this.type = '';
 	this.top = {};
 	this.right = {};
 	this.bottom = {};
 	this.left = {};
-	this.occupied = false;
-	this.occupant = '';
-	this.pointValue = point;
+	this.valueType = '';
+	this.sidesConnected = null;
 	//connected
 	//completed
 }
