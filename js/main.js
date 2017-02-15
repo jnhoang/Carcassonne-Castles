@@ -205,7 +205,7 @@ $('document').ready(function() {
 			//reset of global variables
 			rotateDeg = 0; // move this eventually
 			btnListenersOff();
-			activateMeepleBtn();
+			meepleBtnOn();
 
 	}
 	function rotateBtnOn () {
@@ -248,9 +248,11 @@ $('document').ready(function() {
 		console.log(tileToMeeple);
  		$(tileToMeeple).append('<div class="meepleImage"></div>');
 	}
-	function activateMeepleBtn() {
+	function meepleBtnOn() {
 		$('#meepleBtn').on('click', changeMeepSpace);
-		
+	}
+	function meepleBtnOff() {
+		$('#meepleBtn').off('click', changeMeepSpace);
 	}
 	function changeMeepSpace() {
 		placeMeeple();
@@ -295,6 +297,7 @@ $('document').ready(function() {
 		playerTurn = (playerTurn + 1) % 2;
 
 		// resets all global vars
+		meepleBtnOff();
 		resetGlobalVars();
 		updatePlayerInfo();
 		nextCard();
