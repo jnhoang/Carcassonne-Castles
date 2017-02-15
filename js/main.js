@@ -12,7 +12,7 @@ var gameBoardArr = [];
 var arrId;
 var arrTile;
 
-var tileToMeeple;
+var tileToMeeple = '';
 var rotateDeg = 0;
 
 var displayTile = '<div class="tile draggable displayCard"><div class="top"></div><div \
@@ -192,6 +192,7 @@ $('document').ready(function() {
 	function submitBtnOn() {
 			// now match cardIndex with currentMove
 			arrId = tileDroppedOn.split('');
+			console.log(arrId);
 			
 			// updates JS board
 			gameBoardArr[arrId[1]][arrId[2]] = cardArr[cardCount];
@@ -237,8 +238,15 @@ $('document').ready(function() {
 		$('#' + tileDroppedOn + ' > .left').on('click', reserveMeepSpace);			
 	}
 	function reserveMeepSpace(event) {
-		tileToMeeple = event.target;
+		if (tileToMeeple != '') {
+			console.log(tileToMeeple)
+			console.log('should remove something')
+			$(tileToMeeple).text($(tileToMeeple).text());
+		} 
+
+		tileToMeeple = event.target;			
 		console.log(tileToMeeple);
+ 		$(tileToMeeple).append('<div class="meepleImage"></div>');
 	}
 	function activateMeepleBtn() {
 		$('#meepleBtn').on('click', changeMeepSpace);
@@ -256,15 +264,15 @@ $('document').ready(function() {
 	}
 	function placeMeeple() {
 		// add to html board
- 		$(tileToMeeple).append('<div class="meepleImage"></div>');
- 		console.log(arrId); //debug code
+ 		//console.log(arrId); //debug code
 		// add to js board
 		tileMeepled = $(tileToMeeple).attr('class');
-		gameBoardArr[arrId[1]][arrId[2]]['top'].occupied = true;
-		gameBoardArr[arrId[1]][arrId[2]]['top'].occupant = playerTurn;
-		console.log(gameBoardArr); //debug code
+		//console.log(tileMeepled);
+		//console.log(gameBoardArr[arrId[1]][arrId[2]]);
+		gameBoardArr[arrId[1]][arrId[2]][tileMeepled].occupied = true;
+		gameBoardArr[arrId[1]][arrId[2]][tileMeepled].occupant = playerTurn;
+		//console.log(gameBoardArr); //debug code
 
-		tileToMeeple = '';
 	}
 							// droppable object manipulation here!
 	function activateDrop() {
@@ -284,12 +292,19 @@ $('document').ready(function() {
 		} else {
 			playerTwo.meeples -= 1;
 		}
+		playerTurn = (playerTurn + 1) % 2;
 
-		tileDroppedOn = '';
-		arrId = '';
+		// resets all global vars
+		resetGlobalVars();
 		updatePlayerInfo();
 		nextCard();
 		btnListenersOn();
+	}
+	function resetGlobalVars() {
+		tileToMeeple = '';
+		tileDroppedOn = '';
+		arrId = '';
+		arrTile = '';
 	}
 	function updatePlayerInfo() {
 		$('#pOneScore').text(playerOne.points);
