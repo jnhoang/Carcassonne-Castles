@@ -1,18 +1,22 @@
 var ARRAYSIZE = 4;
 var CARDSIDES = 4;
-var gameBoardArr = [];
 
 var cardCount = 0;
 var playerTurn = 0;
 
 //var currentIndex = 0; placeholder at 0, to change to dynamic after shuffle ()
 var tileDroppedOn;
+
+// used to manipulate JS array
+var gameBoardArr = [];
+var arrId;
+var arrTile;
+
 var tileToMeeple;
 var rotateDeg = 0;
 
-var displayTile = '<div class="tile draggable displayCard"><div class="top"></div>\
-				  <div class="left"></div><div class="right"></div>\
-				  <div class="bottom"></div></div>';
+var displayTile = '<div class="tile draggable displayCard"><div class="top"></div><div \
+				  class="left"></div><div class="right"></div><div class="bottom"></div></div>';
 
 var playerOne = {
 	meeples: 7,
@@ -137,124 +141,10 @@ $('document').ready(function() {
 
 	initArrays();
 	nextCard();
-	submitBtnListener();
-	rotateBtnListener();
+	btnListenersOn();
 	updatePlayerInfo();
-	function updateGameState() {
-		$('.nextBox').append(displayTile);
-		cardCount += 1;
-		
-		if (playerTurn === 0) {
-			playerOne.meeples -= 1;
-		} else {
-			playerTwo.meeples -= 1;
-		}
-
-		updatePlayerInfo();
-		nextCard();
-	}
-	function updatePlayerInfo() {
-		$('#pOneScore').text(playerOne.points);
-		$('#pOneMeeps').text(playerOne.meeples);
-		$('#pTwoScore').text(playerTwo.points);
-		$('#pTwoMeeps').text(playerTwo.meeples);
-
-	}
-
-	function updateBoard(arrTile) {
-		//updates board where tile was placed
-		$('#' + tileDroppedOn + '> .top').text( $('.displayCard > .top').text() );
-		$('#' + tileDroppedOn + '> .right').text( $('.displayCard > .right').text() );
-		$('#' + tileDroppedOn + '> .bottom').text( $('.displayCard > .bottom').text() );
-		$('#' + tileDroppedOn + '> .left').text( $('.displayCard > .left').text() );
-
-		$('.displayCard').remove();
-
-	}
-	function nextCard(){
-		var value = cardArr[cardCount];
-		$('.displayCard > .top').text(value.top.type);
-		$('.displayCard > .right').text(value.right.type);
-		$('.displayCard > .bottom').text(value.bottom.type);
-		$('.displayCard > .left').text(value.left.type);
-
-		$('.draggable').draggable({ snap: ".square"});
-	}
-	function submitBtnListener() {
-		$('#submitBtn').on('click', function() {
-			//now match cardIndex with currentMove
-			arrId = tileDroppedOn.split('');
-			var arrTile = gameBoardArr[arrId[1]][arrId[2]];
-			arrTile = cardArr[cardCount];
-			
-			updateBoard(arrTile);
-			monitorMeepSpots(this);
-			
-			//reset of global variables
-			rotateDeg = 0; // move this eventually
-
-			activateMeepleBtn();
-		});
-	}
-	function monitorMeepSpots() {
-		$('#' + tileDroppedOn + '> .top').on('click', reserveMeepSpace);
-		$('#' + tileDroppedOn + '> .right').on('click', reserveMeepSpace);
-		$('#' + tileDroppedOn + '> .bottom').on('click', reserveMeepSpace);
-		$('#' + tileDroppedOn + '> .left').on('click', reserveMeepSpace);			
-	}
-	function reserveMeepSpace(event) {
-		console.log(event.target);
-		tileToMeeple = event.target;
-	}
-	function activateMeepleBtn() {
-		$('#meepleBtn').on('click', changeMeepSpace);
-		
-	}
-	function changeMeepSpace() {
-		placeMeeple();
-		$('#' + tileDroppedOn + '> .top').off('click', reserveMeepSpace);
-		$('#' + tileDroppedOn + '> .right').off('click', reserveMeepSpace);
-		$('#' + tileDroppedOn + '> .bottom').off('click', reserveMeepSpace);
-		$('#' + tileDroppedOn + '> .left').off('click', reserveMeepSpace);
-
-		console.log(gameBoardArr);
-
-		tileDroppedOn = '';
-		updateGameState();
-	}
-	function placeMeeple() {
-		// html add
-		$(tileToMeeple).append('<div class="meepleImage"></div>');
-
-		// js add
-		// arrId = tileDroppedOn.split('');
-		// var arrTile = gameBoardArr[arrId[1]][arrId[2]];
-		// tileMeepled = $(tileToMeeple).attr('class');
-		// arrTile[tileMeepled].occupied = true;
-		// arrTile[tileMeepled].occupant = playerTurn;
-	}
-	function rotateBtnListener() {
-		$('#rotateBtn').on('click', function() {
-			rotateDeg = (rotateDeg + 90) % 360;
-			$('.displayCard').css('transform', 'rotate(' + rotateDeg + 'deg)');
-			rotateTileValues();
-		})
-	}
-	function rotateTileValues() {		
-		var temp = cardArr[cardCount].top.type;
-		
-		cardArr[cardCount].top.type = cardArr[cardCount].left.type;
-		cardArr[cardCount].left.type = cardArr[cardCount].bottom.type;
-		cardArr[cardCount].bottom.type = cardArr[cardCount].right.type;
-		cardArr[cardCount].right.type = temp;
-	}
-							// droppable object manipulation here!
-	function activateDrop() {
-		$('.square').droppable({ drop: function(event, ui) {
-			tileDroppedOn = $(this).attr('id');
-			$(this).addClass("ui-state-highlight"); //debug code	
-		}});
-	}
+	
+	// functions
 	function initArrays() {
 		gameBoardArr = [];
 
@@ -262,7 +152,7 @@ $('document').ready(function() {
 			gameBoardArr.push([]);
 			for (var j = 0; j < ARRAYSIZE; j++) {
 				// JS side
-				gameBoardArr[i].push(new Tile('"'+ i + ',' + j + '"'));
+				gameBoardArr[i].push(new Tile('n' + i + j));
 			}
 			// HTML side
 			addRow(i);
@@ -277,13 +167,137 @@ $('document').ready(function() {
 	function addTile(rowNumber) {
 		for (var i = 0; i < ARRAYSIZE; i++) {
 			var tileSquare = '<div class="tile square ui-droppable" id="n' + rowNumber + '' + i + '">\
-							  <div class="top">top</div><div class="left">\
-							  left</div><div class="right">right</div><div class="bottom">bottom\
-							  </div></div>';
+							  <div class="top">top</div><div class="left">left</div><div class="right">\
+							  right</div><div class="bottom">bottom</div></div>';
 			$('.row' + rowNumber).append(tileSquare);
 		}
 	}
+	function nextCard(){
+		var value = cardArr[cardCount];
+		$('.displayCard > .top').text(value.top.type);
+		$('.displayCard > .right').text(value.right.type);
+		$('.displayCard > .bottom').text(value.bottom.type);
+		$('.displayCard > .left').text(value.left.type);
 
+		$('.draggable').draggable({ snap: ".square"});
+	}
+	function btnListenersOn() {
+		$('#submitBtn').on('click', submitBtnOn);
+		$('#rotateBtn').on('click', rotateBtnOn);
+	}
+	function btnListenersOff() {
+		$('#submitBtn').off('click', submitBtnOn);
+		$('#rotateBtn').off('click', rotateBtnOn);
+	}
+	function submitBtnOn() {
+			// now match cardIndex with currentMove
+			arrId = tileDroppedOn.split('');
+			
+			// updates JS board
+			gameBoardArr[arrId[1]][arrId[2]] = cardArr[cardCount];
+			arrTile = gameBoardArr[arrId[1]][arrId[2]];
+			console.log(gameBoardArr); //debug code
+
+			updateBoard(arrTile);
+			monitorMeepSpots(this);
+			
+			//reset of global variables
+			rotateDeg = 0; // move this eventually
+			btnListenersOff();
+			activateMeepleBtn();
+
+	}
+	function rotateBtnOn () {
+			rotateDeg = (rotateDeg + 90) % 360;
+			$('.displayCard').css('transform', 'rotate(' + rotateDeg + 'deg)');
+			rotateTileValues();
+	}
+	function rotateTileValues() {		
+		var temp = cardArr[cardCount].top.type;
+		
+		cardArr[cardCount].top.type = cardArr[cardCount].left.type;
+		cardArr[cardCount].left.type = cardArr[cardCount].bottom.type;
+		cardArr[cardCount].bottom.type = cardArr[cardCount].right.type;
+		cardArr[cardCount].right.type = temp;
+	}
+	function updateBoard(arrTile) {
+		//updates HTML board where tile was placed
+		$('#' + tileDroppedOn + ' > .top').text( $('.displayCard > .top').text() );
+		$('#' + tileDroppedOn + ' > .right').text( $('.displayCard > .right').text() );
+		$('#' + tileDroppedOn + ' > .bottom').text( $('.displayCard > .bottom').text() );
+		$('#' + tileDroppedOn + ' > .left').text( $('.displayCard > .left').text() );
+
+		$('.displayCard').remove();
+
+	}
+	function monitorMeepSpots() {
+		$('#' + tileDroppedOn + ' > .top').on('click', reserveMeepSpace);
+		$('#' + tileDroppedOn + ' > .right').on('click', reserveMeepSpace);
+		$('#' + tileDroppedOn + ' > .bottom').on('click', reserveMeepSpace);
+		$('#' + tileDroppedOn + ' > .left').on('click', reserveMeepSpace);			
+	}
+	function reserveMeepSpace(event) {
+		tileToMeeple = event.target;
+		console.log(tileToMeeple);
+	}
+	function activateMeepleBtn() {
+		$('#meepleBtn').on('click', changeMeepSpace);
+		
+	}
+	function changeMeepSpace() {
+		placeMeeple();
+		$('#' + tileDroppedOn + ' > .top').off('click', reserveMeepSpace);
+		$('#' + tileDroppedOn + ' > .right').off('click', reserveMeepSpace);
+		$('#' + tileDroppedOn + ' > .bottom').off('click', reserveMeepSpace);
+		$('#' + tileDroppedOn + ' > .left').off('click', reserveMeepSpace);
+
+
+		updateGameState();
+	}
+	function placeMeeple() {
+		// add to html board
+ 		$(tileToMeeple).append('<div class="meepleImage"></div>');
+ 		console.log(arrId); //debug code
+		// add to js board
+		tileMeepled = $(tileToMeeple).attr('class');
+		gameBoardArr[arrId[1]][arrId[2]]['top'].occupied = true;
+		gameBoardArr[arrId[1]][arrId[2]]['top'].occupant = playerTurn;
+		console.log(gameBoardArr); //debug code
+
+		tileToMeeple = '';
+	}
+							// droppable object manipulation here!
+	function activateDrop() {
+		$('.square').droppable({ drop: function(event, ui) {
+			tileDroppedOn = $(this).attr('id');
+			console.log('dropped on me at' + tileDroppedOn);
+			$(this).addClass("ui-state-highlight"); //debug code	
+		}});
+	}
+	
+	function updateGameState() {
+		$('.nextBox').append(displayTile);
+		cardCount += 1;
+		
+		if (playerTurn === 0) {
+			playerOne.meeples -= 1;
+		} else {
+			playerTwo.meeples -= 1;
+		}
+
+		tileDroppedOn = '';
+		arrId = '';
+		updatePlayerInfo();
+		nextCard();
+		btnListenersOn();
+	}
+	function updatePlayerInfo() {
+		$('#pOneScore').text(playerOne.points);
+		$('#pOneMeeps').text(playerOne.meeples);
+		$('#pTwoScore').text(playerTwo.points);
+		$('#pTwoMeeps').text(playerTwo.meeples);
+
+	}
 
 
 
