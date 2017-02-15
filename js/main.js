@@ -139,9 +139,21 @@ $('document').ready(function() {
 	nextCard();
 	submitBtnListener();
 	rotateBtnListener();
-	submitMeepleBtn();
 	updatePlayerInfo();
+	function updateGameState() {
+		$('.nextBox').append(displayTile);
+		cardCount += 1;
+		
+		if (playerTurn === 0) {
+			playerOne.meeples -= 1;
+		} else {
+			playerTwo.meeples -= 1;
+		}
 
+		updatePlayerInfo();
+		nextCard();
+		
+	}
 	function updatePlayerInfo() {
 		$('#pOneScore').text(playerOne.points);
 		$('#pOneMeeps').text(playerOne.meeples);
@@ -160,10 +172,7 @@ $('document').ready(function() {
 		//add background image for arrId
 
 		$('.displayCard').remove();
-		$('.nextBox').append(displayTile);
-		cardCount += 1;
 
-		nextCard();
 	}
 	function nextCard(){
 		var cardValues = ['top', 'right', 'bottom', 'left'];
@@ -185,39 +194,59 @@ $('document').ready(function() {
 		$('#submitBtn').on('click', function() {
 			//now match cardIndex with currentMove
 			//console.log(tileDroppedOn)
-			var tileId = document.getElementById(tileDroppedOn);
 			arrId = tileDroppedOn.split(',');
 			var arrTile = gameBoardArr[arrId[1]][arrId[2]];
 			arrTile = cardArr[cardCount];
 			
 			updateBoard(arrTile);
-			
-			//JS d/t JQuery issues
-			tileId.childNodes[1].addEventListener('click', function() {addMeeple(this)});
-			tileId.childNodes[2].childNodes[0].addEventListener('click', function() {addMeeple(this)});
-			tileId.childNodes[2].childNodes[1].addEventListener('click', function() {addMeeple(this)});
-			tileId.childNodes[3].addEventListener('click', function() {addMeeple(this)});			
+			monitorMeepSpots(this);
 			
 			//reset of global variables
 			rotateDeg = 0; // move this eventually
+
+			activateMeepleBtn();
 		});
 	}
-	function addMeeple(clicked) {
-		tileToMeeple = $(clicked).context;
-		//tileToMeeple = tileToMeeple.context;
-
-		console.log(tileToMeeple);
+	function monitorMeepSpots() {
+		//JS d/t JQuery issues
+		var tileId = document.getElementById(tileDroppedOn);
+		tileId.childNodes[1].addEventListener('click', function() {reserveMeepSpace(this)});
+		tileId.childNodes[2].childNodes[0].addEventListener('click', function() {reserveMeepSpace(this)});
+		tileId.childNodes[2].childNodes[1].addEventListener('click', function() {reserveMeepSpace(this)});
+		tileId.childNodes[3].addEventListener('click', function() {reserveMeepSpace(this)});			
 	}
-	function submitMeepleBtn() {
-		$('#meepleBtn').on('click', function() {
-			$(tileToMeeple).append('<div class="meepleImage"></div>');
-			var tileId = document.getElementById(tileDroppedOn);
-			tileId.childNodes[1].removeEventListener('click', addMeeple);
-			tileId.childNodes[2].childNodes[0].removeEventListener('click', addMeeple);
-			tileId.childNodes[2].childNodes[1].removeEventListener('click', addMeeple);
-			tileId.childNodes[3].removeEventListener('click', addMeeple);
-		})
-		tileDroppedOn = '';
+	function reserveMeepSpace(clicked) {
+		console.log('space reserved!');
+		tileToMeeple = $(clicked).context;
+	}
+	function activateMeepleBtn() {
+		$('#meepleBtn').on('click', changeMeepSpace);
+		
+	}
+	function changeMeepSpace() {
+		$(tileToMeeple).append('<div class="meepleImage"></div>');
+		var tileId = document.getElementById(tileDroppedOn);
+		// console.log(tileId)
+		// console.log(tileId.childNodes)
+		tileId.childNodes[1].removeEventListener('click', reserveMeepSpace);
+		tileId.childNodes[2].childNodes[0].removeEventListener('click', reserveMeepSpace);
+		tileId.childNodes[2].childNodes[1].removeEventListener('click', reserveMeepSpace);
+		tileId.childNodes[3].removeEventListener('click', reserveMeepSpace);
+
+		arrId = tileDroppedOn.split(',');
+		var arrTile = gameBoardArr[arrId[0]][arrId[1]];
+
+		tileMeepled = $(tileToMeeple).attr('class');
+		arrTile[tileMeepled].occupied = true;
+		arrTile[tileMeepled].occupant = playerTurn;
+		//arrTile.tileMeepled.occupied = true;
+		//arrTile.tileMeepled.occupant = playerTurn;
+
+		console.log(gameBoardArr);
+
+
+		//tileDroppedOn = ''; //will leave off until bug with removeEventListener gets fixed
+		updateGameState();
 	}
 	function rotateBtnListener() {
 		$('#rotateBtn').on('click', function() {
@@ -233,14 +262,14 @@ $('document').ready(function() {
 		cardArr[cardCount].left.type = cardArr[cardCount].bottom.type;
 		cardArr[cardCount].bottom.type = cardArr[cardCount].right.type;
 		cardArr[cardCount].right.type = temp;
-
-		
-		// unending loop -> figure out later
-		// for (var i = 1, j = 0; i <= .length; i++, j++) {
-		// 	[i] = [j];
-		// }
-
-
+	}
+							// droppable object manipulation here!
+	function activateDrop() {
+		$('.square').droppable({ drop: function(event, ui) {
+			tileDroppedOn = $(this).attr('id');
+			console.log($(tileDroppedOn))
+			$(this).addClass("ui-state-highlight"); //debug code	
+		}});
 	}
 	function initArrays() {
 		gameBoardArr = [];
@@ -254,19 +283,8 @@ $('document').ready(function() {
 			// HTML side
 			addRow(i);
 		}
-		
 		activateDrop();
-
-		
 	}
-							// droppable object manipulation here!
-	function activateDrop() {
-		$('.square').droppable({ drop: function(event, ui) {
-			tileDroppedOn = $(this).attr('id');
-			$(this).addClass("ui-state-highlight"); //debug code	
-		}});
-	}
-
 	function addRow(rowNumber) {
 		$('#gameBoard').append('<div class="row row' + rowNumber + '"></div>');
 		
@@ -281,10 +299,6 @@ $('document').ready(function() {
 			$('.row' + rowNumber).append(tileSquare);
 		}
 	}
-
-function addHTMLRow(row) {
-
-}
 
 
 
