@@ -10,7 +10,6 @@ var tileDroppedOn;
 // used to manipulate JS array
 var gameBoardArr = [];
 var arrId;
-var arrTile;
 
 var tileToMeeple = '';
 var rotateDeg = 0;
@@ -35,115 +34,117 @@ function Tile(name, point) {
 	this.left = {};
 	this.valueType = '';
 	this.sidesConnected = null;
-	//connected
+	this.paired = false;
 	//completed
 }
 var cardArr = [
-	{ top: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
-	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
-	bottom: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
-	left: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
+	{ top: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
+	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
+	bottom: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
+	left: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
 	valueType: 'normal', sidesConnect: false},
 
-	{ top: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
-	right: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
-	bottom: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
-	left: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
+	{ top: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
+	right: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
+	bottom: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
+	left: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
 	valueType: 'normal', sidesConnect: false},
 
-	{ top: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
-	right: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
-	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 0}, 
-	left: { type: 'castle', occupied: false, occupant: '', pointValue: 0}, 
+	{ top: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
+	right: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
+	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
+	left: { type: 'castle', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
 	valueType: 'normal', sidesConnect: true},
 
-	{ top: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
-	right: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
-	bottom: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
-	left: { type: 'castle', occupied: false, occupant: '', pointValue: 0}, 
+	{ top: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
+	right: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
+	bottom: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false},
+	left: { type: 'castle', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false},
 	valueType: 'normal', sidesConnect: true},
 
-	{ top: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
-	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
-	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
-	left: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
+	{ top: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
+	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
+	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
+	left: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
 	valueType: 'normal', sidesConnect: false},
 
-	{ top: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
-	right: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
-	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 0}, 
-	left: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
+	{ top: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
+	right: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
+	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
+	left: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
 	valueType: 'normal', sidesConnect: true},
 
-	{ top: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
-	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
-	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
-	left: { type: 'castle', occupied: false, occupant: '', pointValue: 0}, 
+	{ top: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
+	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
+	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
+	left: { type: 'castle', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
 	valueType: 'normal', sidesConnect: true},
 
-	{ top: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
-	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
-	bottom: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
-	left: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
+	{ top: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
+	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
+	bottom: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
+	left: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
 	valueType: 'normal', sidesConnect: false},
 
-	{ top: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
-	right: { type: 'castle', occupied: false, occupant: '', pointValue: 0}, 
-	bottom: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
-	left: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
+	{ top: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
+	right: { type: 'castle', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
+	bottom: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
+	left: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
 	valueType: 'double', sidesConnect: true},
 
-	{ top: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
-	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
-	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 0}, 
-	left: { type: 'castle', occupied: false, occupant: '', pointValue: 0}, 
+	{ top: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
+	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
+	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
+	left: { type: 'castle', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
 	valueType: 'normal', sidesConnect: true},
 
-	{ top: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
-	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
-	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 0}, 
-	left: { type: 'castle', occupied: false, occupant: '', pointValue: 0}, 
+	{ top: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
+	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
+	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
+	left: { type: 'castle', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
 	valueType: 'normal', sidesConnect: true},
 
-	{ top: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
-	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
-	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
-	left: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
+	{ top: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
+	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
+	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
+	left: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
 	valueType: 'normal', sidesConnect: false},	
 
-	{ top: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
-	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
-	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
-	left: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
+	{ top: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
+	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
+	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
+	left: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
 	valueType: 'normal', sidesConnect: false},
 
-	{ top: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
-	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
-	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
-	left: { type: 'castle', occupied: false, occupant: '', pointValue: 0}, 
+	{ top: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
+	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
+	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
+	left: { type: 'castle', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
 	valueType: 'double', sidesConnect: true},
 
-	{ top: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
-	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
-	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 0}, 
-	left: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
+	{ top: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
+	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
+	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
+	left: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
 	valueType: 'double', sidesConnect: true},
 
-	{ top: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
-	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
-	bottom: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
-	left: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
+	{ top: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
+	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
+	bottom: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
+	left: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
 	valueType: 'normal', sidesConnect: false},
 ];
 $('document').ready(function() {
-	console.log('ready');
+	//console.log('ready');
 
 
 	initArrays();
-	nextCard();
+	showNextCard();
 	btnListenersOn();
 	updatePlayerInfo();
 	
+
+
 	// functions
 	function initArrays() {
 		gameBoardArr = [];
@@ -172,7 +173,7 @@ $('document').ready(function() {
 			$('.row' + rowNumber).append(tileSquare);
 		}
 	}
-	function nextCard(){
+	function showNextCard(){
 		var value = cardArr[cardCount];
 		$('.displayCard > .top').text(value.top.type);
 		$('.displayCard > .right').text(value.right.type);
@@ -189,78 +190,81 @@ $('document').ready(function() {
 		$('#submitBtn').off('click', submitBtnOn);
 		$('#rotateBtn').off('click', rotateBtnOn);
 	}
-	function submitBtnOn() {
-			// now match cardIndex with currentMove
-			arrId = tileDroppedOn.split('');
-			console.log(arrId);
-			
-			// updates JS board
-			gameBoardArr[arrId[1]][arrId[2]] = cardArr[cardCount];
-			arrTile = gameBoardArr[arrId[1]][arrId[2]];
-			console.log(gameBoardArr); //debug code
-
-			updateBoard(arrTile);
-			monitorMeepSpots(this);
-			
-			//reset of global variables
-			rotateDeg = 0; // move this eventually
-			btnListenersOff();
-			meepleBtnOn();
-
-	}
-	function rotateBtnOn () {
-			rotateDeg = (rotateDeg + 90) % 360;
-			$('.displayCard').css('transform', 'rotate(' + rotateDeg + 'deg)');
-			rotateTileValues();
-	}
-	function rotateTileValues() {		
-		var temp = cardArr[cardCount].top.type;
-		
-		cardArr[cardCount].top.type = cardArr[cardCount].left.type;
-		cardArr[cardCount].left.type = cardArr[cardCount].bottom.type;
-		cardArr[cardCount].bottom.type = cardArr[cardCount].right.type;
-		cardArr[cardCount].right.type = temp;
-	}
-	function updateBoard(arrTile) {
-		//updates HTML board where tile was placed
-		$('#' + tileDroppedOn + ' > .top').text( $('.displayCard > .top').text() );
-		$('#' + tileDroppedOn + ' > .right').text( $('.displayCard > .right').text() );
-		$('#' + tileDroppedOn + ' > .bottom').text( $('.displayCard > .bottom').text() );
-		$('#' + tileDroppedOn + ' > .left').text( $('.displayCard > .left').text() );
-
-		$('.displayCard').remove();
-
-	}
-	function monitorMeepSpots() {
-		$('#' + tileDroppedOn + ' > .top').on('click', reserveMeepSpace);
-		$('#' + tileDroppedOn + ' > .right').on('click', reserveMeepSpace);
-		$('#' + tileDroppedOn + ' > .bottom').on('click', reserveMeepSpace);
-		$('#' + tileDroppedOn + ' > .left').on('click', reserveMeepSpace);			
-	}
-	function reserveMeepSpace(event) {
-		if (tileToMeeple != '') {
-			console.log(tileToMeeple)
-			console.log('should remove something')
-			$(tileToMeeple).text($(tileToMeeple).text());
-		} 
-
-		tileToMeeple = event.target;			
-		console.log(tileToMeeple);
- 		$(tileToMeeple).append('<div class="meepleImage"></div>');
-	}
 	function meepleBtnOn() {
 		$('#meepleBtn').on('click', changeMeepSpace);
 	}
 	function meepleBtnOff() {
 		$('#meepleBtn').off('click', changeMeepSpace);
 	}
-	function changeMeepSpace() {
-		placeMeeple();
+	function submitBtnOn() {
+			// now match cardIndex with currentMove
+			arrId = tileDroppedOn.split('');
+			//console.log(arrId); // debug code
+			//console.log(cardArr[cardCount]); // debug code
+			// updates JS board
+			gameBoardArr[arrId[1]][arrId[2]] = cardArr[cardCount]; 
+			//console.log(gameBoardArr[arrId[1]][arrId[2]]) //debug code
+			//console.log(gameBoardArr); //debug code
+
+			updateBoard(gameBoardArr[arrId[1]][arrId[2]]);
+			monitorMeepPlacementOn(this);
+			
+			//reset of global variables
+			btnListenersOff();
+			meepleBtnOn();
+
+	}
+	function rotateBtnOn () {
+			rotateDeg += 90;
+			$('.displayCard').css('transform', 'rotate(' + rotateDeg + 'deg)');
+			rotateTileValues();
+	}
+	function rotateTileValues() {		
+		var temp = cardArr[cardCount].top.type;
+		//console.log(temp); //debug code
+		cardArr[cardCount].top.type = cardArr[cardCount].left.type;
+		cardArr[cardCount].left.type = cardArr[cardCount].bottom.type;
+		cardArr[cardCount].bottom.type = cardArr[cardCount].right.type;
+		cardArr[cardCount].right.type = temp;
+		//console.log(cardArr[cardCount]); //debug code
+	}
+	function updateBoard(arrTile) {
+		//updates HTML board where tile was placed  ******issue is here with the rotate bug
+		// change .displayCard to gameboardArr (the updated values) 
+		$('#' + tileDroppedOn + ' > .top').text( cardArr[cardCount].top.type );
+		$('#' + tileDroppedOn + ' > .right').text( cardArr[cardCount].right.type );
+		$('#' + tileDroppedOn + ' > .bottom').text( cardArr[cardCount].bottom.type );
+		$('#' + tileDroppedOn + ' > .left').text( cardArr[cardCount].left.type );
+
+		$('.displayCard').remove();
+
+	}
+	function monitorMeepPlacementOn() {
+		$('#' + tileDroppedOn + ' > .top').on('click', reserveMeepSpace);
+		$('#' + tileDroppedOn + ' > .right').on('click', reserveMeepSpace);
+		$('#' + tileDroppedOn + ' > .bottom').on('click', reserveMeepSpace);
+		$('#' + tileDroppedOn + ' > .left').on('click', reserveMeepSpace);			
+	}
+	function monitorMeepPlacementOff() {
 		$('#' + tileDroppedOn + ' > .top').off('click', reserveMeepSpace);
 		$('#' + tileDroppedOn + ' > .right').off('click', reserveMeepSpace);
 		$('#' + tileDroppedOn + ' > .bottom').off('click', reserveMeepSpace);
 		$('#' + tileDroppedOn + ' > .left').off('click', reserveMeepSpace);
+	}
+	function reserveMeepSpace(event) {
+		if (tileToMeeple != '') {
+			//console.log(tileToMeeple) //debug code
+			//console.log('should remove something') // debug code
+			$(tileToMeeple).text($(tileToMeeple).text());
+		} 
 
+		tileToMeeple = event.target;			
+		//console.log(tileToMeeple); // debug code
+ 		$(tileToMeeple).append('<div class="meepleImage"></div>');
+	}
+	function changeMeepSpace() {
+		placeMeeple();
+		monitorMeepPlacementOff();
 
 		updateGameState();
 	}
@@ -269,8 +273,8 @@ $('document').ready(function() {
  		//console.log(arrId); //debug code
 		// add to js board
 		tileMeepled = $(tileToMeeple).attr('class');
-		//console.log(tileMeepled);
-		//console.log(gameBoardArr[arrId[1]][arrId[2]]);
+		//console.log(tileMeepled); //debug code
+		//console.log(gameBoardArr[arrId[1]][arrId[2]]); //debug code
 		gameBoardArr[arrId[1]][arrId[2]][tileMeepled].occupied = true;
 		gameBoardArr[arrId[1]][arrId[2]][tileMeepled].occupant = playerTurn;
 		//console.log(gameBoardArr); //debug code
@@ -280,7 +284,7 @@ $('document').ready(function() {
 	function activateDrop() {
 		$('.square').droppable({ drop: function(event, ui) {
 			tileDroppedOn = $(this).attr('id');
-			console.log('dropped on me at' + tileDroppedOn);
+			console.log('dropped on me at' + tileDroppedOn); // debig code
 			$(this).addClass("ui-state-highlight"); //debug code	
 		}});
 	}
@@ -296,18 +300,18 @@ $('document').ready(function() {
 		}
 		playerTurn = (playerTurn + 1) % 2;
 
-		// resets all global vars
 		meepleBtnOff();
 		resetGlobalVars();
 		updatePlayerInfo();
-		nextCard();
+		showNextCard();
 		btnListenersOn();
+		arrayCheck();
 	}
 	function resetGlobalVars() {
+		rotateDeg = 0;
 		tileToMeeple = '';
 		tileDroppedOn = '';
 		arrId = '';
-		arrTile = '';
 	}
 	function updatePlayerInfo() {
 		$('#pOneScore').text(playerOne.points);
@@ -316,6 +320,77 @@ $('document').ready(function() {
 		$('#pTwoMeeps').text(playerTwo.meeples);
 
 	}
+	//ArrayCheck(); // debug code
+	function arrayCheck() {
+		for (var i = 0; i < ARRAYSIZE; i++) {
+			for (var j = 0; j < ARRAYSIZE; j++) {
+				// must call checkForPair on each side-possible that castle on multiple sides
+				//console.log(gameBoardArr[i][j]); // debug code
+
+				checkTopSide(i, j);
+				checkRightSide(i, j);
+				checkBottomSide(i, j);
+				checkLeftSide(i, j);
+				
+				
+			}
+		}
+		console.log(gameBoardArr) // debug code
+	}
+	function checkTopSide(i, j) {
+		if (gameBoardArr[i][j].top.type === 'castle') {
+			if (gameBoardArr[i - 1][j].bottom.type === 'castle') {
+				gameBoardArr[i][j].top.paired = true;
+				gameBoardArr[i - 1][j].bottom.paired = true;
+			}
+		}
+	}
+	function checkRightSide(i, j) {
+		if (gameBoardArr[i][j].right.type === 'castle') {
+			if (gameBoardArr[i][j + 1].left.type === 'castle') {
+				gameBoardArr[i][j].right.paired = true;
+				gameBoardArr[i][j + 1].left.paired = true;
+			}
+		}
+
+	}
+	function checkBottomSide(i, j) {
+		if (gameBoardArr[i][j].bottom.type === 'castle') {
+			if (gameBoardArr[i + 1][j].top.type === 'castle') {
+				gameBoardArr[i][j].bottom.paired = true;
+				gameBoardArr[i + 1][j].top.paired = true;
+			}
+		}
+	}
+	function checkLeftSide(i, j) {
+		if (gameBoardArr[i][j].left.type === 'castle') {
+			if (gameBoardArr[i][j - 1].right.type === 'castle') {
+				gameBoardArr[i][j].left.paired = true;
+				gameBoardArr[i][j - 1].right.paired = true;
+			}
+		}
+	}
+
+	//debug code
+	// var testObj = { 
+	//  top: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, side: 'top'}, 
+	// right: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, side: 'right'}, 
+	// bottom: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, side: 'bottom'}, 
+	// left: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, side: 'left'}, 
+	// valueType: 'normal', sidesConnect: false}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
