@@ -398,8 +398,7 @@ $('document').ready(function() {
 				} else {
 					playerTwo.points += arrObj[side].pointValue;
 				}
-				console.log(gameBoardArr);
-			}
+ 			}
 		}
 
 	}
@@ -420,6 +419,12 @@ $('document').ready(function() {
 			if (gameBoardArr[i - 1][j].bottom.type === 'castle') {
 				gameBoardArr[i][j].top.paired = true;
 				gameBoardArr[i - 1][j].bottom.paired = true;
+				// if occupied, flips paired castle's occupant to match that of its pair's occupant
+				if (gameBoardArr[i][j].top.occupied) {
+					gameBoardArr[i - 1][j].bottom.occupant = gameBoardArr[i][j].top.occupant;
+				} else if (gameBoardArr[i - 1][j].bottom.occupied) {
+					gameBoardArr[i][j].top.occupant = gameBoardArr[i - 1][j].bottom.occupant;
+				}
 			}
 		}
 	}
@@ -430,9 +435,14 @@ $('document').ready(function() {
 			if (gameBoardArr[i][j + 1].left.type === 'castle') {
 				gameBoardArr[i][j].right.paired = true;
 				gameBoardArr[i][j + 1].left.paired = true;
+				
+				if (gameBoardArr[i][j].right.occupied) {
+					gameBoardArr[i][j + 1].left.occupant = gameBoardArr[i][j].right.occupant;
+				} else if (gameBoardArr[i][j + 1].left.occupied) {
+					gameBoardArr[i][j].right.occupant = gameBoardArr[i][j + 1].left.occupant;
+				}
 			}
 		}
-
 	}
 	function checkBottomSide(i, j) {
 		if (i === 3) {
@@ -441,6 +451,12 @@ $('document').ready(function() {
 			if (gameBoardArr[i + 1][j].top.type === 'castle') {
 				gameBoardArr[i][j].bottom.paired = true;
 				gameBoardArr[i + 1][j].top.paired = true;
+
+				if (gameBoardArr[i][j].bottom.occupied) {
+					gameBoardArr[i + 1][j].top.occupant = gameBoardArr[i][j].bottom.occupant;
+				} else if (gameBoardArr[i + 1][j].top.occupied) {
+					gameBoardArr[i][j].bottom.occupant = gameBoardArr[i + 1][j].top.occupant;
+				}
 			}
 		}
 	}
@@ -451,6 +467,12 @@ $('document').ready(function() {
 			if (gameBoardArr[i][j - 1].right.type === 'castle') {
 				gameBoardArr[i][j].left.paired = true;
 				gameBoardArr[i][j - 1].right.paired = true;
+
+				if (gameBoardArr[i][j].left.occupied) {
+					gameBoardArr[i][j - 1].right.occupant = gameBoardArr[i][j].left.occupant;
+				} else if (gameBoardArr[i][j - 1].right.occupied) {
+					gameBoardArr[i][j].left.occupant = gameBoardArr[i][j - 1].right.occupant;
+				}
 			}
 		}
 	}
