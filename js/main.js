@@ -197,12 +197,7 @@ $('document').ready(function() {
 		$('#submitBtn').off('click', submitBtnOn);
 		$('#rotateBtn').off('click', rotateBtnOn);
 	}
-	function meepleBtnOn() {
-		$('#meepleBtn').on('click', changeMeepSpace);
-	}
-	function meepleBtnOff() {
-		$('#meepleBtn').off('click', changeMeepSpace);
-	}
+
 	function submitBtnOn() {
 			// now match cardIndex with currentMove
 			arrId = tileDroppedOn.split('');
@@ -247,6 +242,15 @@ $('document').ready(function() {
 		$('.displayCard').remove();
 
 	}
+
+// meeple functions START
+
+	function meepleBtnOn() {
+		$('#meepleBtn').on('click', changeMeepSpace);
+	}
+	function meepleBtnOff() {
+		$('#meepleBtn').off('click', changeMeepSpace);
+	}
 	function monitorMeepPlacementOn() {
 		$('#' + tileDroppedOn + ' > .top').on('click', determineMeeplePlacement);
 		$('#' + tileDroppedOn + ' > .right').on('click', determineMeeplePlacement);
@@ -259,8 +263,6 @@ $('document').ready(function() {
 		$('#' + tileDroppedOn + ' > .bottom').off('click', determineMeeplePlacement);
 		$('#' + tileDroppedOn + ' > .left').off('click', determineMeeplePlacement);
 	}
-
-
 	function determineMeeplePlacement(event) {
 		if (playerTurn === 0 && playerOne.meeples < 1) {
 			console.log('no more meeples left :\'\(, click Next');
@@ -269,10 +271,15 @@ $('document').ready(function() {
 			console.log('no more meeples left :\'\(, click Next');
 			monitorMeepPlacementOff();
 	 	} else {
-	 		reserveMeepSpace(event);
-			// check if a space was already reserved, removes prev placed meeple if able
-			
-	 		
+	 		// trying to target placement & check if occupied
+
+ 			castlePairCheck();
+	 		if (gameBoardArr[arrId[1]][arrId[2]][event.target.className].occupied) {
+	 			console.log('aready occupied');
+	 		} else {
+		 		console.log(event.target);
+		 		reserveMeepSpace(event);
+	 		}
 	 	}
 	}
 	function reserveMeepSpace() {
@@ -282,16 +289,14 @@ $('document').ready(function() {
 		tileToMeeple = event.target;
 
 			if (playerTurn === 0) {
-				playerOne.meeples -= 1;
 				$(tileToMeeple).append('<div class="meepleImage meepleBlue"></div>');
 			} else {
-				playerTwo.meeples -= 1;
 				$(tileToMeeple).append('<div class="meepleImage meepleRed"></div>');
 			}
 	}
 	function changeMeepSpace() {
 		if (!tileToMeeple) {
-			updateGameState();
+			updateGameState(); // can you just move this out of the if statement & remove other one?
 		} else {
 			placeMeeple();
 			monitorMeepPlacementOff();
@@ -299,19 +304,26 @@ $('document').ready(function() {
 			updateGameState();
 		}
 	}
-	//
 	function placeMeeple() {
-		// add to html board
- 		//console.log(arrId); //debug code
-		// add to js board
-		tileMeepled = $(tileToMeeple).attr('class');
-		//console.log(tileMeepled); //debug code
-		//console.log(gameBoardArr[arrId[1]][arrId[2]]); //debug code
-		gameBoardArr[arrId[1]][arrId[2]][tileMeepled].occupied = true;
-		gameBoardArr[arrId[1]][arrId[2]][tileMeepled].occupant = playerTurn;
-		//console.log(gameBoardArr); //debug code
+	// add to html board
+		//console.log(arrId); //debug code
+	// add to js board
+	tileMeepled = $(tileToMeeple).attr('class');
+	//console.log(tileMeepled); //debug code
+	//console.log(gameBoardArr[arrId[1]][arrId[2]]); //debug code
+	gameBoardArr[arrId[1]][arrId[2]][tileMeepled].occupied = true;
+	gameBoardArr[arrId[1]][arrId[2]][tileMeepled].occupant = playerTurn;
+	//console.log(gameBoardArr); //debug code
+		if (playerTurn === 0) {
+			playerOne.meeples -= 1;
+		} else {
+			playerTwo.meeples -= 1;
+		}
 
 	}
+
+// meeple functions END
+
 							// droppable object manipulation here!
 	function activateDrop() {
 		$('.square').droppable({ drop: function(event, ui) {
