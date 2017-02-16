@@ -38,12 +38,6 @@ function Tile(name, point) {
 	//completed
 }
 var cardArr = [
-	/*test*/{ top: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
-	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
-	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
-	left: { type: 'castle', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
-	valueType: 'normal', sidesConnect: true, img: 'url("./img/topCastle.png")'},
-
 	{ top: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
 	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
 	bottom: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
@@ -120,25 +114,25 @@ var cardArr = [
 	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
 	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
 	left: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
-	valueType: 'normal', sidesConnect: false},
+	valueType: 'normal', sidesConnect: false, img: 'url("./img/botCastle.png")'},
 
 	{ top: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
 	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
 	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
 	left: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
-	valueType: 'double', sidesConnect: true},
+	valueType: 'double', sidesConnect: true, img: 'url("./img/shieldLeftBotCastle.png")'},
 
 	{ top: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
 	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
 	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
 	left: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
-	valueType: 'double', sidesConnect: true},
+	valueType: 'double', sidesConnect: true, img: 'url("./img/shieldTopBotCastle.png")'},
 
 	{ top: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
 	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
 	bottom: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
 	left: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
-	valueType: 'normal', sidesConnect: false},
+	valueType: 'normal', sidesConnect: false, img: 'url("./img/topCastle.png")'},
 ];
 $('document').ready(function() {
 	//console.log('ready');
@@ -209,8 +203,8 @@ $('document').ready(function() {
 			//console.log(gameBoardArr[arrId[1]][arrId[2]]) //debug code
 			//console.log(gameBoardArr); //debug code
 
-			monitorMeepPlacementOn(this);
 			updateBoard(gameBoardArr[arrId[1]][arrId[2]]);
+			monitorMeepPlacementOn(this);
 
 			//reset of global variables
 			btnListenersOff();
@@ -222,30 +216,35 @@ $('document').ready(function() {
 			$('.displayCard').css('transform', 'rotate(' + rotateDeg + 'deg)');
 			rotateTileValues();
 	}
-	function rotateTileValues() {		
+	function rotateTileValues() {
+	console.log(cardArr[cardCount]);		
 		var temp = cardArr[cardCount].top;
 		//console.log(temp); //debug code
 		cardArr[cardCount].top = cardArr[cardCount].left;
 		cardArr[cardCount].left = cardArr[cardCount].bottom;
 		cardArr[cardCount].bottom = cardArr[cardCount].right;
 		cardArr[cardCount].right = temp;
-		//console.log(cardArr[cardCount]); //debug code
+		console.log(cardArr[cardCount]); //debug code
 	}
 	function updateBoard(arrTile) {
 		//updates HTML board where tile was placed  
 		// change .displayCard to gameBoardArr (the updated values) 
 		$('#' + tileDroppedOn + ' > .top').text( $('.displayCard > .top').text());
-		$('#' + tileDroppedOn + ' > .top').css('transform', 'rotate(' + (-rotateDeg) + 'deg)');
 		$('#' + tileDroppedOn + ' > .right').text( $('.displayCard > .right').text());
-		$('#' + tileDroppedOn + ' > .right').css('transform', 'rotate(' + (-rotateDeg) + 'deg)');
 		$('#' + tileDroppedOn + ' > .bottom').text( $('.displayCard > .bottom').text());
-		$('#' + tileDroppedOn + ' > .bottom').css('transform', 'rotate(' + (-rotateDeg) + 'deg)');
 		$('#' + tileDroppedOn + ' > .left').text( $('.displayCard > .left').text());
+		
+		$('#' + tileDroppedOn + ' > .top').css('transform', 'rotate(' + (-rotateDeg) + 'deg)');
+		$('#' + tileDroppedOn + ' > .right').css('transform', 'rotate(' + (-rotateDeg) + 'deg)');
+		$('#' + tileDroppedOn + ' > .bottom').css('transform', 'rotate(' + (-rotateDeg) + 'deg)');
 		$('#' + tileDroppedOn + ' > .left').css('transform', 'rotate(' + (-rotateDeg) + 'deg)');
 		$('#' + tileDroppedOn).css('background-image', cardArr[cardCount].img); //works, implement later
 		$('#' + tileDroppedOn).css('transform', 'rotate(' + rotateDeg + 'deg)'); //works, implement later
 		$('.displayCard').remove();
+		console.log('b4 castlePairCheck')
 		console.log(gameBoardArr)
+
+		castlePairCheck();
 
 	}
 
@@ -278,8 +277,8 @@ $('document').ready(function() {
 			monitorMeepPlacementOff();
 	 	} else {
 	 		// trying to target placement & check if occupied
-
- 			castlePairCheck();
+	 		console.log(gameBoardArr[arrId[1]][arrId[2]][event.target.className])
+ 			console.log('occupied: ',gameBoardArr[arrId[1]][arrId[2]][event.target.className].occupied)
 	 		if (gameBoardArr[arrId[1]][arrId[2]][event.target.className].occupied) {
 	 			console.log('aready occupied');
 	 		} else {
@@ -325,7 +324,8 @@ $('document').ready(function() {
 		} else {
 			playerTwo.meeples -= 1;
 		}
-
+		console.log('after meeple placed');
+		console.log(gameBoardArr);
 	}
 
 // meeple functions END
@@ -385,6 +385,7 @@ $('document').ready(function() {
 						
 			}
 		}
+		console.log('after castlePairCheck');
 		console.log(gameBoardArr) // debug code
 	}
 	// currently unused, planned for use in castlecompletecheck

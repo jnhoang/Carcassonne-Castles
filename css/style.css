@@ -21,10 +21,8 @@
 .playersBox p {
 	display: inline-block;
 }
-.nextBox * {
-	border: 1px solid red;
-}
 .nextBox {
+	border: 1px solid red;
 	display: flex;
 	justify-content: center;
 	flex-wrap: wrap;
@@ -40,7 +38,6 @@
 	display: flex;
 	height: 100px;
 	width: 100px;
-	border: 1px solid red;
 	transform-origin: 50% 50%;
 	transform: rotate(0deg);
 	transition: transform 300ms ease-in-out;
@@ -67,6 +64,7 @@
 	border: 1px solid black;
 	background-size: cover;
 	background-repeat: no-repeat;
+	border-radius: 2px;
 
 }
 .boxShadow {
