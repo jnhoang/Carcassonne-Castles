@@ -18,11 +18,11 @@ var displayTile = '<div class="tile draggable displayCard"><div class="top"></di
 				  class="left"></div><div class="right"></div><div class="bottom"></div></div>';
 
 var playerOne = {
-	meeples: 1,
+	meeples: 3,
 	points: 0,
 }
 var playerTwo = {
-	meeples: 1,
+	meeples: 3,
 	points: 0,
 }
 function Tile(name, point) {
@@ -248,20 +248,20 @@ $('document').ready(function() {
 
 	}
 	function monitorMeepPlacementOn() {
-		$('#' + tileDroppedOn + ' > .top').on('click', reserveMeepSpace);
-		$('#' + tileDroppedOn + ' > .right').on('click', reserveMeepSpace);
-		$('#' + tileDroppedOn + ' > .bottom').on('click', reserveMeepSpace);
-		$('#' + tileDroppedOn + ' > .left').on('click', reserveMeepSpace);			
+		$('#' + tileDroppedOn + ' > .top').on('click', determineMeeplePlacement);
+		$('#' + tileDroppedOn + ' > .right').on('click', determineMeeplePlacement);
+		$('#' + tileDroppedOn + ' > .bottom').on('click', determineMeeplePlacement);
+		$('#' + tileDroppedOn + ' > .left').on('click', determineMeeplePlacement);			
 	}
 	function monitorMeepPlacementOff() {
-		$('#' + tileDroppedOn + ' > .top').off('click', reserveMeepSpace);
-		$('#' + tileDroppedOn + ' > .right').off('click', reserveMeepSpace);
-		$('#' + tileDroppedOn + ' > .bottom').off('click', reserveMeepSpace);
-		$('#' + tileDroppedOn + ' > .left').off('click', reserveMeepSpace);
+		$('#' + tileDroppedOn + ' > .top').off('click', determineMeeplePlacement);
+		$('#' + tileDroppedOn + ' > .right').off('click', determineMeeplePlacement);
+		$('#' + tileDroppedOn + ' > .bottom').off('click', determineMeeplePlacement);
+		$('#' + tileDroppedOn + ' > .left').off('click', determineMeeplePlacement);
 	}
 
 
-	function reserveMeepSpace(event) {
+	function determineMeeplePlacement(event) {
 		if (playerTurn === 0 && playerOne.meeples < 1) {
 			console.log('no more meeples left :\'\(, click Next');
 			monitorMeepPlacementOff();
@@ -269,21 +269,25 @@ $('document').ready(function() {
 			console.log('no more meeples left :\'\(, click Next');
 			monitorMeepPlacementOff();
 	 	} else {
+	 		reserveMeepSpace(event);
 			// check if a space was already reserved, removes prev placed meeple if able
-			if (tileToMeeple != '') {
-				$(tileToMeeple).text($(tileToMeeple).text());
-			} 
-			// separate function -> PASS EVENT!!!
-			if (playerTurn === 0) {
-				playerOne.meeples -= 1;
-			} else {
-				playerTwo.meeples -= 1;
-			}
-
-			tileToMeeple = event.target;			
-	 		$(tileToMeeple).append('<div class="meepleImage"></div>');
+			
 	 		
 	 	}
+	}
+	function reserveMeepSpace() {
+		if (tileToMeeple != '') {
+			$(tileToMeeple).text($(tileToMeeple).text());
+		} 
+		tileToMeeple = event.target;
+
+			if (playerTurn === 0) {
+				playerOne.meeples -= 1;
+				$(tileToMeeple).append('<div class="meepleImage meepleBlue"></div>');
+			} else {
+				playerTwo.meeples -= 1;
+				$(tileToMeeple).append('<div class="meepleImage meepleRed"></div>');
+			}
 	}
 	function changeMeepSpace() {
 		if (!tileToMeeple) {

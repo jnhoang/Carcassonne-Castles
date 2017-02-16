@@ -80,9 +80,15 @@
 	box-sizing: border-box;
 }
 .meepleImage {
-	background-image: url('./../img/meepleRed.png');
 	height: 25px;
 	width: 25px;
 	background-size: contain;
 	display: inline-block;
+}
+.meepleRed {
+	background-image: url('./../img/meepleRed.png');
+}
+.meepleBlue {
+	background-image: url('./../img/meepleBlue.png');
+
 }
