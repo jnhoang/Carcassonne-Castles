@@ -44,9 +44,9 @@
 	transform-origin: 50% 50%;
 	transform: rotate(0deg);
 	transition: transform 300ms ease-in-out;
+	z-index: 1;
 }
-.rotate {
-}
+
 #gameBoard {
 	width: 50%;
 	height: auto;
@@ -61,12 +61,13 @@
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: center;
-	margin: 10px;
+	margin: 2px;
 	height: 100px;
 	width: 100px;
 	border: 1px solid black;
-	background-size: contain;
+	background-size: cover;
 	background-repeat: no-repeat;
+
 }
 .boxShadow {
 	box-shadow: inset 0px 1px 10px black;	
@@ -74,10 +75,12 @@
 .top, .bottom {
 	width: 100%;
 	box-sizing: border-box;
+	transform-origin: 50% 50%;
 }
 .left, .right {
 	width: 50%;
 	box-sizing: border-box;
+	transform-origin: 50% 50%;
 }
 .meepleImage {
 	height: 25px;
