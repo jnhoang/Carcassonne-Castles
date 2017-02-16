@@ -478,7 +478,7 @@ $('document').ready(function() {
 		} else if (leftObj.left.type === 'castle') {
 			if (rightObj.right.type === 'castle') {
 				leftObj.left.paired = true;
-				rightObj].right.paired = true;
+				rightObj.right.paired = true;
 
 				if (leftObj.left.occupied) {
 					rightObj.right.occupied = leftObj.left.occupied;
