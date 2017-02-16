@@ -413,32 +413,32 @@ $('document').ready(function() {
 
 	}
 	function checkTopSide(i, j) {
-		var topObj = gameBoardArr[i][j];
-		var botObj = gameBoardArr[i - 1][j];
 		if (i === 0) {
 			return;
-		} else if (topObj.top.type === 'castle') {
-			if (botObj.bottom.type === 'castle') {
-				topObj.top.paired = true;
-				botObj.bottom.paired = true;
-				// if occupied, flips paired castle's occupant to match that of its pair's occupant
-				if (topObj.top.occupied) {
-					botObj.bottom.occupied = topObj.top.occupied;
-					botObj.bottom.occupant = topObj.top.occupant;
-				} else if (botObj.bottom.occupied) {
-					topObj.top.occupied = botObj.bottom.occupied;
-					topObj.top.occupant = botObj.bottom.occupant;
-				}
+		} else if (gameBoardArr[i][j].top.type === 'castle' && gameBoardArr[i - 1][j].bottom.type === 'castle') {
+			var topObj = gameBoardArr[i][j];
+			var botObj = gameBoardArr[i - 1][j];
+			
+			topObj.top.paired = true;
+			botObj.bottom.paired = true;
+			// if occupied, flips paired castle's occupant to match that of its pair's occupant
+			if (topObj.top.occupied) {
+				botObj.bottom.occupied = topObj.top.occupied;
+				botObj.bottom.occupant = topObj.top.occupant;
+			} else if (botObj.bottom.occupied) {
+				topObj.top.occupied = botObj.bottom.occupied;
+				topObj.top.occupant = botObj.bottom.occupant;
 			}
 		}
 	}
 	function checkRightSide(i, j) {
-		var rightObj = gameBoardArr[i][j];
-		var leftObj = gameBoardArr[i][j + 1];
 
 		if (j === 3) {
 			return;
-		} else if (rightObj.right.type === 'castle' && leftObj.left.type === 'castle') {
+		} else if (gameBoardArr[i][j].right.type === 'castle' && gameBoardArr[i][j + 1].left.type === 'castle') {
+			var rightObj = gameBoardArr[i][j];
+			var leftObj = gameBoardArr[i][j + 1];
+			
 			rightObj.right.paired = true;
 			leftObj.left.paired = true;
 				
@@ -452,45 +452,43 @@ $('document').ready(function() {
 		}
 	}
 	function checkBottomSide(i, j) {
-		var botObj = gameBoardArr[i][j];
-		var topObj = gameBoardArr[i + 1][j];
 		if (i === 3) {
 			return;
-		} else if (botObj.bottom.type === 'castle') {
-			if (topObj.top.type === 'castle') {
-				botObj.bottom.paired = true;
-				topObj.top.paired = true;
+		} else if (gameBoardArr[i][j].bottom.type === 'castle' && gameBoardArr[i + 1][j].top.type === 'castle') {
+			var botObj = gameBoardArr[i][j];
+			var topObj = gameBoardArr[i + 1][j];
+			
+			botObj.bottom.paired = true;
+			topObj.top.paired = true;
 
-				if (botObj.bottom.occupied) {
-					topObj.top.occupied = botObj.bottom.occupied;
-					topObj.top.occupant = botObj.bottom.occupant;
-				} else if (topObj.top.occupied) {
-					botObj.bottom.occupant = topObj.top.occupant;
-				}
+			if (botObj.bottom.occupied) {
+				topObj.top.occupied = botObj.bottom.occupied;
+				topObj.top.occupant = botObj.bottom.occupant;
+			} else if (topObj.top.occupied) {
+				botObj.bottom.occupant = topObj.top.occupant;
 			}
+			
 		}
 	}
 	function checkLeftSide(i, j) {
-		var leftObj = gameBoardArr[i][j];
-		var rightObj = gameBoardArr[i][j - 1];
 		if (j === 0) {
 			return;
-		} else if (leftObj.left.type === 'castle') {
-			if (rightObj.right.type === 'castle') {
-				leftObj.left.paired = true;
-				rightObj.right.paired = true;
+		} else if (gameBoardArr[i][j].left.type === 'castle' && gameBoardArr[i][j - 1].right.type === 'castle') {
+			var leftObj = gameBoardArr[i][j];
+			var rightObj = gameBoardArr[i][j - 1];
 
-				if (leftObj.left.occupied) {
-					rightObj.right.occupied = leftObj.left.occupied;
-					rightObj.right.occupant = leftObj.left.occupant;
-				} else if (rightObj.right.occupied) {
-					leftObj.left.occupied = rightObj.right.occupied;
-					leftObj.left.occupant = rightObj.right.occupant;
-				}
+			leftObj.left.paired = true;
+			rightObj.right.paired = true;
+
+			if (leftObj.left.occupied) {
+				rightObj.right.occupied = leftObj.left.occupied;
+				rightObj.right.occupant = leftObj.left.occupant;
+			} else if (rightObj.right.occupied) {
+				leftObj.left.occupied = rightObj.right.occupied;
+				leftObj.left.occupant = rightObj.right.occupant;
 			}
 		}
 	}
-
 	//debug code
 	// var testObj = { 
 	//  top: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, side: 'top'}, 
