@@ -18,11 +18,11 @@ var displayTile = '<div class="tile draggable displayCard"><div class="top"></di
 				  class="left"></div><div class="right"></div><div class="bottom"></div></div>';
 
 var playerOne = {
-	meeples: 7,
+	meeples: 1,
 	points: 0,
 }
 var playerTwo = {
-	meeples: 7,
+	meeples: 1,
 	points: 0,
 }
 function Tile(name, point) {
@@ -185,6 +185,7 @@ $('document').ready(function() {
 		$('.displayCard > .right').text(value.right.type);
 		$('.displayCard > .bottom').text(value.bottom.type);
 		$('.displayCard > .left').text(value.left.type);
+		// add one for image
 
 		$('.draggable').draggable({ snap: ".square"});
 	}
@@ -212,9 +213,9 @@ $('document').ready(function() {
 			//console.log(gameBoardArr[arrId[1]][arrId[2]]) //debug code
 			//console.log(gameBoardArr); //debug code
 
-			updateBoard(gameBoardArr[arrId[1]][arrId[2]]);
 			monitorMeepPlacementOn(this);
-			
+			updateBoard(gameBoardArr[arrId[1]][arrId[2]]);
+
 			//reset of global variables
 			btnListenersOff();
 			meepleBtnOn();
@@ -235,7 +236,7 @@ $('document').ready(function() {
 		//console.log(cardArr[cardCount]); //debug code
 	}
 	function updateBoard(arrTile) {
-		//updates HTML board where tile was placed  ******issue is here with the rotate bug
+		//updates HTML board where tile was placed  
 		// change .displayCard to gameBoardArr (the updated values) 
 		$('#' + tileDroppedOn + ' > .top').text( cardArr[cardCount].top.type );
 		$('#' + tileDroppedOn + ' > .right').text( cardArr[cardCount].right.type );
@@ -258,23 +259,43 @@ $('document').ready(function() {
 		$('#' + tileDroppedOn + ' > .bottom').off('click', reserveMeepSpace);
 		$('#' + tileDroppedOn + ' > .left').off('click', reserveMeepSpace);
 	}
-	function reserveMeepSpace(event) {
-		if (tileToMeeple != '') {
-			//console.log(tileToMeeple) //debug code
-			//console.log('should remove something') // debug code
-			$(tileToMeeple).text($(tileToMeeple).text());
-		} 
 
-		tileToMeeple = event.target;			
-		//console.log(tileToMeeple); // debug code
- 		$(tileToMeeple).append('<div class="meepleImage"></div>');
+
+	function reserveMeepSpace(event) {
+		if (playerTurn === 0 && playerOne.meeples < 1) {
+			console.log('no more meeples left :\'\(, click Next');
+			monitorMeepPlacementOff();
+		} else if (playerTurn === 1 && playerTwo.meeples < 1){
+			console.log('no more meeples left :\'\(, click Next');
+			monitorMeepPlacementOff();
+	 	} else {
+			// check if a space was already reserved, removes prev placed meeple if able
+			if (tileToMeeple != '') {
+				$(tileToMeeple).text($(tileToMeeple).text());
+			} 
+			// separate function -> PASS EVENT!!!
+			if (playerTurn === 0) {
+				playerOne.meeples -= 1;
+			} else {
+				playerTwo.meeples -= 1;
+			}
+
+			tileToMeeple = event.target;			
+	 		$(tileToMeeple).append('<div class="meepleImage"></div>');
+	 		
+	 	}
 	}
 	function changeMeepSpace() {
-		placeMeeple();
-		monitorMeepPlacementOff();
+		if (!tileToMeeple) {
+			updateGameState();
+		} else {
+			placeMeeple();
+			monitorMeepPlacementOff();
 
-		updateGameState();
+			updateGameState();
+		}
 	}
+	//
 	function placeMeeple() {
 		// add to html board
  		//console.log(arrId); //debug code
@@ -312,11 +333,6 @@ $('document').ready(function() {
 		btnListenersOn();
 	}
 	function updatePlayerTurn() {
-		if (playerTurn === 0) {
-			playerOne.meeples -= 1;
-		} else {
-			playerTwo.meeples -= 1;
-		}
 		playerTurn = (playerTurn + 1) % 2;
 	}
 	function resetGlobalVars() {
@@ -395,9 +411,9 @@ $('document').ready(function() {
 			console.log(side + ': castle complete'); //debug code
 			if (arrObj[side].occupied) {
 				if (arrObj[side].occupant === 0) {
-					playerOne.points += arrObj[side].pointValue;
+					playerOne.points += (arrObj[side].pointValue * 2);
 				} else {
-					playerTwo.points += arrObj[side].pointValue;
+					playerTwo.points += (arrObj[side].pointValue * 2);
 				}
  			}
 		}
@@ -466,7 +482,9 @@ $('document').ready(function() {
 				topObj.top.occupied = botObj.bottom.occupied;
 				topObj.top.occupant = botObj.bottom.occupant;
 			} else if (topObj.top.occupied) {
+				botObj.bottom.occupied = topObj.top.occupied;
 				botObj.bottom.occupant = topObj.top.occupant;
+
 			}
 			
 		}
