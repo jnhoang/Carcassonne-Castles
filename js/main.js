@@ -42,7 +42,7 @@ var cardArr = [
 	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
 	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
 	left: { type: 'castle', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
-	valueType: 'normal', sidesConnect: true},
+	valueType: 'normal', sidesConnect: true, /*img: 'url("./img/topC.png")'*/},
 
 	{ top: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
 	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
@@ -173,7 +173,7 @@ $('document').ready(function() {
 	}
 	function addTile(rowNumber) {
 		for (var i = 0; i < ARRAYSIZE; i++) {
-			var tileSquare = '<div class="tile square ui-droppable" id="n' + rowNumber + '' + i + '">\
+			var tileSquare = '<div class="tile square ui-droppable boxShadow" id="n' + rowNumber + '' + i + '">\
 							  <div class="top">top</div><div class="left">left</div><div class="right">\
 							  right</div><div class="bottom">bottom</div></div>';
 			$('.row' + rowNumber).append(tileSquare);
@@ -241,6 +241,7 @@ $('document').ready(function() {
 		$('#' + tileDroppedOn + ' > .right').text( cardArr[cardCount].right.type );
 		$('#' + tileDroppedOn + ' > .bottom').text( cardArr[cardCount].bottom.type );
 		$('#' + tileDroppedOn + ' > .left').text( cardArr[cardCount].left.type );
+		//$('#' + tileDroppedOn).css('background-image', cardArr[cardCount].img); //works, implement later
 
 		$('.displayCard').remove();
 
@@ -290,7 +291,7 @@ $('document').ready(function() {
 	function activateDrop() {
 		$('.square').droppable({ drop: function(event, ui) {
 			tileDroppedOn = $(this).attr('id');
-			console.log('dropped on me at' + tileDroppedOn); // debig code
+			$(this).removeClass('boxShadow');
 			$(this).addClass("ui-state-highlight"); //debug code	
 		}});
 	}
