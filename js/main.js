@@ -38,6 +38,12 @@ function Tile(name, point) {
 	//completed
 }
 var cardArr = [
+	/*test*/{ top: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
+	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
+	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
+	left: { type: 'castle', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
+	valueType: 'normal', sidesConnect: true},
+
 	{ top: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
 	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
 	bottom: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
@@ -230,7 +236,7 @@ $('document').ready(function() {
 	}
 	function updateBoard(arrTile) {
 		//updates HTML board where tile was placed  ******issue is here with the rotate bug
-		// change .displayCard to gameboardArr (the updated values) 
+		// change .displayCard to gameBoardArr (the updated values) 
 		$('#' + tileDroppedOn + ' > .top').text( cardArr[cardCount].top.type );
 		$('#' + tileDroppedOn + ' > .right').text( cardArr[cardCount].right.type );
 		$('#' + tileDroppedOn + ' > .bottom').text( cardArr[cardCount].bottom.type );
@@ -300,12 +306,14 @@ $('document').ready(function() {
 		}
 		playerTurn = (playerTurn + 1) % 2;
 
+		castlePairCheck();
+		castleCompleteCheck();
+
 		meepleBtnOff();
 		resetGlobalVars();
 		updatePlayerInfo();
 		showNextCard();
 		btnListenersOn();
-		arrayCheck();
 	}
 	function resetGlobalVars() {
 		rotateDeg = 0;
@@ -321,7 +329,9 @@ $('document').ready(function() {
 
 	}
 	//ArrayCheck(); // debug code
-	function arrayCheck() {
+
+	// checks if castles are paired and changes side.occupied = true
+	function castlePairCheck() {
 		for (var i = 0; i < ARRAYSIZE; i++) {
 			for (var j = 0; j < ARRAYSIZE; j++) {
 				// must call checkForPair on each side-possible that castle on multiple sides
@@ -331,14 +341,76 @@ $('document').ready(function() {
 				checkRightSide(i, j);
 				checkBottomSide(i, j);
 				checkLeftSide(i, j);
-				
-				
+						
 			}
 		}
 		console.log(gameBoardArr) // debug code
 	}
+	function tileCastleCheck(array) {
+		for (var i = 0; i < array.length; i++) {
+			if (array[i].occupied === false) {
+				return false;
+			}
+		}
+		return true;
+	}
+	function castleCompleteCheck() {
+		for (var i = 0; i < ARRAYSIZE; i++) {
+			for (var j = 0; j < ARRAYSIZE; j++) {
+				var castleArr = [];
+				var arrObj = gameBoardArr[i][j];
+				// console.log(arrObj); //debug code
+
+			// check squares that have multi-sides that are connected
+				// checks if a tile has > 1 castle side
+				if (arrObj.sidesConnect === true) {
+					// for tile, find all sides with castle & adds them to the array
+					lookForCastleSides(arrObj, castleArr);
+
+				} else {
+
+			// check all other squares
+
+					checkCompleteCastle(arrObj, 'top');
+					checkCompleteCastle(arrObj, 'right');
+					checkCompleteCastle(arrObj, 'bottom');
+					checkCompleteCastle(arrObj, 'left');
+
+				}
+
+
+				if (castleArr.length > 0) {
+					//console.log(castleArr);
+				}
+
+
+			}
+		}
+	}
+	function checkCompleteCastle(arrObj, side) {
+		if (arrObj[side].paired && arrObj[side].complete === false) {
+			arrObj[side].complete = true;
+			console.log(side + ': castle complete'); //debug code
+			if (arrObj[side].occupied) {
+				// add points
+			}
+		}
+
+	}
+	function lookForCastleSides(arrObj, castleArr) {
+		for (sides in arrObj) {
+			for (types in arrObj[sides]) {
+				if (arrObj[sides][types] === 'castle') {
+					castleArr.push(arrObj[sides]);
+				}
+			}
+		}
+
+	}
 	function checkTopSide(i, j) {
-		if (gameBoardArr[i][j].top.type === 'castle') {
+		if (i === 0) {
+			return;
+		} else if (gameBoardArr[i][j].top.type === 'castle') {
 			if (gameBoardArr[i - 1][j].bottom.type === 'castle') {
 				gameBoardArr[i][j].top.paired = true;
 				gameBoardArr[i - 1][j].bottom.paired = true;
@@ -346,7 +418,9 @@ $('document').ready(function() {
 		}
 	}
 	function checkRightSide(i, j) {
-		if (gameBoardArr[i][j].right.type === 'castle') {
+		if (j === 3) {
+			return;
+		} else if (gameBoardArr[i][j].right.type === 'castle') {
 			if (gameBoardArr[i][j + 1].left.type === 'castle') {
 				gameBoardArr[i][j].right.paired = true;
 				gameBoardArr[i][j + 1].left.paired = true;
@@ -355,7 +429,9 @@ $('document').ready(function() {
 
 	}
 	function checkBottomSide(i, j) {
-		if (gameBoardArr[i][j].bottom.type === 'castle') {
+		if (i === 3) {
+			return;
+		} else if (gameBoardArr[i][j].bottom.type === 'castle') {
 			if (gameBoardArr[i + 1][j].top.type === 'castle') {
 				gameBoardArr[i][j].bottom.paired = true;
 				gameBoardArr[i + 1][j].top.paired = true;
@@ -363,7 +439,9 @@ $('document').ready(function() {
 		}
 	}
 	function checkLeftSide(i, j) {
-		if (gameBoardArr[i][j].left.type === 'castle') {
+		if (j === 0) {
+			return;
+		} else if (gameBoardArr[i][j].left.type === 'castle') {
 			if (gameBoardArr[i][j - 1].right.type === 'castle') {
 				gameBoardArr[i][j].left.paired = true;
 				gameBoardArr[i][j - 1].right.paired = true;
