@@ -226,12 +226,12 @@ $('document').ready(function() {
 			rotateTileValues();
 	}
 	function rotateTileValues() {		
-		var temp = cardArr[cardCount].top.type;
+		var temp = cardArr[cardCount].top;
 		//console.log(temp); //debug code
-		cardArr[cardCount].top.type = cardArr[cardCount].left.type;
-		cardArr[cardCount].left.type = cardArr[cardCount].bottom.type;
-		cardArr[cardCount].bottom.type = cardArr[cardCount].right.type;
-		cardArr[cardCount].right.type = temp;
+		cardArr[cardCount].top = cardArr[cardCount].left;
+		cardArr[cardCount].left = cardArr[cardCount].bottom;
+		cardArr[cardCount].bottom = cardArr[cardCount].right;
+		cardArr[cardCount].right = temp;
 		//console.log(cardArr[cardCount]); //debug code
 	}
 	function updateBoard(arrTile) {
@@ -299,12 +299,7 @@ $('document').ready(function() {
 		$('.nextBox').append(displayTile);
 		cardCount += 1;
 		
-		if (playerTurn === 0) {
-			playerOne.meeples -= 1;
-		} else {
-			playerTwo.meeples -= 1;
-		}
-		playerTurn = (playerTurn + 1) % 2;
+		updatePlayerTurn();
 
 		castlePairCheck();
 		castleCompleteCheck();
@@ -314,6 +309,14 @@ $('document').ready(function() {
 		updatePlayerInfo();
 		showNextCard();
 		btnListenersOn();
+	}
+	function updatePlayerTurn() {
+		if (playerTurn === 0) {
+			playerOne.meeples -= 1;
+		} else {
+			playerTwo.meeples -= 1;
+		}
+		playerTurn = (playerTurn + 1) % 2;
 	}
 	function resetGlobalVars() {
 		rotateDeg = 0;
@@ -346,6 +349,7 @@ $('document').ready(function() {
 		}
 		console.log(gameBoardArr) // debug code
 	}
+	// currently unused, planned for use in castlecompletecheck
 	function tileCastleCheck(array) {
 		for (var i = 0; i < array.length; i++) {
 			if (array[i].occupied === false) {
@@ -368,14 +372,11 @@ $('document').ready(function() {
 					lookForCastleSides(arrObj, castleArr);
 
 				} else {
-
-			// check all other squares
-
+					// check all other squares
 					checkCompleteCastle(arrObj, 'top');
 					checkCompleteCastle(arrObj, 'right');
 					checkCompleteCastle(arrObj, 'bottom');
 					checkCompleteCastle(arrObj, 'left');
-
 				}
 
 
@@ -392,7 +393,12 @@ $('document').ready(function() {
 			arrObj[side].complete = true;
 			console.log(side + ': castle complete'); //debug code
 			if (arrObj[side].occupied) {
-				// add points
+				if (arrObj[side].occupant === 0) {
+					playerOne.points += arrObj[side].pointValue;
+				} else {
+					playerTwo.points += arrObj[side].pointValue;
+				}
+				console.log(gameBoardArr);
 			}
 		}
 
