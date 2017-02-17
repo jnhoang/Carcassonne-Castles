@@ -1,5 +1,4 @@
 var ARRAYSIZE = 4;
-var CARDSIDES = 4;
 
 var cardCount = 0;
 var playerTurn = 0;
@@ -272,6 +271,7 @@ $('document').ready(function() {
 		$('#' + tileDroppedOn + ' > .left').off('click', determineMeeplePlacement);
 	}
 	function determineMeeplePlacement(event) {
+		console.log(event.target.className)
 		if (playerTurn === 0 && playerOne.meeples < 1) {
 			console.log('no more meeples left :\'\(, click Next');
 			monitorMeepPlacementOff();
@@ -288,6 +288,7 @@ $('document').ready(function() {
 		 		reserveMeepSpace(event);
 	 		}
 	 	}
+	 	console.log(gameBoardArr)
 	}
 	function reserveMeepSpace() {
 		if (tileToMeeple != '') {
