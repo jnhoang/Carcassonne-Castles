@@ -38,12 +38,18 @@
 	display: flex;
 	height: 100px;
 	width: 100px;
-	transform-origin: 50% 50%;
-	transform: rotate(0deg);
-	transition: transform 300ms ease-in-out;
 	z-index: 1;
 }
-
+.imgBox {
+	height: 100px;
+	width: 100px;
+	position: absolute;
+ 	transform: rotate(0deg);
+	background-size: contain;
+	background-size: cover;
+	background-repeat: no-repeat;
+	z-index: -1;
+}
 #gameBoard {
 	width: 50%;
 	height: auto;
@@ -62,29 +68,29 @@
 	height: 100px;
 	width: 100px;
 	border: 1px solid black;
-	background-size: cover;
-	background-repeat: no-repeat;
 	border-radius: 2px;
 
 }
 .boxShadow {
 	box-shadow: inset 0px 1px 10px black;	
 }
+
 .top, .bottom {
 	width: 100%;
 	box-sizing: border-box;
-	transform-origin: 50% 50%;
+
 }
 .left, .right {
 	width: 50%;
 	box-sizing: border-box;
-	transform-origin: 50% 50%;
+
 }
 .meepleImage {
 	height: 25px;
 	width: 25px;
 	background-size: contain;
 	display: inline-block;
+	z-index: 1;
 }
 .meepleRed {
 	background-image: url('./../img/meepleRed.png');

@@ -14,7 +14,7 @@ var arrId;
 var tileToMeeple = '';
 var rotateDeg = 0;
 
-var displayTile = '<div class="tile draggable displayCard"><div class="top"></div><div \
+var displayTile = '<div class="tile draggable displayCard"><div class="imgBox"></div><div class="top"></div><div \
 				  class="left"></div><div class="right"></div><div class="bottom"></div></div>';
 
 var playerOne = {
@@ -96,19 +96,19 @@ var cardArr = [
 	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
 	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
 	left: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
-	valueType: 'normal', sidesConnect: true, img: 'url("./img/leftTopBot.png")'},
+	valueType: 'normal', sidesConnect: true, img: 'url("./img/leftTopBotCastle.png")'},
 
 	{ top: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
 	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
 	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
 	left: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
-	valueType: 'normal', sidesConnect: true, img: 'url("./img/leftTopBot.png")'},
+	valueType: 'normal', sidesConnect: true, img: 'url("./img/leftTopBotCastle.png")'},
 
 	{ top: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
 	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
 	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
 	left: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
-	valueType: 'normal', sidesConnect: false, img: 'url("./img/sepTopBot.png")'},	
+	valueType: 'normal', sidesConnect: false, img: 'url("./img/sepTopBotCastle.png")'},	
 
 	{ top: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
 	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
@@ -168,8 +168,8 @@ $('document').ready(function() {
 	function addTile(rowNumber) {
 		for (var i = 0; i < ARRAYSIZE; i++) {
 			var tileSquare = '<div class="tile square ui-droppable boxShadow" id="n' + rowNumber + '' + i + '">\
-							  <div class="top">top</div><div class="left">left</div><div class="right">\
-							  right</div><div class="bottom">bottom</div></div>';
+							  <div class="imgBox"></div><div class="top">top</div><div class="left">left</div>\
+							  <div class="right">right</div><div class="bottom">bottom</div></div>';
 			$('.row' + rowNumber).append(tileSquare);
 		}
 	}
@@ -179,7 +179,7 @@ $('document').ready(function() {
 		$('.displayCard > .right').text(value.right.type);
 		$('.displayCard > .bottom').text(value.bottom.type);
 		$('.displayCard > .left').text(value.left.type);
-		$('.displayCard').css('background-image', cardArr[cardCount].img);
+		$('.displayCard > .imgBox').css('background-image', cardArr[cardCount].img);
 
 
 		$('.draggable').draggable({ snap: ".square"});
@@ -212,19 +212,27 @@ $('document').ready(function() {
 
 	}
 	function rotateBtnOn () {
+			// HTML side
 			rotateDeg += 90;
-			$('.displayCard').css('transform', 'rotate(' + rotateDeg + 'deg)');
+			$('.displayCard > .imgBox').css('transform', 'rotate(' + rotateDeg + 'deg)');
+
 			rotateTileValues();
 	}
 	function rotateTileValues() {
-	console.log(cardArr[cardCount]);		
+		// JS side
 		var temp = cardArr[cardCount].top;
-		//console.log(temp); //debug code
 		cardArr[cardCount].top = cardArr[cardCount].left;
 		cardArr[cardCount].left = cardArr[cardCount].bottom;
 		cardArr[cardCount].bottom = cardArr[cardCount].right;
 		cardArr[cardCount].right = temp;
-		console.log(cardArr[cardCount]); //debug code
+
+		// HTML side
+		temp = $('.displayCard > .top').text();
+		$('.displayCard > .top').text($('.displayCard > .left').text());
+		$('.displayCard > .left').text($('.displayCard > .bottom').text());
+		$('.displayCard > .bottom').text($('.displayCard > .right').text());
+		$('.displayCard > .right').text(temp);
+
 	}
 	function updateBoard(arrTile) {
 		//updates HTML board where tile was placed  
@@ -233,13 +241,11 @@ $('document').ready(function() {
 		$('#' + tileDroppedOn + ' > .right').text( $('.displayCard > .right').text());
 		$('#' + tileDroppedOn + ' > .bottom').text( $('.displayCard > .bottom').text());
 		$('#' + tileDroppedOn + ' > .left').text( $('.displayCard > .left').text());
-		
-		$('#' + tileDroppedOn + ' > .top').css('transform', 'rotate(' + (-rotateDeg) + 'deg)');
-		$('#' + tileDroppedOn + ' > .right').css('transform', 'rotate(' + (-rotateDeg) + 'deg)');
-		$('#' + tileDroppedOn + ' > .bottom').css('transform', 'rotate(' + (-rotateDeg) + 'deg)');
-		$('#' + tileDroppedOn + ' > .left').css('transform', 'rotate(' + (-rotateDeg) + 'deg)');
-		$('#' + tileDroppedOn).css('background-image', cardArr[cardCount].img); //works, implement later
-		$('#' + tileDroppedOn).css('transform', 'rotate(' + rotateDeg + 'deg)'); //works, implement later
+		$('#' + tileDroppedOn + ' > .imgBox').css('background-image', cardArr[cardCount].img);
+		console.log(rotateDeg)
+		$('#' + tileDroppedOn + ' > .imgBox').css('transform', 'rotate(' + rotateDeg + 'deg)');
+
+
 		$('.displayCard').remove();
 		console.log('b4 castlePairCheck')
 		console.log(gameBoardArr)
@@ -277,8 +283,6 @@ $('document').ready(function() {
 			monitorMeepPlacementOff();
 	 	} else {
 	 		// trying to target placement & check if occupied
-	 		console.log(gameBoardArr[arrId[1]][arrId[2]][event.target.className])
- 			console.log('occupied: ',gameBoardArr[arrId[1]][arrId[2]][event.target.className].occupied)
 	 		if (gameBoardArr[arrId[1]][arrId[2]][event.target.className].occupied) {
 	 			console.log('aready occupied');
 	 		} else {
@@ -311,21 +315,16 @@ $('document').ready(function() {
 	}
 	function placeMeeple() {
 	// add to html board
-		//console.log(arrId); //debug code
+
 	// add to js board
 	tileMeepled = $(tileToMeeple).attr('class');
-	//console.log(tileMeepled); //debug code
-	//console.log(gameBoardArr[arrId[1]][arrId[2]]); //debug code
 	gameBoardArr[arrId[1]][arrId[2]][tileMeepled].occupied = true;
 	gameBoardArr[arrId[1]][arrId[2]][tileMeepled].occupant = playerTurn;
-	//console.log(gameBoardArr); //debug code
 		if (playerTurn === 0) {
 			playerOne.meeples -= 1;
 		} else {
 			playerTwo.meeples -= 1;
 		}
-		console.log('after meeple placed');
-		console.log(gameBoardArr);
 	}
 
 // meeple functions END
@@ -376,7 +375,6 @@ $('document').ready(function() {
 		for (var i = 0; i < ARRAYSIZE; i++) {
 			for (var j = 0; j < ARRAYSIZE; j++) {
 				// must call checkForPair on each side-possible that castle on multiple sides
-				//console.log(gameBoardArr[i][j]); // debug code
 
 				checkTopSide(i, j);
 				checkRightSide(i, j);
@@ -385,8 +383,6 @@ $('document').ready(function() {
 						
 			}
 		}
-		console.log('after castlePairCheck');
-		console.log(gameBoardArr) // debug code
 	}
 	// currently unused, planned for use in castlecompletecheck
 	function tileCastleCheck(array) {
@@ -402,7 +398,6 @@ $('document').ready(function() {
 			for (var j = 0; j < ARRAYSIZE; j++) {
 				var castleArr = [];
 				var arrObj = gameBoardArr[i][j];
-				// console.log(arrObj); //debug code
 
 			// check squares that have multi-sides that are connected
 				// checks if a tile has > 1 castle side
