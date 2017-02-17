@@ -194,15 +194,15 @@ $('document').ready(function() {
 	}
 
 	function submitBtnOn() {
-			// now match cardIndex with currentMove
-			arrId = tileDroppedOn.split('');
 			// updates JS board
+			arrId = tileDroppedOn.split('');
 			gameBoardArr[arrId[1]][arrId[2]] = cardArr[cardCount]; 
 
 			updateBoard(gameBoardArr[arrId[1]][arrId[2]]);
+
 			monitorMeepPlacementOn(this);
 
-			//reset of global variables
+			// changes what buttons are listening
 			btnListenersOff();
 			meepleBtnOn();
 
@@ -220,6 +220,12 @@ $('document').ready(function() {
 		$('.displayCard').remove();
 
 		castlePairCheck();
+		checkCastleComplete();
+
+
+		updatePlayerInfo();
+
+
 	}
 	function rotateBtnOn () {
 			// HTML side
@@ -279,7 +285,6 @@ $('document').ready(function() {
 	 		} else if (gameBoardArr[arrId[1]][arrId[2]][event.target.className].type === 'grass') {
 	 			console.log('get off my lawn! Meeples can\' be placed on grass');
 	 		} else{
-		 		console.log(event.target);
 		 		reserveMeepSpace(event);
 	 		}
 	 	}
@@ -337,11 +342,9 @@ $('document').ready(function() {
 		updatePlayerTurn();
 
 		castlePairCheck();
-		castleCompleteCheck();
 
 		meepleBtnOff();
 		resetGlobalVars();
-		updatePlayerInfo();
 		showNextCard();
 		btnListenersOn();
 	}
@@ -377,7 +380,7 @@ $('document').ready(function() {
 			}
 		}
 	}
-	// currently unused, planned for use in castlecompletecheck
+	// currently unused, planned for use in checkCastlecomplete
 	function tileCastleCheck(array) {
 		for (var i = 0; i < array.length; i++) {
 			if (array[i].occupied === false) {
@@ -386,7 +389,7 @@ $('document').ready(function() {
 		}
 		return true;
 	}
-	function castleCompleteCheck() {
+	function checkCastleComplete() {
 		for (var i = 0; i < ARRAYSIZE; i++) {
 			for (var j = 0; j < ARRAYSIZE; j++) {
 				var castleArr = [];
@@ -398,24 +401,28 @@ $('document').ready(function() {
 					// for tile, find all sides with castle & adds them to the array
 					lookForCastleSides(arrObj, castleArr);
 
+					
+
+					if (castleArr.length > 0) {
+						//console.log(castleArr);
+					}
 				} else {
 					// check all other squares
-					checkCompleteCastle(arrObj, 'top');
-					checkCompleteCastle(arrObj, 'right');
-					checkCompleteCastle(arrObj, 'bottom');
-					checkCompleteCastle(arrObj, 'left');
+					checkCastleSide(arrObj, 'top');
+					checkCastleSide(arrObj, 'right');
+					checkCastleSide(arrObj, 'bottom');
+					checkCastleSide(arrObj, 'left');
 				}
 
 
-				if (castleArr.length > 0) {
-					//console.log(castleArr);
-				}
 
 
 			}
 		}
 	}
-	function checkCompleteCastle(arrObj, side) {
+	// if meeple present, remove taht div and meeplecount++
+	
+	function checkCastleSide(arrObj, side) {
 		if (arrObj[side].paired && arrObj[side].complete === false) {
 			arrObj[side].complete = true;
 			console.log(side + ': castle complete'); //debug code
