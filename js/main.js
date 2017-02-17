@@ -196,12 +196,8 @@ $('document').ready(function() {
 	function submitBtnOn() {
 			// now match cardIndex with currentMove
 			arrId = tileDroppedOn.split('');
-			//console.log(arrId); // debug code
-			//console.log(cardArr[cardCount]); // debug code
 			// updates JS board
 			gameBoardArr[arrId[1]][arrId[2]] = cardArr[cardCount]; 
-			//console.log(gameBoardArr[arrId[1]][arrId[2]]) //debug code
-			//console.log(gameBoardArr); //debug code
 
 			updateBoard(gameBoardArr[arrId[1]][arrId[2]]);
 			monitorMeepPlacementOn(this);
@@ -210,6 +206,20 @@ $('document').ready(function() {
 			btnListenersOff();
 			meepleBtnOn();
 
+	}
+	function updateBoard(arrTile) {
+		//updates HTML board where tile was placed  
+		// change .displayCard to gameBoardArr (the updated values) 
+		$('#' + tileDroppedOn + ' > .top').text( $('.displayCard > .top').text());
+		$('#' + tileDroppedOn + ' > .right').text( $('.displayCard > .right').text());
+		$('#' + tileDroppedOn + ' > .bottom').text( $('.displayCard > .bottom').text());
+		$('#' + tileDroppedOn + ' > .left').text( $('.displayCard > .left').text());
+		$('#' + tileDroppedOn + ' > .imgBox').css('background-image', cardArr[cardCount].img);
+		$('#' + tileDroppedOn + ' > .imgBox').css('transform', 'rotate(' + rotateDeg + 'deg)');
+
+		$('.displayCard').remove();
+
+		castlePairCheck();
 	}
 	function rotateBtnOn () {
 			// HTML side
@@ -232,25 +242,6 @@ $('document').ready(function() {
 		$('.displayCard > .left').text($('.displayCard > .bottom').text());
 		$('.displayCard > .bottom').text($('.displayCard > .right').text());
 		$('.displayCard > .right').text(temp);
-
-	}
-	function updateBoard(arrTile) {
-		//updates HTML board where tile was placed  
-		// change .displayCard to gameBoardArr (the updated values) 
-		$('#' + tileDroppedOn + ' > .top').text( $('.displayCard > .top').text());
-		$('#' + tileDroppedOn + ' > .right').text( $('.displayCard > .right').text());
-		$('#' + tileDroppedOn + ' > .bottom').text( $('.displayCard > .bottom').text());
-		$('#' + tileDroppedOn + ' > .left').text( $('.displayCard > .left').text());
-		$('#' + tileDroppedOn + ' > .imgBox').css('background-image', cardArr[cardCount].img);
-		console.log(rotateDeg)
-		$('#' + tileDroppedOn + ' > .imgBox').css('transform', 'rotate(' + rotateDeg + 'deg)');
-
-
-		$('.displayCard').remove();
-		console.log('b4 castlePairCheck')
-		console.log(gameBoardArr)
-
-		castlePairCheck();
 
 	}
 
@@ -285,7 +276,9 @@ $('document').ready(function() {
 	 		// trying to target placement & check if occupied
 	 		if (gameBoardArr[arrId[1]][arrId[2]][event.target.className].occupied) {
 	 			console.log('aready occupied');
-	 		} else {
+	 		} else if (gameBoardArr[arrId[1]][arrId[2]][event.target.className].type === 'grass') {
+	 			console.log('get off my lawn! Meeples can\' be placed on grass');
+	 		} else{
 		 		console.log(event.target);
 		 		reserveMeepSpace(event);
 	 		}
