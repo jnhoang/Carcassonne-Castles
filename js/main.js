@@ -43,96 +43,18 @@ var cardArr = [
 	left: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
 	valueType: 'normal', sidesConnect: false, img: 'url("./img/topCastle.png")'},
 
-	{ top: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
-	right: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
-	bottom: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
-	left: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
-	valueType: 'normal', sidesConnect: false, img: 'url("./img/rightCastle.png")'},
-
-	{ top: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
-	right: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
-	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
-	left: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
-	valueType: 'normal', sidesConnect: true, img: 'url("./img/rightLeftBotCastle.png")'},
-
-	{ top: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
+  	{ top: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
 	right: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
 	bottom: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false},
 	left: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false},
 	valueType: 'normal', sidesConnect: true, img: 'url("./img/rightLeftCastle.png")'},
 
 	{ top: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
-	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
-	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
-	left: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
-	valueType: 'normal', sidesConnect: false, img: 'url("./img/sepLeftBotCastle.png")'},
-
-	{ top: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
-	right: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
-	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
-	left: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
-	valueType: 'normal', sidesConnect: true, img: 'url("./img/rightBotCastle.png")'},
-
-	{ top: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
-	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
-	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
-	left: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
-	valueType: 'normal', sidesConnect: true, img: 'url("./img/leftBotCastle.png")'},
-
-	{ top: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
-	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
-	bottom: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
-	left: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
-	valueType: 'normal', sidesConnect: false, img: 'url("./img/leftCastle.png")'},
-
-	{ top: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
 	right: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
 	bottom: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
 	left: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
-	valueType: 'double', sidesConnect: true, img: 'url("./img/shieldTopRightCastle.png")'},
-
-	{ top: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
-	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
-	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
-	left: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
-	valueType: 'normal', sidesConnect: true, img: 'url("./img/leftTopBotCastle.png")'},
-
-	{ top: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
-	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
-	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
-	left: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
-	valueType: 'normal', sidesConnect: true, img: 'url("./img/leftTopBotCastle.png")'},
-
-	{ top: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
-	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
-	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
-	left: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
-	valueType: 'normal', sidesConnect: false, img: 'url("./img/sepTopBotCastle.png")'},	
-
-	{ top: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
-	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
-	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
-	left: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
-	valueType: 'normal', sidesConnect: false, img: 'url("./img/botCastle.png")'},
-
-	{ top: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
-	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
-	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
-	left: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
-	valueType: 'double', sidesConnect: true, img: 'url("./img/shieldLeftBotCastle.png")'},
-
-	{ top: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
-	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
-	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
-	left: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
-	valueType: 'double', sidesConnect: true, img: 'url("./img/shieldTopBotCastle.png")'},
-
-	{ top: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
-	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
-	bottom: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
-	left: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
-	valueType: 'normal', sidesConnect: false, img: 'url("./img/topCastle.png")'},
-];
+	valueType: 'normal', sidesConnect: false, img: 'url("./img/rightCastle.png")'},
+  ]
 $('document').ready(function() {
 	//console.log('ready');
 
