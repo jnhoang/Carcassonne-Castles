@@ -140,14 +140,95 @@ $('document').ready(function() {
 
 		$('.displayCard').remove();
 
-		castlePairCheck();
+		//castlePairCheck();
 		checkCastleComplete();
-
-
+		
 		updatePlayerInfo();
+	}
+	// eventually, function that will add score will run checkCastleComplete
+	function checkCastleComplete(tileJustPlaced) { 	// tileJustPlaced == gameBoardArr[arrId[1]][arrId[2]]
+
+		// check for attr**
+
+		// find number of sides with castle piece on MAIN-TILE
+		// if only one -> castlePairCheck()
+		if (checkTileForSidesWithCastles(tileJustPlaced) === 1) {
+			castlePairCheck(tileJustPlaced);
+			// if paired, assignPoints() <---- delete castleCheck and make this one
+			// need to see if castle is complete before assigning points
+			
+		// if #sides with castles on MAIN-TILE > 1
+		} else {
+			castlePairCheck(tileJustPlaced);
+		}
+
+		
+	function castlePairCheck(tileJustPlaced) {
+		
+		// must call checkForPair on each side-possible that castle on multiple sides
+		checkTopSide();
+		// checkRightSide(i, j);
+		// checkBottomSide(i, j);
+		// checkLeftSide(i, j);
+
+	}
+	function checkTopSide() {
+		arrId = tileDroppedOn.split('');
+		var topTile = gameBoardArr[arrId[1]][arrId[2]];
+		var botTile = gameBoardArr[arrId[1] - 1][arrId[2]];
+		
+		// this check is to make sure fx doesn't try to check for a non-existent square
+		if (arrId[1] === 0) {
+			return;
+		} else if (topTile.top.type === 'castle' && botTile.bot.type === 'castle') {
+			topObj.top.paired = true;
+			botObj.bottom.paired = true;
+
+			changeOccupancy(topTile, botTile, 'top', 'bot');
+			// if occupied, flips paired castle's occupant to match that of its pair's occupant
+			
+		}
+	}
+	function changeOccupancy(objA, objB, sideA, sideB) {
+		if (objA[sideA].occupied) {
+			objB[sideB].occupied = objA[sideA].occupied;
+			objB[sideB].occupant = objA[sideA].occupant;
+		} else if (objB[sideB].occupied) {
+			objA[sideA].occupied = objB[sideB].occupied;
+			objA[sideA].occupant = objB[sideB].occupant;
+		}
+	}
+			// castlePairCheck() -> check if all sides on MAIN-TILE are paired
+				// if one side on MAIN-TILE is unpaired, return false!! (castle is incomplete)
+				// if all sides on MAIN-TILE are paired, add their paired tile to an array
+					// mark this MAIN-TILE with an attr** that checkCastleComplete() knows to avoid it
+						// flip something on?
+					// check 2NDARY-TILES for attr**
+						// attr** == false -> add to an array 
+						// attr** == true -> do not add to array
+					// run checkCastleComplete() on all tiles in the array
+						// return true if all pass 
+
+
+			// if one is incomplete, return false, this tile is incomplete by association
+
+			// if 
 
 
 	}
+	function checkTileForSidesWithCastles(tile) {
+	// looks at given tile and checks for 'castle' type
+		var sidesWithCastles = 0;
+		var sidesArr = ['top', 'right', 'bottom', 'left'];
+
+		for (var i = 0; i < sidesArr.length; i++) {
+			if (tile[sidesArr[i]].type === 'castle') {
+				sidesWithCastles += 1;
+			}
+		}
+		return sidesWithCastles;
+	}
+
 	function rotateBtnOn () {
 			// HTML side
 			rotateDeg += 90;
@@ -312,7 +393,8 @@ $('document').ready(function() {
 		}
 		return true;
 	}
-	function checkCastleComplete() {
+
+	function oldcheckCastleComplete() {
 		for (var i = 0; i < ARRAYSIZE; i++) {
 			for (var j = 0; j < ARRAYSIZE; j++) {
 				var castleArr = [];
