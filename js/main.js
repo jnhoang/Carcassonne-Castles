@@ -34,26 +34,26 @@ function Tile(name, point) {
 	this.valueType = '';
 	this.sidesConnected = null;
 	this.paired = false;
-	//completed
+	this.empty = true;
 }
 var cardArr = [
 	{ top: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
 	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
 	bottom: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
 	left: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
-	valueType: 'normal', sidesConnect: false, img: 'url("./img/topCastle.png")'},
+	valueType: 'normal', sidesConnect: false, img: 'url("./img/topCastle.png")', empty: false},
 
   	{ top: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
 	right: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
 	bottom: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false},
 	left: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false},
-	valueType: 'normal', sidesConnect: true, img: 'url("./img/rightLeftCastle.png")'},
+	valueType: 'normal', sidesConnect: true, img: 'url("./img/rightLeftCastle.png")', empty: false},
 
 	{ top: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
 	right: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
 	bottom: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
 	left: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
-	valueType: 'normal', sidesConnect: false, img: 'url("./img/rightCastle.png")'},
+	valueType: 'normal', sidesConnect: false, img: 'url("./img/rightCastle.png")', empty: false},
   ]
 $('document').ready(function() {
 	//console.log('ready');
@@ -141,7 +141,7 @@ $('document').ready(function() {
 		$('.displayCard').remove();
 
 		//castlePairCheck();
-		checkCastleComplete();
+		checkCastleComplete(arrTile);
 		
 		updatePlayerInfo();
 	}
@@ -153,37 +153,21 @@ $('document').ready(function() {
 		// find number of sides with castle piece on MAIN-TILE
 		// if only one -> castlePairCheck()
 		var castleSides = checkTileForSidesWithCastles(tileJustPlaced);
+		console.log(castleSides)
+		if (!checkForExistingPairs(castleSides)) {
+			return;
+		}
+
 
 		if (castleSides.length === 1) {
 			castlePairCheck(castleSides);
+			console.log(gameBoardArr)
 			// if paired, assignPoints() <---- delete castleCheck and make this one
 			// need to see if castle is complete before assigning points
 			
 		// if #sides with castles on MAIN-TILE > 1
 		} else {
-			var counter = 0;
-			for (var i = 0; i < castleSides.length; i++) {
-				if (arr[i] === 'top') {
-					if (checkTopSide()) { // means that it has an unfinished side
-						counter += 1;
-					}				
-				} else if (arr[i] === 'right') {
-					if (checkRightSide()) {
-						counter += 1;
-					}				
-				} else if (arr[i] === 'bot') {
-					if (checkBottomSide()) {
-						counter += 1;
-					}	
-				} else {
-					if (checkLeftSide()) {
-						counter += 1;
-					}
-				}
-			}
-			if (counter === castleSides.length) {
-				console.log('great');
-			}
+			castlePairCheck(castleSides);
 		}
 
 		// castlePairCheck() -> check if all sides on MAIN-TILE are paired
@@ -203,11 +187,12 @@ $('document').ready(function() {
 		// if 
 
 	}
+
 	function checkTileForSidesWithCastles(tile) {
 	// looks at given tile and checks for 'castle' type
 		var sidesArr = ['top', 'right', 'bottom', 'left'];
 		var sidesWithCastles = [];
-
+		console.log(tile)
 		for (var i = 0; i < sidesArr.length; i++) {
 			if (tile[sidesArr[i]].type === 'castle') {
 				sidesWithCastles.push(sidesArr[i]);
@@ -215,33 +200,80 @@ $('document').ready(function() {
 		}
 		return sidesWithCastles;
 	}
-	
-	function castlePairCheck(arr)
+	function checkForExistingPairs(arr) {
+		arrId = tileDroppedOn.split('');
+		var tile = gameBoardArr[arrId[1]][arrId[2]];
+		var counter = 0;
+		console.log(gameBoardArr);
+		for (var i = 0; i < arr.length; i++) {
+			if (arr[i] === 'top' && !arrId[1] === 0 && !gameBoardArr[arrId[1] - 1][arrId[2]].empty) {
+				counter += 1;
+			} 
+			if (arr[i] === 'right' && !arrId[2] === 3 && !gameBoardArr[arrId[1]][arrId[2] + 1].empty) {
+				counter += 1;
+			}
+			if (arr[i] === 'bottom' && !arrId[1] === 3 && !gameBoardArr[arrId[1] + 1][arrId[2]].empty) {
+				counter += 1;
+			}
+			if (arr[i] === 'left' && !arrId[2] === 0 && !gameBoardArr[arrId[1]][arrId[2] - 1].empty) {
+				counter += 1;
+			}
+		}
+		if (counter === arr.length) {
+			return true;
+		} else {
+			return false;
+		}
+
+
+	}
+	function castlePairCheck(arr) {
 		// good candidate for switch statement
+		var counter = 0;
+
 		for (var i = 0; i < arr.length; i++) {
 			if (arr[i] === 'top') {
-				checkTopSide();				
+				if (checkTopSide()) { // means that it has an unfinished side
+					counter += 1;
+				}				
 			} else if (arr[i] === 'right') {
-				checkRightSide();				
+				if (checkRightSide()) {
+					counter += 1;
+				}				
 			} else if (arr[i] === 'bot') {
-				checkBottomSide();	
+				if (checkBottomSide()) {
+					counter += 1;
+				}	
 			} else {
-				checkLeftSide();				
+				if (checkLeftSide()) {
+					counter += 1;
+				}
+			}
+		}
+		if (arr.length > 1) {
+			if (counter === castleSides.length) {
+				console.log('all sides were paired');
+			} else {
+				console.log('not all paired')
 			}
 		}
 		// must call checkForPair on each side-possible that castle on multiple sides
 
 	}
+	
+	
 	function checkTopSide() {
 		arrId = tileDroppedOn.split('');
 		var topObj = gameBoardArr[arrId[1]][arrId[2]];
 		var botObj = gameBoardArr[arrId[1] - 1][arrId[2]];
-		
+		console.log(topObj)
 		// this check is to make sure fx doesn't try to check for a non-existent square
 		if (arrId[1] === 0) {
+			console.log('checktopside reports false')
 			return false;
 		} else if (topObj.top.type === 'castle' && botObj.bot.type === 'castle') {
 			// if occupied, flips paired castle's occupant to match that of its pair's occupant
+			console.log('checktopside reports true')
 			changeOccupancy(topObj, botObj, 'top', 'bot');
 			return true;		
 		} else {
@@ -305,8 +337,6 @@ $('document').ready(function() {
 		}
 	}
 
-
-	}
 
 	function rotateBtnOn () {
 			// HTML side
@@ -424,7 +454,7 @@ $('document').ready(function() {
 		
 		updatePlayerTurn();
 
-		castlePairCheck();
+//		castlePairCheck();
 
 		meepleBtnOff();
 		resetGlobalVars();
@@ -450,19 +480,7 @@ $('document').ready(function() {
 	//ArrayCheck(); // debug code
 
 	// checks if castles are paired and changes side.occupied = true
-	function castlePairCheck() {
-		for (var i = 0; i < ARRAYSIZE; i++) {
-			for (var j = 0; j < ARRAYSIZE; j++) {
-				// must call checkForPair on each side-possible that castle on multiple sides
-
-				checkTopSide(i, j);
-				checkRightSide(i, j);
-				checkBottomSide(i, j);
-				checkLeftSide(i, j);
-						
-			}
-		}
-	}
+	
 	// currently unused, planned for use in checkCastlecomplete
 	function tileCastleCheck(array) {
 		for (var i = 0; i < array.length; i++) {
