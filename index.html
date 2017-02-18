@@ -4,46 +4,48 @@
 	<title></title>
 	<link rel="stylesheet" type="text/css" href="./css/style.css">
 	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+	<link href="https://fonts.googleapis.com/css?family=MedievalSharp" rel="stylesheet">
 </head>
 <body>
 	<div id='container'>
 		
 		<div class='side'>
-			<div id='playerInfo' class='playersBox'>
-				<div id='playerOne'>
+			<div id='playerInfo'>
+				<div id='playerOne' class='playersBox'>
 					<p>Player 1</p><br>
 					<p>Score:</p><span id='pOneScore'></span><br>
 					<p>Meeples: </p><span id='pOneMeeps'></span>
 				</div>
-				<div id='playerOne' class='playersBox'>
+				<div id='playerTwo' class='playersBox'>
 					<p>Player 2</p><br>
 					<p>Score:</p><span id='pTwoScore'></span><br>
 					<p>Meeples: </p><span id='pTwoMeeps'></span>
 				</div>
 			</div>
 
+			<h3>Tile to Place</h3>
 			<div class='nextBox'>
-				<p>Tile to Place</p>
 				<div class='tilePlaceHolder'>
 					<div class='tile draggable displayCard rotate'>
 						<div class='imgBox'></div>
-						<div class='top'>top</div>
-						<div class='left'>left</div>
-						<div class='right'>right</div>
-						<div class='bottom'>bottom</div>
+						<div class='top'></div>
+						<div class='left'></div>
+						<div class='right'></div>
+						<div class='bottom'></div>
 					</div>
 				</div>
+			</div>
+			<div id='buttonBox'>
+				<button id='submitBtn'>Accept</button>
+				<button id='rotateBtn'>Rotate</button>
+				<button id='meepleBtn'>Next</button>
 			</div>
 		</div>
 
 
 		<div id='gameBoard'></div>
 	</div>
-	<div id='buttonBox'>
-		<button id='submitBtn'>Accept</button>
-		<button id='rotateBtn'>Rotate</button>
-		<button id='meepleBtn'>Next</button>
-	</div>
+
 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>

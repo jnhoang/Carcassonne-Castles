@@ -1,8 +1,15 @@
 body {
 	background-image: url('./../img/fresno-wood.jpg');
+	background-repeat: no-repeat;
+	background-size: cover;
+	font-family: 'MedievalSharp', cursive;
+	color: white;
+
+}
+body p {
+	margin: 5px;	
 }
 #container {
-	border: 1px solid red;
 	display: flex;
 	flex-wrap: nowrap;
 }
@@ -12,27 +19,51 @@ body {
 	flex-wrap: wrap;
 	flex-direction: column;
 	justify-content: space-around;
-	width: 25%;
+	box-shadow: 12px 5px 10px black;
+	background-image: url('./../img/wood-border.jpg');
+	background-size: contain;
+	width: 20%;
 
 }
-#playerInfo {
-	border: 1px solid red;
+#playerOne {
+	background-image: url('./../img/blue-pattern.jpg');
+	background-size: cover;
 }
-.playersBox *{
-	border: 1px solid red;
+#playerTwo {
+	background-image: url('./../img/red-pattern.jpg');
+	background-size: cover;
+}
+#playerInfo {
+	height: 50%;
+
+}
+.playersBox {
+	margin: 5px;
+	border: 5px solid black;
+	font-size: 18px;
 }
 .playersBox p {
 	display: inline-block;
 }
+.side h3{
+	align-self: center;
+	margin-bottom: 5px;
+}
 .nextBox {
-	border: 1px solid red;
+	height: 24%;
+	width: 74%;
+	box-shadow: inset 0 0 35px black;
 	display: flex;
+	align-items: center;
+	align-self: center;
 	justify-content: center;
 	flex-wrap: wrap;
 }
-.nextBox p {
-	flex: 100%;
+#buttonBox {
 	text-align: center;
+	height: 100px;
+	width: 100px;
+	justify-content: center;
 }
 #tileToPlace {
 	border: 1px solid red;
@@ -89,11 +120,13 @@ body {
 }
 
 .top, .bottom {
+	height: 32%;
 	width: 100%;
 	box-sizing: border-box;
 
 }
-.left, .right {
+.left, .right{
+	height: 32%;
 	width: 50%;
 	box-sizing: border-box;
 
@@ -102,12 +135,7 @@ body {
 	height: 100px;
 	width: 100px;
 }
-#buttonBox {
-	text-align: center;
-	height: 100px;
-	width: 100px;
-	justify-content: center;
-}
+
 .meepleImage {
 	height: 25px;
 	width: 25px;

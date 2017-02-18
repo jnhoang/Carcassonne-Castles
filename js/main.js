@@ -173,29 +173,26 @@ $('document').ready(function() {
 		}
 	}
 	function showNextCard(){
-		var value = cardArr[cardCount];
-		// $('.displayCard > .top').text(value.top.type);
-		// $('.displayCard > .right').text(value.right.type);
-		// $('.displayCard > .bottom').text(value.bottom.type);
-		// $('.displayCard > .left').text(value.left.type);
+		//var value = cardArr[cardCount];
 		$('.displayCard > .imgBox').css('background-image', cardArr[cardCount].img);
 
 
 		$('.draggable').draggable({ snap: ".square"});
 	}
 	function btnListenersOn() {
-		$('#submitBtn').on('click', submitBtnOn);
-		$('#rotateBtn').on('click', rotateBtnOn);
+		$('#submitBtn').on('click', submitBtn);
+		$('#rotateBtn').on('click', rotateBtn);
 	}
 	function btnListenersOff() {
-		$('#submitBtn').off('click', submitBtnOn);
-		$('#rotateBtn').off('click', rotateBtnOn);
+		$('#submitBtn').off('click', submitBtn);
+		$('#rotateBtn').off('click', rotateBtn);
 	}
 
-	function submitBtnOn() {
+	function submitBtn() {
 			// updates JS board
 			arrId = tileDroppedOn.split('');
-			gameBoardArr[arrId[1]][arrId[2]] = cardArr[cardCount]; 
+			gameBoardArr[arrId[1]][arrId[2]] = cardArr[cardCount];
+			$('#' + tileDroppedOn).css('background', '0'); 
 
 			updateBoard(gameBoardArr[arrId[1]][arrId[2]]);
 
@@ -208,11 +205,6 @@ $('document').ready(function() {
 	}
 	function updateBoard(arrTile) {
 		//updates HTML board where tile was placed  
-		// change .displayCard to gameBoardArr (the updated values) 
-		// $('#' + tileDroppedOn + ' > .top').text( $('.displayCard > .top').text());
-		// $('#' + tileDroppedOn + ' > .right').text( $('.displayCard > .right').text());
-		// $('#' + tileDroppedOn + ' > .bottom').text( $('.displayCard > .bottom').text());
-		// $('#' + tileDroppedOn + ' > .left').text( $('.displayCard > .left').text());
 		$('#' + tileDroppedOn + ' > .imgBox').css('background-image', cardArr[cardCount].img);
 		$('#' + tileDroppedOn + ' > .imgBox').css('transform', 'rotate(' + rotateDeg + 'deg)');
 
@@ -226,28 +218,16 @@ $('document').ready(function() {
 
 
 	}
-	function rotateBtnOn () {
-			// HTML side
-			rotateDeg += 90;
-			$('.displayCard > .imgBox').css('transform', 'rotate(' + rotateDeg + 'deg)');
+	function rotateBtn() {
+		rotateDeg += 90;
+		$('.displayCard > .imgBox').css('transform', 'rotate(' + rotateDeg + 'deg)');
 
-			rotateTileValues();
-	}
-	function rotateTileValues() {
 		// JS side
 		var temp = cardArr[cardCount].top;
 		cardArr[cardCount].top = cardArr[cardCount].left;
 		cardArr[cardCount].left = cardArr[cardCount].bottom;
 		cardArr[cardCount].bottom = cardArr[cardCount].right;
 		cardArr[cardCount].right = temp;
-
-		// HTML side
-		// temp = $('.displayCard > .top').text();
-		// $('.displayCard > .top').text($('.displayCard > .left').text());
-		// $('.displayCard > .left').text($('.displayCard > .bottom').text());
-		// $('.displayCard > .bottom').text($('.displayCard > .right').text());
-		// $('.displayCard > .right').text(temp);
-
 	}
 
 // meeple functions START
@@ -337,7 +317,7 @@ $('document').ready(function() {
 	}
 	
 	function updateGameState() {
-		$('.nextBox').append(displayTile);
+		$('.nextBox > .tilePlaceHolder').append(displayTile);
 		cardCount += 1;
 		
 		updatePlayerTurn();
