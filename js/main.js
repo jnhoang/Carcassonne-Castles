@@ -54,6 +54,27 @@ var cardArr = [
 	bottom: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
 	left: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
 	valueType: 'normal', sidesConnect: false, img: 'url("./img/rightCastle.png")', empty: false},
+
+	{ top: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
+	right: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
+	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
+	left: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
+	valueType: 'normal', sidesConnect: false, img: 'url("./img/rightLeftBotCastle.png")', empty: false},
+
+	{ top: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
+	right: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
+	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
+	left: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
+	valueType: 'normal', sidesConnect: false, img: 'url("./img/rightBotCastle.png")', empty: false},
+
+
+	{ top: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
+	right: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
+	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
+	left: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
+	valueType: 'normal', sidesConnect: false, img: 'url("./img/rightBotCastle.png")', empty: false},
+
+
   ]
 $('document').ready(function() {
 	//console.log('ready');
@@ -158,12 +179,14 @@ $('document').ready(function() {
 
 
 		if (castleSides.length === 1) {
+			console.log('only had one side, didn\'t do anything')
 			console.log(gameBoardArr)
 			// if paired, assignPoints() <---- delete castleCheck and make this one
 			// need to see if castle is complete before assigning points
 			
 		// if #sides with castles on MAIN-TILE > 1
 		} else {
+			console.log('this castle had multiple sides');
 
 
 		}
@@ -197,11 +220,14 @@ $('document').ready(function() {
 		}
 		return sidesWithCastles;
 	}
+
+	var recursiveArr = [];
 	function checkForExistingTiles(arr) {
 		arrId = tileDroppedOn.split('');
 		console.log(parseInt(arrId[1]))
 		var tile = gameBoardArr[arrId[1]][arrId[2]];
 		console.log(arrId[1])
+
 		var counter = 0;
 		console.log(gameBoardArr);
 		for (var i = 0; i < arr.length; i++) {
@@ -222,50 +248,42 @@ $('document').ready(function() {
 				checkBottomSide();
 				counter += 1;
 			}
-			if (arr[i] === 'left' &&  !gameBoardArr[arrId[1]][parseInt(arrId[2]) - 1].empty) {
+			if (arr[i] === 'left' && !gameBoardArr[arrId[1]][parseInt(arrId[2]) - 1].empty) {
 				console.log('going to check leftside!')
 				checkLeftSide();
 				counter += 1;
 			}
 		}
-		console.log(gameBoardArr)
-		console.log(counter)
-		if (counter === arr.length) {
-			return true;
-		} else {
-			return false;
+		console.log('array with connected sides',recursiveArr)
+		//console.log(gameBoardArr)
+		console.log('resetting recursiveArr')
+
+		for (var i = 0; i < recursiveArr.length; i++) {
+			var tile = recursiveArr[i]
 		}
 
+
+		recursiveArr = []
+		console.log('recursiveArr reset', recursiveArr)
+		console.log(counter)
+		if (arr.length > 1) {
+			if (counter === arr.length) {
+				console.log('all sides were paired');
+				return true;
+			} else {
+				console.log('not all paired')
+				return false;
+			}
+		}
 
 	}
 	function castlePairCheck(arr) {
 		// good candidate for switch statement
 		var counter = 0;
 
-		// for (var i = 0; i < arr.length; i++) {
-		// 	if (arr[i] === 'top') {
-		// 		if (checkTopSide()) { // means that it has an unfinished side
-		// 			counter += 1;
-		// 		}				
-		// 	} else if (arr[i] === 'right') {
-		// 		if (checkRightSide()) {
-		// 			counter += 1;
-		// 		}				
-		// 	} else if (arr[i] === 'bot') {
-		// 		if (checkBottomSide()) {
-		// 			counter += 1;
-		// 		}	
-		// 	} else {
-		// 		if (checkLeftSide()) {
-		// 			counter += 1;
-		// 		}
-		// 	}
-		// }
 		if (arr.length > 1) {
 			if (counter === arr.length) {
-				console.log('all sides were paired');
 			} else {
-				console.log('not all paired')
 			}
 		}
 		// must call checkForPair on each side-possible that castle on multiple sides
@@ -277,16 +295,15 @@ $('document').ready(function() {
 		arrId = tileDroppedOn.split('');
 		var topObj = gameBoardArr[arrId[1]][arrId[2]];
 		var botObj = gameBoardArr[parseInt(arrId[1]) - 1][arrId[2]];
+		recursiveArr.push(botObj)
 		console.log(topObj)
 		// this check is to make sure fx doesn't try to check for a non-existent square
-			console.log(topObj.top.type)
-			console.log(botObj)
 		if (arrId[1] === 0) {
 			return;
-		} else if (topObj.top.type === 'castle' && botObj.bot.type === 'castle') {
+		} else if (topObj.top.type === 'castle' && botObj.bottom.type === 'castle') {
 			// if occupied, flips paired castle's occupant to match that of its pair's occupant
 			console.log('checktopside reports true')
-			changeOccupancy(topObj, botObj, 'top', 'bot');
+			changeOccupancy(topObj, botObj, 'top', 'bottom');
 			return true;		
 		} else {
 			return false;
@@ -296,6 +313,7 @@ $('document').ready(function() {
 		arrId = tileDroppedOn.split('');
 		var rightObj = gameBoardArr[arrId[1]][arrId[2]];
 		var leftObj = gameBoardArr[arrId[1]][parseInt(arrId[2]) + 1];
+		recursiveArr.push(leftObj)
 
 		if (arrId[2] === 3) {
 			return;
@@ -310,7 +328,8 @@ $('document').ready(function() {
 		arrId = tileDroppedOn.split('');
 		var botObj = gameBoardArr[arrId[1]][arrId[2]];
 		var topObj = gameBoardArr[parseInt(arrId[1]) + 1][arrId[2]];
-		
+		recursiveArr.push(topObj)
+
 		console.log('checkbotside')
 		if (arrId[1] === 3) {
 			return;
@@ -328,6 +347,7 @@ $('document').ready(function() {
 		arrId = tileDroppedOn.split('');
 		var leftObj = gameBoardArr[arrId[1]][arrId[2]];
 		var rightObj = gameBoardArr[arrId[1]][parseInt(arrId[2]) - 1];
+		recursiveArr.push(rightObj);
 
 		if (arrId[2] === 0) {
 			return;
