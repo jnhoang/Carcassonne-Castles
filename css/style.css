@@ -1,3 +1,6 @@
+body {
+	background-image: url('./../img/fresno-wood.jpg');
+}
 #container {
 	border: 1px solid red;
 	display: flex;
@@ -41,6 +44,8 @@
 	z-index: 1;
 }
 .imgBox {
+	border-radius: 1px;
+	border: 1px solid black;
 	height: 100px;
 	width: 100px;
 	position: absolute;
@@ -50,13 +55,21 @@
 	background-repeat: no-repeat;
 	z-index: -1;
 }
+.square .imgBox {
+	border: none;
+}
 #gameBoard {
 	width: 50%;
 	height: auto;
 	border: 1px solid red;
 	text-align: center;
+	justify-content: center;
+	border-image: url('./../img/wood-border.jpg');
+	border: 50px solid transparent; 
+	padding: 20px;
 }
 .row {
+	margin: 1px;
 	display: flex;
 }
 .tile {
@@ -69,6 +82,7 @@
 	width: 100px;
 	border: 1px solid black;
 	border-radius: 2px;
+	background: rgba(0, 0, 0, 0.4);
 }
 .boxShadow {
 	box-shadow: inset 0px 1px 10px black;	

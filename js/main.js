@@ -167,17 +167,17 @@ $('document').ready(function() {
 	function addTile(rowNumber) {
 		for (var i = 0; i < ARRAYSIZE; i++) {
 			var tileSquare = '<div class="tile square ui-droppable boxShadow" id="n' + rowNumber + '' + i + '">\
-							  <div class="imgBox"></div><div class="top">top</div><div class="left">left</div>\
-							  <div class="right">right</div><div class="bottom">bottom</div></div>';
+							  <div class="imgBox"></div><div class="top"></div><div class="left"></div>\
+							  <div class="right"></div><div class="bottom"></div></div>';
 			$('.row' + rowNumber).append(tileSquare);
 		}
 	}
 	function showNextCard(){
 		var value = cardArr[cardCount];
-		$('.displayCard > .top').text(value.top.type);
-		$('.displayCard > .right').text(value.right.type);
-		$('.displayCard > .bottom').text(value.bottom.type);
-		$('.displayCard > .left').text(value.left.type);
+		// $('.displayCard > .top').text(value.top.type);
+		// $('.displayCard > .right').text(value.right.type);
+		// $('.displayCard > .bottom').text(value.bottom.type);
+		// $('.displayCard > .left').text(value.left.type);
 		$('.displayCard > .imgBox').css('background-image', cardArr[cardCount].img);
 
 
@@ -209,10 +209,10 @@ $('document').ready(function() {
 	function updateBoard(arrTile) {
 		//updates HTML board where tile was placed  
 		// change .displayCard to gameBoardArr (the updated values) 
-		$('#' + tileDroppedOn + ' > .top').text( $('.displayCard > .top').text());
-		$('#' + tileDroppedOn + ' > .right').text( $('.displayCard > .right').text());
-		$('#' + tileDroppedOn + ' > .bottom').text( $('.displayCard > .bottom').text());
-		$('#' + tileDroppedOn + ' > .left').text( $('.displayCard > .left').text());
+		// $('#' + tileDroppedOn + ' > .top').text( $('.displayCard > .top').text());
+		// $('#' + tileDroppedOn + ' > .right').text( $('.displayCard > .right').text());
+		// $('#' + tileDroppedOn + ' > .bottom').text( $('.displayCard > .bottom').text());
+		// $('#' + tileDroppedOn + ' > .left').text( $('.displayCard > .left').text());
 		$('#' + tileDroppedOn + ' > .imgBox').css('background-image', cardArr[cardCount].img);
 		$('#' + tileDroppedOn + ' > .imgBox').css('transform', 'rotate(' + rotateDeg + 'deg)');
 
@@ -242,11 +242,11 @@ $('document').ready(function() {
 		cardArr[cardCount].right = temp;
 
 		// HTML side
-		temp = $('.displayCard > .top').text();
-		$('.displayCard > .top').text($('.displayCard > .left').text());
-		$('.displayCard > .left').text($('.displayCard > .bottom').text());
-		$('.displayCard > .bottom').text($('.displayCard > .right').text());
-		$('.displayCard > .right').text(temp);
+		// temp = $('.displayCard > .top').text();
+		// $('.displayCard > .top').text($('.displayCard > .left').text());
+		// $('.displayCard > .left').text($('.displayCard > .bottom').text());
+		// $('.displayCard > .bottom').text($('.displayCard > .right').text());
+		// $('.displayCard > .right').text(temp);
 
 	}
 
