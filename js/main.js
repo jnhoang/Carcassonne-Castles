@@ -223,37 +223,47 @@ $('document').ready(function() {
 
 	var checkedCastlesArr = [];
 	function checkForExistingTiles(tile) {
-
+		console.log(tile)
 		for (var i = 0; i < ARRAYSIZE; i++) {
 			for (var j = 0; j < ARRAYSIZE; j++) {
-				if (gameBoardArr[i][j] === gameBoardArr[arrId[1]][arrId[2]]) {
+				if (gameBoardArr[i][j] === tile) {
 					arrayIndex = [i, j]
 				}
 			}
 		}
+		console.log('check for arrayIndex on checkedCastlesArr');
+		console.log('checkedCastlesArr:', checkedCastlesArr);
+		console.log('arrayIndex:', arrayIndex)
 		if (checkedCastlesArr.includes(arrayIndex)){
 			return;
 		} else {
+			if (checkedCastlesArr.length > 10) {
+				return
+			}
 			checkedCastlesArr.push(arrayIndex);
 
 			for (var side in tile) {
-				if (tile[side].type === 'castle') {
+				if (tile.empty === false && tile[side].type === 'castle') {
 					console.log('found castle side at ' + side);
 
 					var adjacentTile;
-					if (side === 'top' && !arrayIndex[0] === 0) {
+					if (side === 'top' && !(arrayIndex[0] === 0)) {
 						adjacentTile = gameBoardArr[arrayIndex[0] - 1][arrayIndex[1]];
+						console.log('adjacentTile: ', adjacentTile);
 
-					} else if (side === 'right' && !arrayIndex[1] === 3) {
+					} else if (side === 'right' && !(arrayIndex[1] === 3)) {
 						adjacentTile = gameBoardArr[arrayIndex[0]][arrayIndex[1] + 1];
+						console.log('adjacentTile: ', adjacentTile);
 
-					} else if (side === 'bottom' && !arrayIndex[0] === 3) {
+					} else if (side === 'bottom' && !(arrayIndex[0] === 3)) {
 						adjacentTile = gameBoardArr[arrayIndex[0] + 1][arrayIndex[1]];
+						console.log('adjacentTile: ', adjacentTile);
 
-					} else if (side === 'left' && !arrayIndex[1] === 0) {
+					} else if (side === 'left' && !(arrayIndex[1] === 0)) {
 						adjacentTile = gameBoardArr[arrayIndex[0]][arrayIndex[1] - 1];
+						console.log('adjacentTile: ', adjacentTile);
 					}
-					console.log('adjacentTile: ', adjacentTile);
+					console.log('about to loop to : ', arrayIndex[0],arrayIndex[1] - 1);
 					if (adjacentTile) {
 						checkForExistingTiles(adjacentTile);
 					}
@@ -262,44 +272,43 @@ $('document').ready(function() {
 		}
 		console.log(checkedCastlesArr)
 	}
+	// for (var side in tile) {
+	// 	if (tile[side].type === 'castle') {
+	// 		console.log('at arrayIndex', arrayIndex)
+	// 		console.log('found castle side at ' + side);
 
-	// function checkForExistingTiles(arr) {
-	// 	console.log(parseInt(arrId[1]))
-	// 	var tile = gameBoardArr[arrId[1]][arrId[2]];
-	// 	console.log(arrId[1])
+	// 		var adjacentTile;
+	// 		console.log(arrayIndex[0])
+	// 		if (side === 'top' && !(arrayIndex[0] === 0) && !gameBoardArr[arrayIndex[0] - 1][arrayIndex[1]].empty) {
+	// 			adjacentTile = gameBoardArr[arrayIndex[0] - 1][arrayIndex[1]];
+	// 			console.log('adjacentTile: ', adjacentTile);
+	// 			// if (tile.top.paired == false || adjacentTile.bottom.paired == false) {
+	// 			// 	changeOccupancy(tile, adjacentTile, 'top', 'bottom');
+	// 			// }
 
-	// 	var counter = 0;
-	// 	console.log(gameBoardArr);
-	// 	for (var i = 0; i < arr.length; i++) {
-	// 		if (arr[i] === 'top' && !gameBoardArr[parseInt(arrId[1]) - 1][arrId[2]].empty) {
-	// 			console.log('going to check topside!')
-	// 			checkTopSide();
-	// 			counter += 1;
-	// 		} 
-	// 		if (arr[i] === 'right' && !gameBoardArr[arrId[1]][parseInt(arrId[2]) + 1].empty) {
-	// 			console.log('going to check rightside!')
-	// 			checkRightSide();
-	// 			counter += 1;
+
+	// 		} else if (side === 'right' && !(arrayIndex[1] === 3) && !gameBoardArr[arrayIndex[0]][arrayIndex[1] + 1].empty) {
+	// 			adjacentTile = gameBoardArr[arrayIndex[0]][arrayIndex[1] + 1];
+	// 			console.log('adjacentTile: ', adjacentTile);
+	// 			// if (tile.right.paired == false || adjacentTile.left.paired == false) {
+	// 			// 	changeOccupancy(tile, adjacentTile, 'right', 'left');
+	// 			// }
+
+	// 		} else if (side === 'bottom' && !(arrayIndex[0] === 3) && !gameBoardArr[arrayIndex[0] + 1][arrayIndex[1]].empty) {
+	// 			adjacentTile = gameBoardArr[arrayIndex[0] + 1][arrayIndex[1]];
+	// 			console.log('adjacentTile: ', adjacentTile);
+	// 			// if (tile.bottom.paired == false || adjacentTile.top.paired == false) {
+	// 			// 	changeOccupancy(tile, adjacentTile, 'bottom', 'top');
+	// 			// }
+
+	// 		} else if (side === 'left' && !(arrayIndex[1] === 0) && !gameBoardArr[arrayIndex[0]][arrayIndex[1] - 1].empty) {
+	// 			adjacentTile = gameBoardArr[arrayIndex[0]][arrayIndex[1] - 1];
+	// 			console.log('adjacentTile: ', adjacentTile);
+	// 			// if (tile.left.paired == false || adjacentTile.right.paired == false) {
+	// 			// 	changeOccupancy(tile, adjacentTile, 'left', 'right');
+	// 			// }
+
 	// 		}
-	// 		console.log(arrId[1])
-	// 		console.log(gameBoardArr[(arrId[1])][arrId[2]])
-	// 		if (arr[i] === 'bottom' && !gameBoardArr[parseInt(arrId[1]) + 1][arrId[2]].empty) {
-	// 			console.log('going to check botside!')
-	// 			checkBottomSide();
-	// 			counter += 1;
-	// 		}
-	// 		if (arr[i] === 'left' && !gameBoardArr[arrId[1]][parseInt(arrId[2]) - 1].empty) {
-	// 			console.log('going to check leftside!')
-	// 			checkLeftSide();
-	// 			counter += 1;
-	// 		}
-	// 	}
-	// 	console.log('array with connected sides',recursiveArr)
-	// 	//console.log(gameBoardArr)
-	// 	console.log('resetting recursiveArr')
-
-
-
 
 	// 	recursiveArr = []
 	// 	console.log('recursiveArr reset', recursiveArr)
