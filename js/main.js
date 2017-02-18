@@ -168,6 +168,7 @@ $('document').ready(function() {
 	}
 	// eventually, function that will add score will run checkCastleComplete
 	function checkCastleComplete(tileJustPlaced) { 	// tileJustPlaced == gameBoardArr[arrId[1]][arrId[2]]
+		checkForExistingTiles(tileJustPlaced)
 
 		// check for attr**
 
@@ -175,7 +176,6 @@ $('document').ready(function() {
 		// if only one -> castlePairCheck()
 		var castleSides = checkTileForSidesWithCastles(tileJustPlaced);
 		console.log(castleSides)
-		checkForExistingTiles(castleSides)
 
 
 		if (castleSides.length === 1) {
@@ -221,62 +221,100 @@ $('document').ready(function() {
 		return sidesWithCastles;
 	}
 
-	var recursiveArr = [];
-	function checkForExistingTiles(arr) {
-		arrId = tileDroppedOn.split('');
-		console.log(parseInt(arrId[1]))
-		var tile = gameBoardArr[arrId[1]][arrId[2]];
-		console.log(arrId[1])
+	var checkedCastlesArr = [];
+	function checkForExistingTiles(tile) {
 
-		var counter = 0;
-		console.log(gameBoardArr);
-		for (var i = 0; i < arr.length; i++) {
-			if (arr[i] === 'top' && !gameBoardArr[parseInt(arrId[1]) - 1][arrId[2]].empty) {
-				console.log('going to check topside!')
-				checkTopSide();
-				counter += 1;
-			} 
-			if (arr[i] === 'right' && !gameBoardArr[arrId[1]][parseInt(arrId[2]) + 1].empty) {
-				console.log('going to check rightside!')
-				checkRightSide();
-				counter += 1;
-			}
-			console.log(arrId[1])
-			console.log(gameBoardArr[(arrId[1])][arrId[2]])
-			if (arr[i] === 'bottom' && !gameBoardArr[parseInt(arrId[1]) + 1][arrId[2]].empty) {
-				console.log('going to check botside!')
-				checkBottomSide();
-				counter += 1;
-			}
-			if (arr[i] === 'left' && !gameBoardArr[arrId[1]][parseInt(arrId[2]) - 1].empty) {
-				console.log('going to check leftside!')
-				checkLeftSide();
-				counter += 1;
+		for (var i = 0; i < ARRAYSIZE; i++) {
+			for (var j = 0; j < ARRAYSIZE; j++) {
+				if (gameBoardArr[i][j] === gameBoardArr[arrId[1]][arrId[2]]) {
+					arrayIndex = [i, j]
+				}
 			}
 		}
-		console.log('array with connected sides',recursiveArr)
-		//console.log(gameBoardArr)
-		console.log('resetting recursiveArr')
+		if (checkedCastlesArr.includes(arrayIndex)){
+			return;
+		} else {
+			checkedCastlesArr.push(arrayIndex);
 
-		for (var i = 0; i < recursiveArr.length; i++) {
-			var tile = recursiveArr[i]
-		}
+			for (var side in tile) {
+				if (tile[side].type === 'castle') {
+					console.log('found castle side at ' + side);
 
+					var adjacentTile;
+					if (side === 'top' && !arrayIndex[0] === 0) {
+						adjacentTile = gameBoardArr[arrayIndex[0] - 1][arrayIndex[1]];
 
-		recursiveArr = []
-		console.log('recursiveArr reset', recursiveArr)
-		console.log(counter)
-		if (arr.length > 1) {
-			if (counter === arr.length) {
-				console.log('all sides were paired');
-				return true;
-			} else {
-				console.log('not all paired')
-				return false;
+					} else if (side === 'right' && !arrayIndex[1] === 3) {
+						adjacentTile = gameBoardArr[arrayIndex[0]][arrayIndex[1] + 1];
+
+					} else if (side === 'bottom' && !arrayIndex[0] === 3) {
+						adjacentTile = gameBoardArr[arrayIndex[0] + 1][arrayIndex[1]];
+
+					} else if (side === 'left' && !arrayIndex[1] === 0) {
+						adjacentTile = gameBoardArr[arrayIndex[0]][arrayIndex[1] - 1];
+					}
+					console.log('adjacentTile: ', adjacentTile);
+					if (adjacentTile) {
+						checkForExistingTiles(adjacentTile);
+					}
+				}
 			}
 		}
-
+		console.log(checkedCastlesArr)
 	}
+
+	// function checkForExistingTiles(arr) {
+	// 	console.log(parseInt(arrId[1]))
+	// 	var tile = gameBoardArr[arrId[1]][arrId[2]];
+	// 	console.log(arrId[1])
+
+	// 	var counter = 0;
+	// 	console.log(gameBoardArr);
+	// 	for (var i = 0; i < arr.length; i++) {
+	// 		if (arr[i] === 'top' && !gameBoardArr[parseInt(arrId[1]) - 1][arrId[2]].empty) {
+	// 			console.log('going to check topside!')
+	// 			checkTopSide();
+	// 			counter += 1;
+	// 		} 
+	// 		if (arr[i] === 'right' && !gameBoardArr[arrId[1]][parseInt(arrId[2]) + 1].empty) {
+	// 			console.log('going to check rightside!')
+	// 			checkRightSide();
+	// 			counter += 1;
+	// 		}
+	// 		console.log(arrId[1])
+	// 		console.log(gameBoardArr[(arrId[1])][arrId[2]])
+	// 		if (arr[i] === 'bottom' && !gameBoardArr[parseInt(arrId[1]) + 1][arrId[2]].empty) {
+	// 			console.log('going to check botside!')
+	// 			checkBottomSide();
+	// 			counter += 1;
+	// 		}
+	// 		if (arr[i] === 'left' && !gameBoardArr[arrId[1]][parseInt(arrId[2]) - 1].empty) {
+	// 			console.log('going to check leftside!')
+	// 			checkLeftSide();
+	// 			counter += 1;
+	// 		}
+	// 	}
+	// 	console.log('array with connected sides',recursiveArr)
+	// 	//console.log(gameBoardArr)
+	// 	console.log('resetting recursiveArr')
+
+
+
+
+	// 	recursiveArr = []
+	// 	console.log('recursiveArr reset', recursiveArr)
+	// 	console.log(counter)
+	// 	if (arr.length > 1) {
+	// 		if (counter === arr.length) {
+	// 			console.log('all sides were paired');
+	// 			return true;
+	// 		} else {
+	// 			console.log('not all paired')
+	// 			return false;
+	// 		}
+	// 	}
+
+	// }
 	function castlePairCheck(arr) {
 		// good candidate for switch statement
 		var counter = 0;
@@ -292,7 +330,6 @@ $('document').ready(function() {
 	
 	
 	function checkTopSide() {
-		arrId = tileDroppedOn.split('');
 		var topObj = gameBoardArr[arrId[1]][arrId[2]];
 		var botObj = gameBoardArr[parseInt(arrId[1]) - 1][arrId[2]];
 		recursiveArr.push(botObj)
@@ -310,7 +347,6 @@ $('document').ready(function() {
 		}
 	}
 	function checkRightSide() {
-		arrId = tileDroppedOn.split('');
 		var rightObj = gameBoardArr[arrId[1]][arrId[2]];
 		var leftObj = gameBoardArr[arrId[1]][parseInt(arrId[2]) + 1];
 		recursiveArr.push(leftObj)
@@ -325,7 +361,6 @@ $('document').ready(function() {
 		}
 	}
 	function checkBottomSide() {
-		arrId = tileDroppedOn.split('');
 		var botObj = gameBoardArr[arrId[1]][arrId[2]];
 		var topObj = gameBoardArr[parseInt(arrId[1]) + 1][arrId[2]];
 		recursiveArr.push(topObj)
@@ -344,7 +379,6 @@ $('document').ready(function() {
 		}
 	}
 	function checkLeftSide() {
-		arrId = tileDroppedOn.split('');
 		var leftObj = gameBoardArr[arrId[1]][arrId[2]];
 		var rightObj = gameBoardArr[arrId[1]][parseInt(arrId[2]) - 1];
 		recursiveArr.push(rightObj);
@@ -515,45 +549,9 @@ $('document').ready(function() {
 		$('#pTwoMeeps').text(playerTwo.meeples);
 
 	}
-	//ArrayCheck(); // debug code
 
-	// checks if castles are paired and changes side.occupied = true
-	
-	// currently unused, planned for use in checkCastlecomplete
-	function tileCastleCheck(array) {
-		for (var i = 0; i < array.length; i++) {
-			if (array[i].occupied === false) {
-				return false;
-			}
-		}
-		return true;
-	}
-	// if meeple present, remove taht div and meeplecount++
-	
-	// function checkCastleSide(arrObj, side) {
-	// 	if (arrObj[side].paired && arrObj[side].complete === false) {
-	// 		arrObj[side].complete = true;
-	// 		console.log(side + ': castle complete'); //debug code
-	// 		if (arrObj[side].occupied) {
-	// 			if (arrObj[side].occupant === 0) {
-	// 				playerOne.points += (arrObj[side].pointValue * 2);
-	// 			} else {
-	// 				playerTwo.points += (arrObj[side].pointValue * 2);
-	// 			}
- // 			}
-	// 	}
 
-	// }
 
-	
-	
-	//debug code
-	// var testObj = { 
-	//  top: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, side: 'top'}, 
-	// right: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, side: 'right'}, 
-	// bottom: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, side: 'bottom'}, 
-	// left: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, side: 'left'}, 
-	// valueType: 'normal', sidesConnect: false}
 
 
 
