@@ -1,4 +1,4 @@
-var ARRAYSIZE = 4;
+var ARRAYSIZE = 5;
 
 var cardCount = 0;
 var playerTurn = 0;

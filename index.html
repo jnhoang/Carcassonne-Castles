@@ -7,8 +7,25 @@
 	<link href="https://fonts.googleapis.com/css?family=MedievalSharp" rel="stylesheet">
 </head>
 <body>
-	<div id='container'>
-		
+	<h1>Carcassonne Castles</h1>
+	
+	<div class='instructToggle'>
+	Instructions
+		<div class='instructions'>
+			<h1>Carcassonne Castles Instructions</h1>
+			<p>The goal of the game is to make Castles! Two players will take turns trying to build their castle empire!</p>
+			 <p>Each turn consists of 2 phases.</p>
+
+			<h2>Phase 1</h2>
+			<p>Drag and drop your tile. Use the <span class='instructBtn btnBg'>Rotate</span> Button to best position your tile
+			Press the <span class='instructBtn btnBg'>Place</span> Button</p>
+			<h2>Phase 2</h2>
+			<p>If a castle is empty, claim it as your own and click on it place a meeple inside!</p>
+			<p>Once a castle is claimed it cannot be occupied by another player.</p>
+			<p>Press the <span class='instructBtn btnBg'>Done</span> button to end your turn</p>
+		</div>
+	</div>		
+	<div id='container'>	
 		<div class='side'>
 			<div id='playerInfo'>
 				<div id='playerOne' class='playersBox'>
@@ -36,13 +53,11 @@
 				</div>
 			</div>
 			<div id='buttonBox'>
-				<button id='submitBtn'>Place</button>
-				<button id='rotateBtn'>Rotate</button>
-				<button id='meepleBtn'>Done</button>
+				<button id='rotateBtn' class='btnBg'>Rotate</button>
+				<button id='submitBtn' class='btnBg'>Place</button>
+				<button id='meepleBtn' class='btnBg'>Done</button>
 			</div>
 		</div>
-
-
 		<div id='gameBoard'></div>
 	</div>
 
