@@ -263,6 +263,13 @@ $('document').ready(function() {
 	 		if (gameBoardArr[arrId[1]][arrId[2]][event.target.className].occupied) {
 	 			console.log('aready occupied');
 	 		} else if (gameBoardArr[arrId[1]][arrId[2]][event.target.className].type === 'grass') {
+
+	 			swal({
+	 			  title: "Hey get off my Lawn!",
+	 			  text: "No meeples allowed on the grass.",
+	 			  timer: 2200,
+	 			  showConfirmButton: false
+	 			});
 	 			console.log('get off my lawn! Meeples can\' be placed on grass');
 	 		} else{
 		 		reserveMeepSpace(event);
