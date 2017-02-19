@@ -162,9 +162,9 @@ $('document').ready(function() {
 
 
 	function rotateBtnOn () {
-			// HTML side
-			rotateDeg += 90;
-			$('.displayCard > .imgBox').css('transform', 'rotate(' + rotateDeg + 'deg)');
+		// HTML side
+		rotateDeg += 90;
+		$('.displayCard > .imgBox').css('transform', 'rotate(' + rotateDeg + 'deg)');
 
 		// JS side
 		var temp = cardArr[cardCount].top;
@@ -270,7 +270,7 @@ $('document').ready(function() {
 
 //		castlePairCheck();
 
-		meepleBtnOff();
+		$('#meepleBtn').off('click', determineMeepSpace);
 		resetGlobalVars();
 		showNextCard();
 		btnListenersOn();

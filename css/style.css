@@ -152,7 +152,6 @@ button {
  	transform: rotate(0deg);
 	background-size: cover;
 	background-repeat: no-repeat;
-	z-index: 1;
 }
 .displayCard .imgBox {
 	transition: transform 300ms ease-in-out;
@@ -198,7 +197,6 @@ button {
 }
 .top, .bottom, .left, .right {
 	height: 32%;
-	z-index: 1;
 	box-sizing: border-box;
 }
 .top, .bottom {
