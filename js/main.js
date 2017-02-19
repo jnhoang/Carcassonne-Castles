@@ -376,10 +376,10 @@ $('document').ready(function() {
 				if (side === 'top' && !(indexNum[0] === 0) && !gameBoardArr[indexNum[0] - 1][indexNum[1]].empty) {
 					adjacentTile = gameBoardArr[indexNum[0] - 1][indexNum[1]];
 					changeOccupancy(tile, adjacentTile, 'top', 'bottom');
-				} else if (side === 'right' && !(indexNum[1] === 3) && !gameBoardArr[indexNum[0]][indexNum[1] + 1].empty) {
+				} else if (side === 'right' && !(indexNum[1] === ARRAYSIZE) && !gameBoardArr[indexNum[0]][indexNum[1] + 1].empty) {
 					adjacentTile = gameBoardArr[indexNum[0]][indexNum[1] + 1];
 					changeOccupancy(tile, adjacentTile, 'right', 'left');
-				} else if (side === 'bottom' && !(indexNum[0] === 3) && !gameBoardArr[indexNum[0] + 1][indexNum[1]].empty) {
+				} else if (side === 'bottom' && !(indexNum[0] === ARRAYSIZE) && !gameBoardArr[indexNum[0] + 1][indexNum[1]].empty) {
 					adjacentTile = gameBoardArr[indexNum[0] + 1][indexNum[1]];
 					changeOccupancy(tile, adjacentTile, 'bottom', 'top');
 				} else if (side === 'left' && !(indexNum[1] === 0) && !gameBoardArr[indexNum[0]][indexNum[1] - 1].empty) {
