@@ -194,7 +194,6 @@ $('document').ready(function() {
 			// changes what buttons are listening
 			btnListenersOff();
 			$('#meepleBtn').on('click', determineMeepSpace);
-
 	}
 	function logCurrentPlacement() {
 		arrId = tileDroppedOn.split('');
@@ -237,20 +236,18 @@ $('document').ready(function() {
 		$('#' + tileDroppedOn + ' > .left').off('click', determineMeeplePlacement);
 	}
 	function determineMeeplePlacement(event) {
-		console.log(event.target.className)
 		if (playerTurn === 0 && playerOne.meeples < 1) {
-			console.log('no more meeples left :\'\(, click Next');
 			monitorMeepPlacementOff();
 		} else if (playerTurn === 1 && playerTwo.meeples < 1){
-			console.log('no more meeples left :\'\(, click Next');
 			monitorMeepPlacementOff();
 	 	} else {
 	 		// trying to target placement & check if occupied
 	 		if (gameBoardArr[arrId[1]][arrId[2]][event.target.className].occupied) {
-	 			console.log('aready occupied');
+	 			swal({ title:'Already occupied!', text: 'Get your own place',
+	 			timer: 2000, showConfirmButton: false });
 	 		} else if (gameBoardArr[arrId[1]][arrId[2]][event.target.className].type === 'grass') {
-	 			swal({ title: "Hey get off my Lawn!", text: "No meeples allowed on the grass.",
-	 			timer: 2200, showConfirmButton: false });
+	 			swal({ title: 'Hey get off my Lawn!', text: 'No meeples allowed on the grass.',
+	 			timer: 2000, showConfirmButton: false });
 	 		} else{
 		 		reserveMeepSpace(event);
 	 		}
@@ -277,6 +274,7 @@ $('document').ready(function() {
 
 			updateGameState();
 		}
+
 		console.log(gameBoardArr)
 
 	}
@@ -300,24 +298,38 @@ $('document').ready(function() {
 	}
 	function updateGameState() {
 		$('.nextBox > .tilePlaceHolder').append(displayTile);
-		cardCount += 1;
-		
-		updatePlayerTurn();
+		if (cardCount === cardArr.length - 1) {
+			endGame();
+		} else {
+			cardCount += 1;
+			
+			updatePlayerTurn();
 
 
-		$('#meepleBtn').off('click', determineMeepSpace);
-		resetGlobalVars();
-		showNextCard();
-		btnListenersOn();
+			$('#meepleBtn').off('click', determineMeepSpace);
+			resetGlobalVars();
+			showNextCard();
+			btnListenersOn();
+		}
 	}
 	function updatePlayerTurn() {
 		playerTurn = (playerTurn + 1) % 2;
+		swal({ title: 'Player ' + (playerTurn + 1), text: 'It\'s your turn',
+		timer: 1000, showConfirmButton: false });
 	}
 	function resetGlobalVars() {
+		checkedCastlesArr = [];
 		rotateDeg = 0;
 		tileToMeeple = '';
 		tileDroppedOn = '';
 		arrId = '';
+	}
+	function endGame() {
+		if (playerOne.points > playerTwo.points) {
+			swal({ title:'Player One Wins1', showConfirmButton: true});
+		} else {
+			swal({ title:'Player Two Wins1', showConfirmButton: true});
+		}
 	}
 	function updatePlayerInfo() {
 		$('#pOneScore').text(playerOne.points);
@@ -342,11 +354,10 @@ $('document').ready(function() {
 		if (checkedCastlesArr.includes(arrIndex)){
 			return;
 		} else {
-			if (checkedCastlesArr.length > 10) {
+			if (checkedCastlesArr.length > 100) {
 				return
 			}
 			var indexNum = [];
-			var intermediary;
 			checkedCastlesArr.push(arrIndex);
 			console.log(arrIndex)
 			arrIndex = arrIndex.split(',');
@@ -354,44 +365,43 @@ $('document').ready(function() {
 				indexNum.push(parseInt(index));
 			})
 			console.log(indexNum)
-			for (var side in tile) {
-				if (tile[side].type === 'castle') {
-					console.log('found castle side at ' + side);
+		}
+		for (var side in tile) {
+			if (tile[side].type === 'castle') {
+				console.log('found castle side at ' + side);
 
-					var adjacentTile;
-					console.log(indexNum)
-					console.log(gameBoardArr[indexNum[0] - 1][indexNum[1]])
-					console.log(!gameBoardArr[indexNum[0] - 1][indexNum[1]].empty)
-					if (side === 'top' && !(indexNum[0] === 0) && !gameBoardArr[indexNum[0] - 1][indexNum[1]].empty) {
-						adjacentTile = gameBoardArr[indexNum[0] - 1][indexNum[1]];
-						console.log('adjacentTile: ', adjacentTile);
-						changeOccupancy(tile, adjacentTile, 'top', 'bottom');
-
-					} else if (side === 'right' && !(indexNum[1] === 3) && !gameBoardArr[indexNum[0]][indexNum[1] + 1].empty) {
-						adjacentTile = gameBoardArr[indexNum[0]][indexNum[1] + 1];
-						console.log('adjacentTile: ', adjacentTile);
-						changeOccupancy(tile, adjacentTile, 'right', 'left');
-
-
-					} else if (side === 'bottom' && !(indexNum[0] === 3) && !gameBoardArr[indexNum[0] + 1][indexNum[1]].empty) {
-						adjacentTile = gameBoardArr[indexNum[0] + 1][indexNum[1]];
-						console.log('adjacentTile: ', adjacentTile);
-						changeOccupancy(tile, adjacentTile, 'bottom', 'top');
-
-
-					} else if (side === 'left' && !(indexNum[1] === 0) && !gameBoardArr[indexNum[0]][indexNum[1] - 1].empty) {
-						adjacentTile = gameBoardArr[indexNum[0]][indexNum[1] - 1];
-						console.log('adjacentTile: ', adjacentTile);
-						changeOccupancy(tile, adjacentTile, 'left', 'right');
-
-					}
-					if (adjacentTile) {
-						checkCastleComplete(adjacentTile);
-					}
+				var adjacentTile;
+				console.log(indexNum)
+				
+				if (side === 'top' && !(indexNum[0] === 0) && !gameBoardArr[indexNum[0] - 1][indexNum[1]].empty) {
+					adjacentTile = gameBoardArr[indexNum[0] - 1][indexNum[1]];
+					changeOccupancy(tile, adjacentTile, 'top', 'bottom');
+				} else if (side === 'right' && !(indexNum[1] === 3) && !gameBoardArr[indexNum[0]][indexNum[1] + 1].empty) {
+					adjacentTile = gameBoardArr[indexNum[0]][indexNum[1] + 1];
+					changeOccupancy(tile, adjacentTile, 'right', 'left');
+				} else if (side === 'bottom' && !(indexNum[0] === 3) && !gameBoardArr[indexNum[0] + 1][indexNum[1]].empty) {
+					adjacentTile = gameBoardArr[indexNum[0] + 1][indexNum[1]];
+					changeOccupancy(tile, adjacentTile, 'bottom', 'top');
+				} else if (side === 'left' && !(indexNum[1] === 0) && !gameBoardArr[indexNum[0]][indexNum[1] - 1].empty) {
+					adjacentTile = gameBoardArr[indexNum[0]][indexNum[1] - 1];
+					changeOccupancy(tile, adjacentTile, 'left', 'right');
+				}
+				if (adjacentTile) {
+					checkCastleComplete(adjacentTile);
 				}
 			}
 		}
+		
 		console.log(checkedCastlesArr)
+
+		var pointCheckArr = []
+		
+		checkedCastlesArr.forEach(function(index) {
+			pointCheckArr.push(parseInt(index));
+		})
+
+		console.log('pointCheckArr', pointCheckArr)
+		
 	}
 
 	function changeOccupancy(objA, objB, sideA, sideB) {

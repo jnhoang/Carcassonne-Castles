@@ -58,8 +58,8 @@ ul {
 	width: 55px;
 	display:inline-block;
 	border: 1px solid black;
-	font-size: 18px;
 	text-align: center;
+	font-size: 18px;
 	line-height:26px;
 	background-size: contain;
 	color: black;
@@ -81,13 +81,14 @@ ul {
 	background-size: contain;
 
 }
+#playerOne, #playerTwo, #gameBoard, .imgBox {
+	background-size: cover;
+}
 #playerOne {
 	background-image: url('./../img/blue-pattern.jpg');
-	background-size: cover;
 }
 #playerTwo {
 	background-image: url('./../img/red-pattern.jpg');
-	background-size: cover;
 }
 #playerInfo {
 	height: 33%;
@@ -113,10 +114,10 @@ ul {
 	width: 71%;
 	box-shadow: inset 0 0 35px black;
 	display: flex;
+	flex-wrap: wrap;
 	align-items: center;
 	align-self: center;
 	justify-content: center;
-	flex-wrap: wrap;
 }
 #buttonBox {
 	text-align: center;
@@ -144,13 +145,12 @@ button {
 	z-index: 2;
 }
 .imgBox {
-	border-radius: 1px;
-	border: 1px solid black;
 	height: 100px;
 	width: 100px;
 	position: absolute;
+	border-radius: 1px;
+	border: 1px solid black;
  	transform: rotate(0deg);
-	background-size: cover;
 	background-repeat: no-repeat;
 }
 .displayCard .imgBox {
@@ -159,22 +159,6 @@ button {
 }
 .square .imgBox {
 	border: none;
-}
-#gameBoard {
-	width: 50%;
-	height: auto;
-	border: 1px solid red;
-	display: flex;
-	flex-wrap: wrap;
-	text-align: center;
-	align-items: center;
-	justify-content: space-around;
-	border: 20px solid #26231F; 
-	border-radius: 10px;
-	padding: 20px;
-	background-image: url('./../img/paper.jpg');
-	background-size: cover;
-	box-shadow: inset 0 0 150px black;
 }
 .row {
 	margin: 1px;
@@ -191,6 +175,21 @@ button {
 	border: 1px solid black;
 	border-radius: 2px;
 	background: rgba(0, 0, 0, 0.4);
+}
+#gameBoard {
+	width: 50%;
+	height: auto;
+	border: 1px solid red;
+	display: flex;
+	flex-wrap: wrap;
+	text-align: center;
+	align-items: center;
+	justify-content: space-around;
+	border: 20px solid #26231F; 
+	border-radius: 10px;
+	padding: 20px;
+	background-image: url('./../img/paper.jpg');
+	box-shadow: inset 0 0 150px black;
 }
 .boxShadow {
 	box-shadow: inset 0px 1px 10px black;	
@@ -210,7 +209,6 @@ button {
 	height: 100px;
 	width: 100px;
 }
-
 .meepleImage {
 	height: 25px;
 	width: 25px;
