@@ -7,6 +7,7 @@ var playerTurn = 0;
 var tileDroppedOn;
 
 // used to manipulate JS array
+var checkedCastlesArr = [];
 var gameBoardArr = [];
 var arrId;
 
@@ -140,16 +141,16 @@ $('document').ready(function() {
 			arrId = tileDroppedOn.split('');
 			gameBoardArr[arrId[1]][arrId[2]] = cardArr[cardCount]; 
 
-			updateBoard(gameBoardArr[arrId[1]][arrId[2]]);
+			updateBoard();
 
 			monitorMeepPlacementOn(this);
 
 			// changes what buttons are listening
 			btnListenersOff();
-			meepleBtnOn();
+			$('#meepleBtn').on('click', determineMeepSpace);
 
 	}
-	function updateBoard(arrTile) {
+	function updateBoard() {
 		//updates HTML board where tile was placed  
 		// change .displayCard to gameBoardArr (the updated values) 
 		$('#' + tileDroppedOn + ' > .top').text( $('.displayCard > .top').text());
@@ -162,67 +163,146 @@ $('document').ready(function() {
 		$('.displayCard').remove();
 
 		//castlePairCheck();
-		checkCastleComplete(arrTile);
 		
 		updatePlayerInfo();
 	}
-	// eventually, function that will add score will run checkCastleComplete
-	function checkCastleComplete(tileJustPlaced) { 	// tileJustPlaced == gameBoardArr[arrId[1]][arrId[2]]
-		checkForExistingTiles(tileJustPlaced)
-
-		// check for attr**
-
-		// find number of sides with castle piece on MAIN-TILE
-		// if only one -> castlePairCheck()
-		var castleSides = checkTileForSidesWithCastles(tileJustPlaced);
-		console.log(castleSides)
 
 
-		if (castleSides.length === 1) {
-			console.log('only had one side, didn\'t do anything')
-			console.log(gameBoardArr)
-			// if paired, assignPoints() <---- delete castleCheck and make this one
-			// need to see if castle is complete before assigning points
-			
-		// if #sides with castles on MAIN-TILE > 1
-		} else {
-			console.log('this castle had multiple sides');
+	function rotateBtnOn () {
+			// HTML side
+			rotateDeg += 90;
+			$('.displayCard > .imgBox').css('transform', 'rotate(' + rotateDeg + 'deg)');
 
+			rotateTileValues();
+	}
+	function rotateTileValues() {
+		// JS side
+		var temp = cardArr[cardCount].top;
+		cardArr[cardCount].top = cardArr[cardCount].left;
+		cardArr[cardCount].left = cardArr[cardCount].bottom;
+		cardArr[cardCount].bottom = cardArr[cardCount].right;
+		cardArr[cardCount].right = temp;
 
-		}
-
-		// castlePairCheck() -> check if all sides on MAIN-TILE are paired
-			// if one side on MAIN-TILE is unpaired, return false!! (castle is incomplete)
-			// if all sides on MAIN-TILE are paired, add their paired tile to an array
-				// mark this MAIN-TILE with an attr** that checkCastleComplete() knows to avoid it
-					// flip something on?
-				// check 2NDARY-TILES for attr**
-					// attr** == false -> add to an array 
-					// attr** == true -> do not add to array
-				// run checkCastleComplete() on all tiles in the array
-					// return true if all pass 
-
-
-		// if one is incomplete, return false, this tile is incomplete by association
-
-		// if 
+		// HTML side
+		temp = $('.displayCard > .top').text();
+		$('.displayCard > .top').text($('.displayCard > .left').text());
+		$('.displayCard > .left').text($('.displayCard > .bottom').text());
+		$('.displayCard > .bottom').text($('.displayCard > .right').text());
+		$('.displayCard > .right').text(temp);
 
 	}
 
-	function checkTileForSidesWithCastles(tile) {
-	// looks at given tile and checks for 'castle' type
-		var sidesArr = ['top', 'right', 'bottom', 'left'];
-		var sidesWithCastles = [];
-		for (var i = 0; i < sidesArr.length; i++) {
-			if (tile[sidesArr[i]].type === 'castle') {
-				sidesWithCastles.push(sidesArr[i]);
+	// meeple functions START
+	function monitorMeepPlacementOn() {
+		$('#' + tileDroppedOn + ' > .top').on('click', determineMeeplePlacement);
+		$('#' + tileDroppedOn + ' > .right').on('click', determineMeeplePlacement);
+		$('#' + tileDroppedOn + ' > .bottom').on('click', determineMeeplePlacement);
+		$('#' + tileDroppedOn + ' > .left').on('click', determineMeeplePlacement);			
+	}
+	function monitorMeepPlacementOff() {
+		$('#' + tileDroppedOn + ' > .top').off('click', determineMeeplePlacement);
+		$('#' + tileDroppedOn + ' > .right').off('click', determineMeeplePlacement);
+		$('#' + tileDroppedOn + ' > .bottom').off('click', determineMeeplePlacement);
+		$('#' + tileDroppedOn + ' > .left').off('click', determineMeeplePlacement);
+	}
+	function determineMeeplePlacement(event) {
+		console.log(event.target.className)
+		if (playerTurn === 0 && playerOne.meeples < 1) {
+			console.log('no more meeples left :\'\(, click Next');
+			monitorMeepPlacementOff();
+		} else if (playerTurn === 1 && playerTwo.meeples < 1){
+			console.log('no more meeples left :\'\(, click Next');
+			monitorMeepPlacementOff();
+	 	} else {
+	 		// trying to target placement & check if occupied
+	 		if (gameBoardArr[arrId[1]][arrId[2]][event.target.className].occupied) {
+	 			console.log('aready occupied');
+	 		} else if (gameBoardArr[arrId[1]][arrId[2]][event.target.className].type === 'grass') {
+	 			console.log('get off my lawn! Meeples can\' be placed on grass');
+	 		} else{
+		 		reserveMeepSpace(event);
+	 		}
+	 	}
+	 	console.log(gameBoardArr)
+	}
+	function reserveMeepSpace() {
+		if (tileToMeeple != '') {
+			$(tileToMeeple).text($(tileToMeeple).text());
+		} 
+		tileToMeeple = event.target;
+
+			if (playerTurn === 0) {
+				$(tileToMeeple).append('<div class="meepleImage meepleBlue"></div>');
+			} else {
+				$(tileToMeeple).append('<div class="meepleImage meepleRed"></div>');
 			}
+	}
+	function determineMeepSpace() {
+		checkCastleComplete(gameBoardArr[arrId[1]][arrId[2]]);
+		if (!tileToMeeple) {
+			updateGameState(); // can you just move this out of the if statement & remove other one?
+		} else {
+			placeMeeple();
+			$('#meepleBtn').off('click', determineMeepSpace);
+
+			updateGameState();
 		}
-		return sidesWithCastles;
+		console.log(gameBoardArr)
+
+	}
+	function placeMeeple() {
+	// add to html board
+
+	// add to js board
+	tileMeepled = $(tileToMeeple).attr('class');
+	gameBoardArr[arrId[1]][arrId[2]][tileMeepled].occupied = true;
+	gameBoardArr[arrId[1]][arrId[2]][tileMeepled].occupant = playerTurn;
+		if (playerTurn === 0) {
+			playerOne.meeples -= 1;
+		} else {
+			playerTwo.meeples -= 1;
+		}
 	}
 
-	var checkedCastlesArr = [];
-	function checkForExistingTiles(tile) {
+
+							// droppable object manipulation here!
+	function activateDrop() {
+		$('.square').droppable({ drop: function(event, ui) {
+			tileDroppedOn = $(this).attr('id');
+			$(this).removeClass('boxShadow');
+		}});
+	}
+	
+	function updateGameState() {
+		$('.nextBox').append(displayTile);
+		cardCount += 1;
+		
+		updatePlayerTurn();
+
+//		castlePairCheck();
+
+		meepleBtnOff();
+		resetGlobalVars();
+		showNextCard();
+		btnListenersOn();
+	}
+	function updatePlayerTurn() {
+		playerTurn = (playerTurn + 1) % 2;
+	}
+	function resetGlobalVars() {
+		rotateDeg = 0;
+		tileToMeeple = '';
+		tileDroppedOn = '';
+		arrId = '';
+	}
+	function updatePlayerInfo() {
+		$('#pOneScore').text(playerOne.points);
+		$('#pOneMeeps').text(playerOne.meeples);
+		$('#pTwoScore').text(playerTwo.points);
+		$('#pTwoMeeps').text(playerTwo.meeples);
+
+	}
+	function checkCastleComplete(tile) {
 		console.log(tile)
 		for (var i = 0; i < ARRAYSIZE; i++) {
 			for (var j = 0; j < ARRAYSIZE; j++) {
@@ -272,7 +352,7 @@ $('document').ready(function() {
 					} else if (side === 'bottom' && !(indexNum[0] === 3) && !gameBoardArr[indexNum[0] + 1][indexNum[1]].empty) {
 						adjacentTile = gameBoardArr[indexNum[0] + 1][indexNum[1]];
 						console.log('adjacentTile: ', adjacentTile);
-						changeOccupancy(tile, adjacentTile, 'bottom', 'left');
+						changeOccupancy(tile, adjacentTile, 'bottom', 'top');
 
 
 					} else if (side === 'left' && !(indexNum[1] === 0) && !gameBoardArr[indexNum[0]][indexNum[1] - 1].empty) {
@@ -289,142 +369,15 @@ $('document').ready(function() {
 		}
 		console.log(checkedCastlesArr)
 	}
-	// for (var side in tile) {
-	// 	if (tile[side].type === 'castle') {
-	// 		console.log('at arrayIndex', arrayIndex)
-	// 		console.log('found castle side at ' + side);
-
-	// 		var adjacentTile;
-	// 		console.log(arrayIndex[0])
-	// 		if (side === 'top' && !(arrayIndex[0] === 0) && !gameBoardArr[arrayIndex[0] - 1][arrayIndex[1]].empty) {
-	// 			adjacentTile = gameBoardArr[arrayIndex[0] - 1][arrayIndex[1]];
-	// 			console.log('adjacentTile: ', adjacentTile);
-	// 			// if (tile.top.paired == false || adjacentTile.bottom.paired == false) {
-	// 			// 	changeOccupancy(tile, adjacentTile, 'top', 'bottom');
-	// 			// }
-
-
-	// 		} else if (side === 'right' && !(arrayIndex[1] === 3) && !gameBoardArr[arrayIndex[0]][arrayIndex[1] + 1].empty) {
-	// 			adjacentTile = gameBoardArr[arrayIndex[0]][arrayIndex[1] + 1];
-	// 			console.log('adjacentTile: ', adjacentTile);
-	// 			// if (tile.right.paired == false || adjacentTile.left.paired == false) {
-	// 			// 	changeOccupancy(tile, adjacentTile, 'right', 'left');
-	// 			// }
-
-	// 		} else if (side === 'bottom' && !(arrayIndex[0] === 3) && !gameBoardArr[arrayIndex[0] + 1][arrayIndex[1]].empty) {
-	// 			adjacentTile = gameBoardArr[arrayIndex[0] + 1][arrayIndex[1]];
-	// 			console.log('adjacentTile: ', adjacentTile);
-	// 			// if (tile.bottom.paired == false || adjacentTile.top.paired == false) {
-	// 			// 	changeOccupancy(tile, adjacentTile, 'bottom', 'top');
-	// 			// }
-
-	// 		} else if (side === 'left' && !(arrayIndex[1] === 0) && !gameBoardArr[arrayIndex[0]][arrayIndex[1] - 1].empty) {
-	// 			adjacentTile = gameBoardArr[arrayIndex[0]][arrayIndex[1] - 1];
-	// 			console.log('adjacentTile: ', adjacentTile);
-	// 			// if (tile.left.paired == false || adjacentTile.right.paired == false) {
-	// 			// 	changeOccupancy(tile, adjacentTile, 'left', 'right');
-	// 			// }
-
-	// 		}
-
-	// 	recursiveArr = []
-	// 	console.log('recursiveArr reset', recursiveArr)
-	// 	console.log(counter)
-	// 	if (arr.length > 1) {
-	// 		if (counter === arr.length) {
-	// 			console.log('all sides were paired');
-	// 			return true;
-	// 		} else {
-	// 			console.log('not all paired')
-	// 			return false;
-	// 		}
-	// 	}
-
-	// }
-	function castlePairCheck(arr) {
-		// good candidate for switch statement
-		var counter = 0;
-
-		if (arr.length > 1) {
-			if (counter === arr.length) {
-			} else {
-			}
-		}
-		// must call checkForPair on each side-possible that castle on multiple sides
-
-	}
-	
-	
-	function checkTopSide() {
-		var topObj = gameBoardArr[arrId[1]][arrId[2]];
-		var botObj = gameBoardArr[parseInt(arrId[1]) - 1][arrId[2]];
-		recursiveArr.push(botObj)
-		console.log(topObj)
-		// this check is to make sure fx doesn't try to check for a non-existent square
-		if (arrId[1] === 0) {
-			return;
-		} else if (topObj.top.type === 'castle' && botObj.bottom.type === 'castle') {
-			// if occupied, flips paired castle's occupant to match that of its pair's occupant
-			console.log('checktopside reports true')
-			changeOccupancy(topObj, botObj, 'top', 'bottom');
-			return true;		
-		} else {
-			return false;
-		}
-	}
-	function checkRightSide() {
-		var rightObj = gameBoardArr[arrId[1]][arrId[2]];
-		var leftObj = gameBoardArr[arrId[1]][parseInt(arrId[2]) + 1];
-		recursiveArr.push(leftObj)
-
-		if (arrId[2] === 3) {
-			return;
-		} else if (rightObj.right.type === 'castle' && leftObj.left.type === 'castle') {			
-			changeOccupancy(rightObj, leftObj, 'right', 'left');
-			return true;
-		} else {
-			return false;
-		}
-	}
-	function checkBottomSide() {
-		var botObj = gameBoardArr[arrId[1]][arrId[2]];
-		var topObj = gameBoardArr[parseInt(arrId[1]) + 1][arrId[2]];
-		recursiveArr.push(topObj)
-
-		console.log('checkbotside')
-		if (arrId[1] === 3) {
-			return;
-		} else if (botObj.bottom.type === 'castle' && topObj.top.type === 'castle') {	
-			console.log('checkbotside reports true')
-			changeOccupancy(botObj, topObj, 'bottom', 'top');
-			return true;
-		} else {
-			console.log('checkbotside reports false')
-
-			return false;
-		}
-	}
-	function checkLeftSide() {
-		var leftObj = gameBoardArr[arrId[1]][arrId[2]];
-		var rightObj = gameBoardArr[arrId[1]][parseInt(arrId[2]) - 1];
-		recursiveArr.push(rightObj);
-
-		if (arrId[2] === 0) {
-			return;
-		}else if (leftObj.left.type === 'castle' && rightObj.right.type === 'castle') {
-			changeOccupancy(leftObj, rightObj, 'left', 'right');
-			return true;
-		}
-			return false;
-	}
-
 
 	function changeOccupancy(objA, objB, sideA, sideB) {
-		console.log('about to pair side a')
+		console.log('about to pair side a,', sideA)
 		objA[sideA].paired = true;
-		console.log('about to pair side b')
-
+		console.log(objA)
+		console.log('about to pair side b,',sideB)
 		objB[sideB].paired = true;
+		console.log(objB)
+
 
 		if (objA[sideA].occupied) {
 			objB[sideB].occupied = objA[sideA].occupied;
@@ -433,148 +386,7 @@ $('document').ready(function() {
 			objA[sideA].occupied = objB[sideB].occupied;
 			objA[sideA].occupant = objB[sideB].occupant;
 		}
-	}
-
-
-	function rotateBtnOn () {
-			// HTML side
-			rotateDeg += 90;
-			$('.displayCard > .imgBox').css('transform', 'rotate(' + rotateDeg + 'deg)');
-
-			rotateTileValues();
-	}
-	function rotateTileValues() {
-		// JS side
-		var temp = cardArr[cardCount].top;
-		cardArr[cardCount].top = cardArr[cardCount].left;
-		cardArr[cardCount].left = cardArr[cardCount].bottom;
-		cardArr[cardCount].bottom = cardArr[cardCount].right;
-		cardArr[cardCount].right = temp;
-
-		// HTML side
-		temp = $('.displayCard > .top').text();
-		$('.displayCard > .top').text($('.displayCard > .left').text());
-		$('.displayCard > .left').text($('.displayCard > .bottom').text());
-		$('.displayCard > .bottom').text($('.displayCard > .right').text());
-		$('.displayCard > .right').text(temp);
-
-	}
-
-// meeple functions START
-
-	function meepleBtnOn() {
-		$('#meepleBtn').on('click', changeMeepSpace);
-	}
-	function meepleBtnOff() {
-		$('#meepleBtn').off('click', changeMeepSpace);
-	}
-	function monitorMeepPlacementOn() {
-		$('#' + tileDroppedOn + ' > .top').on('click', determineMeeplePlacement);
-		$('#' + tileDroppedOn + ' > .right').on('click', determineMeeplePlacement);
-		$('#' + tileDroppedOn + ' > .bottom').on('click', determineMeeplePlacement);
-		$('#' + tileDroppedOn + ' > .left').on('click', determineMeeplePlacement);			
-	}
-	function monitorMeepPlacementOff() {
-		$('#' + tileDroppedOn + ' > .top').off('click', determineMeeplePlacement);
-		$('#' + tileDroppedOn + ' > .right').off('click', determineMeeplePlacement);
-		$('#' + tileDroppedOn + ' > .bottom').off('click', determineMeeplePlacement);
-		$('#' + tileDroppedOn + ' > .left').off('click', determineMeeplePlacement);
-	}
-	function determineMeeplePlacement(event) {
-		console.log(event.target.className)
-		if (playerTurn === 0 && playerOne.meeples < 1) {
-			console.log('no more meeples left :\'\(, click Next');
-			monitorMeepPlacementOff();
-		} else if (playerTurn === 1 && playerTwo.meeples < 1){
-			console.log('no more meeples left :\'\(, click Next');
-			monitorMeepPlacementOff();
-	 	} else {
-	 		// trying to target placement & check if occupied
-	 		if (gameBoardArr[arrId[1]][arrId[2]][event.target.className].occupied) {
-	 			console.log('aready occupied');
-	 		} else if (gameBoardArr[arrId[1]][arrId[2]][event.target.className].type === 'grass') {
-	 			console.log('get off my lawn! Meeples can\' be placed on grass');
-	 		} else{
-		 		reserveMeepSpace(event);
-	 		}
-	 	}
-	 	console.log(gameBoardArr)
-	}
-	function reserveMeepSpace() {
-		if (tileToMeeple != '') {
-			$(tileToMeeple).text($(tileToMeeple).text());
-		} 
-		tileToMeeple = event.target;
-
-			if (playerTurn === 0) {
-				$(tileToMeeple).append('<div class="meepleImage meepleBlue"></div>');
-			} else {
-				$(tileToMeeple).append('<div class="meepleImage meepleRed"></div>');
-			}
-	}
-	function changeMeepSpace() {
-		if (!tileToMeeple) {
-			updateGameState(); // can you just move this out of the if statement & remove other one?
-		} else {
-			placeMeeple();
-			monitorMeepPlacementOff();
-
-			updateGameState();
-		}
-	}
-	function placeMeeple() {
-	// add to html board
-
-	// add to js board
-	tileMeepled = $(tileToMeeple).attr('class');
-	gameBoardArr[arrId[1]][arrId[2]][tileMeepled].occupied = true;
-	gameBoardArr[arrId[1]][arrId[2]][tileMeepled].occupant = playerTurn;
-		if (playerTurn === 0) {
-			playerOne.meeples -= 1;
-		} else {
-			playerTwo.meeples -= 1;
-		}
-	}
-
-// meeple functions END
-
-							// droppable object manipulation here!
-	function activateDrop() {
-		$('.square').droppable({ drop: function(event, ui) {
-			tileDroppedOn = $(this).attr('id');
-			$(this).removeClass('boxShadow');
-		}});
-	}
-	
-	function updateGameState() {
-		$('.nextBox').append(displayTile);
-		cardCount += 1;
-		
-		updatePlayerTurn();
-
-//		castlePairCheck();
-
-		meepleBtnOff();
-		resetGlobalVars();
-		showNextCard();
-		btnListenersOn();
-	}
-	function updatePlayerTurn() {
-		playerTurn = (playerTurn + 1) % 2;
-	}
-	function resetGlobalVars() {
-		rotateDeg = 0;
-		tileToMeeple = '';
-		tileDroppedOn = '';
-		arrId = '';
-	}
-	function updatePlayerInfo() {
-		$('#pOneScore').text(playerOne.points);
-		$('#pOneMeeps').text(playerOne.meeples);
-		$('#pTwoScore').text(playerTwo.points);
-		$('#pTwoMeeps').text(playerTwo.meeples);
-
-	}
+	}	
 
 
 
