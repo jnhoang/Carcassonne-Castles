@@ -141,7 +141,7 @@ button {
 	display: flex;
 	height: 100px;
 	width: 100px;
-	z-index: 1;
+	z-index: 2;
 }
 .imgBox {
 	border-radius: 1px;
@@ -196,6 +196,7 @@ button {
 	box-shadow: inset 0px 1px 10px black;	
 }
 .top, .bottom, .left, .right {
+	z-index: 1;
 	height: 32%;
 	box-sizing: border-box;
 }
