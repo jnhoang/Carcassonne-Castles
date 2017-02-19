@@ -227,43 +227,60 @@ $('document').ready(function() {
 		for (var i = 0; i < ARRAYSIZE; i++) {
 			for (var j = 0; j < ARRAYSIZE; j++) {
 				if (gameBoardArr[i][j] === tile) {
-					arrayIndex = [i, j]
+					arrIndex = i + ',' + j;
+					console.log(arrIndex)
 				}
 			}
 		}
-		console.log('check for arrayIndex on checkedCastlesArr');
+		console.log('check for arrIndex on checkedCastlesArr');
 		console.log('checkedCastlesArr:', checkedCastlesArr);
-		console.log('arrayIndex:', arrayIndex)
-		if (checkedCastlesArr.includes(arrayIndex)){
+		console.log('arrIndex:', arrIndex)
+		if (checkedCastlesArr.includes(arrIndex)){
 			return;
 		} else {
 			if (checkedCastlesArr.length > 10) {
 				return
 			}
-			checkedCastlesArr.push(arrayIndex);
-
+			var indexNum = [];
+			var intermediary;
+			checkedCastlesArr.push(arrIndex);
+			console.log(arrIndex)
+			arrIndex = arrIndex.split(',');
+			arrIndex.forEach(function(index) {
+				indexNum.push(parseInt(index));
+			})
+			console.log(indexNum)
 			for (var side in tile) {
-				if (tile.empty === false && tile[side].type === 'castle') {
+				if (tile[side].type === 'castle') {
 					console.log('found castle side at ' + side);
 
 					var adjacentTile;
-					if (side === 'top' && !(arrayIndex[0] === 0)) {
-						adjacentTile = gameBoardArr[arrayIndex[0] - 1][arrayIndex[1]];
+					console.log(indexNum)
+					console.log(gameBoardArr[indexNum[0] - 1][indexNum[1]])
+					console.log(!gameBoardArr[indexNum[0] - 1][indexNum[1]].empty)
+					if (side === 'top' && !(indexNum[0] === 0) && !gameBoardArr[indexNum[0] - 1][indexNum[1]].empty) {
+						adjacentTile = gameBoardArr[indexNum[0] - 1][indexNum[1]];
 						console.log('adjacentTile: ', adjacentTile);
+						changeOccupancy(tile, adjacentTile, 'top', 'bottom');
 
-					} else if (side === 'right' && !(arrayIndex[1] === 3)) {
-						adjacentTile = gameBoardArr[arrayIndex[0]][arrayIndex[1] + 1];
+					} else if (side === 'right' && !(indexNum[1] === 3) && !gameBoardArr[indexNum[0]][indexNum[1] + 1].empty) {
+						adjacentTile = gameBoardArr[indexNum[0]][indexNum[1] + 1];
 						console.log('adjacentTile: ', adjacentTile);
+						changeOccupancy(tile, adjacentTile, 'right', 'left');
 
-					} else if (side === 'bottom' && !(arrayIndex[0] === 3)) {
-						adjacentTile = gameBoardArr[arrayIndex[0] + 1][arrayIndex[1]];
-						console.log('adjacentTile: ', adjacentTile);
 
-					} else if (side === 'left' && !(arrayIndex[1] === 0)) {
-						adjacentTile = gameBoardArr[arrayIndex[0]][arrayIndex[1] - 1];
+					} else if (side === 'bottom' && !(indexNum[0] === 3) && !gameBoardArr[indexNum[0] + 1][indexNum[1]].empty) {
+						adjacentTile = gameBoardArr[indexNum[0] + 1][indexNum[1]];
 						console.log('adjacentTile: ', adjacentTile);
+						changeOccupancy(tile, adjacentTile, 'bottom', 'left');
+
+
+					} else if (side === 'left' && !(indexNum[1] === 0) && !gameBoardArr[indexNum[0]][indexNum[1] - 1].empty) {
+						adjacentTile = gameBoardArr[indexNum[0]][indexNum[1] - 1];
+						console.log('adjacentTile: ', adjacentTile);
+						changeOccupancy(tile, adjacentTile, 'left', 'right');
+
 					}
-					console.log('about to loop to : ', arrayIndex[0],arrayIndex[1] - 1);
 					if (adjacentTile) {
 						checkForExistingTiles(adjacentTile);
 					}
