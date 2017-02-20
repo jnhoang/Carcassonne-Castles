@@ -2,32 +2,32 @@ var ARRAYSIZE = 5;
 
 var cardCount = 0;
 var playerTurn = 0;
-
-//var currentIndex = 0; placeholder at 0, to change to dynamic after shuffle ()
+var rotateDeg = 0;
 var tileDroppedOn;
 
 // used to manipulate JS array
-var checkedCastlesArr = [];
 var gameBoardArr = [];
 var arrId;
 var tileToMeeple = '';
-var rotateDeg = 0;
+
+
+// used in check for completed castle function
+var checkedCastlesArr = [];
 var pOneMeepsInCastle = 0;
 var pTwoMeepsInCastle = 0;
 var meepleBlue = '<div class="meepleImage meepleBlue"></div>';
 var meepleRed = '<div class="meepleImage meepleRed"></div>';
 var displayTile = '<div class="tile draggable displayCard"><div class="imgBox"></div><div class="top"></div><div \
 				  class="left"></div><div class="right"></div><div class="bottom"></div></div>';
-
 var playerOne = {
-	meeples: 1,
+	meeples: 4,
 	points: 0,
 }
 var playerTwo = {
-	meeples: 2,
+	meeples: 4,
 	points: 0,
 }
-function Tile(name, point) {
+function Tile(name) {
 	this.id = name;
 	this.type = '';
 	this.top = {};
@@ -146,8 +146,6 @@ var cardArr = [
 	valueType: 'normal', img: 'url("./img/topCastle.png")'},
   ]
 $('document').ready(function() {
-	//console.log('ready');
-
 
 	initArrays();
 	showNextCard();
@@ -268,12 +266,16 @@ $('document').ready(function() {
 		playerTurn === 0 ? $(tileToMeeple).append(meepleBlue) : $(tileToMeeple).append(meepleRed)
 	}
 	function confirmMeeplePlacement() {
-		if (!tileToMeeple) {
-			updateGameState(); // can you just move this out of the if statement & remove other one?
-		} else {
+		// if (!tileToMeeple) {
+		// 	//updateGameState(); // can you just move this out of the if statement & remove other one?
+		// // } else {
+		// 	placeMeeple();
+		// 	updateGameState();
+		// }
+		if (tileToMeeple){
 			placeMeeple();
-			updateGameState();
 		}
+			updateGameState();
 
 		$('#meepleBtn').off('click', confirmMeeplePlacement);
 	}
@@ -330,15 +332,20 @@ $('document').ready(function() {
 			}
 		} else if (pTwoMeepsInCastle > pOneMeepsInCastle) {
 			playerTwo.points += points * 2;
-			playerTwo.points += points;
+			if (pOneMeepsInCastle > 0) {
+				playerTwo.points += points;
+			}
 		} else if (pOneMeepsInCastle === pTwoMeepsInCastle) {
 			playerOne.points += points;
 			playerTwo.points += points;
 		}
 	}
 	function updatePlayerTurn() {
-		playerTurn = (playerTurn + 1) % 2;
+		console.log(playerTurn)
 		swal(messages.announcePlayerTurn);
+		console.log(playerTurn)
+		playerTurn = (playerTurn + 1) % 2;
+		console.log(playerTurn)
 	}
 	function resetGlobalVars() {
 		pOneMeepsInCastle = 0;

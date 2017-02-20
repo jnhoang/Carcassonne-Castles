@@ -6,31 +6,21 @@ body {
 	color: white;
 
 }
-body h1 {
+.title {
 	font-size: 50px;
 	text-align: center;
 	margin: 0;
 }
-body ul {
-	height: 50px;
-	width: 225px;
-	box-shadow: 12px 5px 10px 10px black;
-	background-color: #26231F;
-}
 body p {
 	margin: 5px;	
 }
-ul {
-	display: inline-block;
-	list-style: none;
-}
+
 .instructToggle div {
 	display: none;
 }
 .instructToggle:hover > .dropMenu.instructions {
 	display:inline-block;
 	animation: dropMenu 300ms ease-in-out;
-
 }
 @keyframes dropMenu{
 	0% {
@@ -70,7 +60,7 @@ ul {
 	justify-content: space-around;
 }
 .side {
-	height:700px;
+	height:650px;
 	width: 225px;
 	display: flex;
 	flex-wrap: wrap;
@@ -84,18 +74,11 @@ ul {
 #playerOne, #playerTwo, #gameBoard, .imgBox {
 	background-size: cover;
 }
-#playerOne {
-	background-image: url('./../img/blue-pattern.jpg');
-}
-#playerTwo {
-	background-image: url('./../img/red-pattern.jpg');
-}
 #playerInfo {
 	height: 33%;
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
-
 }
 .playersBox {
 	margin: 0 5px;
@@ -105,9 +88,15 @@ ul {
 .playersBox p {
 	display: inline-block;
 }
+#playerOne {
+	background-image: url('./../img/blue-pattern.jpg');
+}
+#playerTwo {
+	background-image: url('./../img/red-pattern.jpg');
+}
 .side h2{
 	align-self: center;
-	margin-bottom: 5px;
+	margin: 0;
 }
 .nextBox {
 	height: 21%;
@@ -119,28 +108,16 @@ ul {
 	align-self: center;
 	justify-content: center;
 }
-#buttonBox {
-	text-align: center;
-	justify-content: center;
-}
-.btnBg{
-	background-image: url('./../img/marble.jpg');	
-}
-button {
-	margin: 5px;
-	height: 50px;
-	width: 150px;
-	font-size: 24px;
-	font-family: 'MedievalSharp', cursive;
-	background-size: cover;
-	border-radius:2px;
-}
 
 .displayCard {
 	display: flex;
 	height: 100px;
 	width: 100px;
 	z-index: 2;
+}
+.tilePlaceHolder .displayCard {
+	background: transparent;
+	border: none;
 }
 .imgBox {
 	height: 100px;
@@ -153,25 +130,41 @@ button {
 }
 .displayCard .imgBox {
 	transition: transform 300ms ease-in-out;
-
 }
-.square .imgBox {
-	border: none;
+#buttonBox {
+	text-align: center;
+	justify-content: center;
+}
+button {
+	margin: 5px;
+	height: 50px;
+	width: 150px;
+	font-size: 24px;
+	font-family: 'MedievalSharp', cursive;
+	background-size: cover;
+	border-radius: 2px;
+}
+.btnBg{
+	background-image: url('./../img/marble.jpg');	
 }
 .row {
 	margin: 1px;
 	display: flex;
 }
 .tile {
-	box-sizing: border-box;
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: center;
-	margin: 2px;
 	height: 100px;
 	width: 100px;
+	margin: 2px;
+	display: flex;
+	flex-wrap: wrap;
+	box-sizing: border-box;
+	justify-content: center;
+	border: 2px solid black;
 	border-radius: 2px;
-	background: rgba(0, 0, 0, 0.4);
+	background: rgba(0, 0, 0, 0.3);
+}
+.tile .imgBox {
+	border: none;
 }
 #gameBoard {
 	width: 50%;
