@@ -8,7 +8,7 @@ var tileDroppedOn;
 // used to manipulate JS array
 var gameBoardArr = [];
 var arrId;
-var tileToMeeple = '';
+var tileToPlaceMeeple = '';
 
 
 // used in check for completed castle function
@@ -42,10 +42,13 @@ function Tile(name) {
 var messages = {
 	stayOffGrass : { title: 'Hey get off my Lawn!', text: 'No meeples allowed on the grass.',
  		timer: 2000, showConfirmButton: false },
+
 	noMeeples : { title: 'I\'m sorry I can\'t do that.', text: 'You have no meepled left.',
  		timer: 2000, showConfirmButton: false },
+
  	announcePlayerTurn : { title: 'Player ' + (playerTurn + 1), text: 'It\'s your turn',
 		timer: 1000, showConfirmButton: false },
+
 	playerOneWin: { title:'Player One Wins ' + playerOne.points + ' to' + playerTwo.points , showConfirmButton: true},
 	playerTwoWin: { title:'Player Two Wins', showConfirmButton: true},
 	draw: { title:'Game Tied!', showConfirmButton: true},
@@ -173,8 +176,8 @@ $('document').ready(function() {
 		activateDrop();
 	}
 	function addRow(rowNumber) {
+		// creates a row, adds it to the gameboard, adds ARRAYSIZE number of tiles to the row
 		$('#gameBoard').append('<div class="row row' + rowNumber + '"></div>');
-		
 		addTile(rowNumber);
 	}
 	function addTile(rowNumber) {
@@ -197,6 +200,18 @@ $('document').ready(function() {
 	function btnListenersOff() {
 		$('#submitBtn').off('click', submitBtn);
 		$('#rotateBtn').off('click', rotateBtn);
+	}
+	function rotateBtn() {
+		// HTML side
+		rotateDeg += 90;
+		$('.displayCard > .imgBox').css('transform', 'rotate(' + rotateDeg + 'deg)');
+
+		// JS side
+		var temp = cardArr[cardCount].top;
+		cardArr[cardCount].top = cardArr[cardCount].left;
+		cardArr[cardCount].left = cardArr[cardCount].bottom;
+		cardArr[cardCount].bottom = cardArr[cardCount].right;
+		cardArr[cardCount].right = temp;
 	}
 	function submitBtn() {
 		logCurrentPlacement();
@@ -222,21 +237,10 @@ $('document').ready(function() {
 
 		updatePlayerInfo();
 	}
-	function rotateBtn() {
-		// HTML side
-		rotateDeg += 90;
-		$('.displayCard > .imgBox').css('transform', 'rotate(' + rotateDeg + 'deg)');
-
-		// JS side
-		var temp = cardArr[cardCount].top;
-		cardArr[cardCount].top = cardArr[cardCount].left;
-		cardArr[cardCount].left = cardArr[cardCount].bottom;
-		cardArr[cardCount].bottom = cardArr[cardCount].right;
-		cardArr[cardCount].right = temp;
-	}
 
 	// meeple functions START
 	function monitorMeepPlacementOn() {
+		// listens for clicks to place meeples down
 		$('#' + tileDroppedOn + ' > .top').on('click', verifyMeeplePlacement);
 		$('#' + tileDroppedOn + ' > .right').on('click', verifyMeeplePlacement);
 		$('#' + tileDroppedOn + ' > .bottom').on('click', verifyMeeplePlacement);
@@ -262,44 +266,40 @@ $('document').ready(function() {
 	}
 	function reserveMeepSpace() {
 		// removes any previously placed meeples on the board before placing a new one
-		if (tileToMeeple != '') {
-			$(tileToMeeple).text($(tileToMeeple).text());
+		if (tileToPlaceMeeple != '') {
+			$(tileToPlaceMeeple).text($(tileToPlaceMeeple).text());
 		}
-		tileToMeeple = event.target;
+		tileToPlaceMeeple = event.target;
 
 		// places meeple to the html board
-		playerTurn === 0 ? $(tileToMeeple).append(meepleBlue) : $(tileToMeeple).append(meepleRed)
+		playerTurn === 0 ? $(tileToPlaceMeeple).append(meepleBlue) : $(tileToPlaceMeeple).append(meepleRed)
 	}
 	function confirmMeeplePlacement() {
-		if (tileToMeeple){
+		// permanently places a meeple, if no meeple is placed, continues on
+		if (tileToPlaceMeeple){
 			placeMeeple();
 		}
 		updateGameState();
 		$('#meepleBtn').off('click', confirmMeeplePlacement);
 	}
 	function placeMeeple() {
-	// add to js board
-	tileMeepled = $(tileToMeeple).attr('class');
-	gameBoardArr[arrId[1]][arrId[2]][tileMeepled].occupied = true;
-	gameBoardArr[arrId[1]][arrId[2]][tileMeepled].occupant = playerTurn;
-	
-	//subtract from player meeple count
-	playerTurn === 0 ? playerOne.meeples -= 1 : playerTwo.meeples -= 1;
+		// adds meeple to js board
+		tileMeepled = $(tileToPlaceMeeple).attr('class');
+		gameBoardArr[arrId[1]][arrId[2]][tileMeepled].occupied = true;
+		gameBoardArr[arrId[1]][arrId[2]][tileMeepled].occupant = playerTurn;
+		
+		//subtract from player meeple count
+		playerTurn === 0 ? playerOne.meeples -= 1 : playerTwo.meeples -= 1;
 
 	}
-	// droppable object manipulation here!
 	function activateDrop() {
+		// turns gameBoard tiles into droppable zones
 		$('.square').droppable({ drop: function(event, ui) {
 			tileDroppedOn = $(this).attr('id');
 		}});
 	}
 	function updateGameState() {
-		var complete = checkCastleComplete(gameBoardArr[arrId[1]][arrId[2]]);
-		if (complete) {
-			alotPoints();
-			returnMeeples();
-		}
-
+		castleComplete();
 		updatePlayerTurn();
 		updatePlayerInfo();
 		
@@ -312,6 +312,13 @@ $('document').ready(function() {
 			resetGlobalVars();
 			showNextCard();
 			btnListenersOn();
+		}
+	}
+	function castleComplete() {
+		var complete = checkCastleComplete(gameBoardArr[arrId[1]][arrId[2]]);
+		if (complete) {
+			alotPoints();
+			returnMeeples();
 		}
 	}
 	function returnMeeples() {
@@ -338,7 +345,7 @@ $('document').ready(function() {
 			playerTwo.points += points;
 		}
 	}
-	function updatePlayerTurn() {
+	function updatePlayerTurn() { // needs to be fixed
 		console.log(playerTurn)
 		swal(messages.announcePlayerTurn);
 		console.log(playerTurn)
@@ -350,9 +357,15 @@ $('document').ready(function() {
 		pTwoMeepsInCastle = 0;
 		checkedCastlesArr = [];
 		rotateDeg = 0;
-		tileToMeeple = '';
+		tileToPlaceMeeple = '';
 		tileDroppedOn = '';
 		arrId = '';
+	}
+	function updatePlayerInfo() {
+		$('#pOneScore').text(playerOne.points);
+		$('#pOneMeeps').text(playerOne.meeples);
+		$('#pTwoScore').text(playerTwo.points);
+		$('#pTwoMeeps').text(playerTwo.meeples);
 	}
 	function endGame() {
 		playerOne.points > playerTwo.points ? swal(messages.playerOneWin) : swal(messages.playerTwoWin);
@@ -364,36 +377,24 @@ $('document').ready(function() {
 			swal(messages.draw);
 		}
 	}
-	function updatePlayerInfo() {
-		$('#pOneScore').text(playerOne.points);
-		$('#pOneMeeps').text(playerOne.meeples);
-		$('#pTwoScore').text(playerTwo.points);
-		$('#pTwoMeeps').text(playerTwo.meeples);
-	}
+
 
 
 	function checkCastleComplete(tile) {
 		var isBroken = false;
-		var arrIndex;
-		// get unique identifier of tile in 2d array
-		for (var i = 0; i < ARRAYSIZE; i++) {
-			for (var j = 0; j < ARRAYSIZE; j++) {
-				if (gameBoardArr[i][j] === tile) {
-					arrIndex = i + ',' + j;
-				}
-			}
-		}
+		var indexOfTile = findTileInGameBoardArr(tile);
+
 		// check for endless loop
-		if (checkedCastlesArr.includes(arrIndex)){
+		if (checkedCastlesArr.includes(indexOfTile)){
 			return;
 		} else {
 			// accounts for the adjacent and connected tiles
-			// setup this way so that includes is able to read the string value in arrIndex
+			// setup this way so that includes is able to read the string value in indexOfTile
 			// indexNum is the number value, so the checks in the for-in loop may properly +/- values
 			var indexNum = []; 
-			checkedCastlesArr.push(arrIndex);
-			arrIndex = arrIndex.split(',');
-			arrIndex.forEach(function(index) {
+			checkedCastlesArr.push(indexOfTile);
+			indexOfTile = indexOfTile.split(',');
+			indexOfTile.forEach(function(index) {
 				indexNum.push(parseInt(index));
 			})
 			for (var side in tile) {
@@ -446,6 +447,17 @@ $('document').ready(function() {
 		}
 		return true
 	}
+	function findTileInGameBoardArr(tile) {
+		var arrIndex;
+		for (var i = 0; i < ARRAYSIZE; i++) {
+			for (var j = 0; j < ARRAYSIZE; j++) {
+				if (gameBoardArr[i][j] === tile) {
+					arrIndex = i + ',' + j;
+				}
+			}
+		}
+		return arrIndex;
+	}
 	function changeOccupancy(objA, objB, sideA, sideB) {
 		if (objA[sideA].occupant === 0) {
 			pOneMeepsInCastle += 1 
@@ -453,24 +465,6 @@ $('document').ready(function() {
 			pTwoMeepsInCastle += 1;
 		}
 	}	
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
