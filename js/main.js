@@ -265,8 +265,8 @@ $('document').ready(function() {
  			swal(messages.noMeeples);
  		} else {
 	 		reserveMeepSpace(event);
+		 	monitorMeepPlacementOff();
  		}
-	 	monitorMeepPlacementOff();
 	}
 	function reserveMeepSpace() {
 		// removes any previously placed meeples on the board before placing a new one
