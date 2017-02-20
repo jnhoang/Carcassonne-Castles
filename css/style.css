@@ -45,11 +45,13 @@ body p {
 	width: 50%;
 	box-shadow: inset 0 0 80px 5px black;
 	left: 25%;
-	top:3%;
+	top:17%;
 	animation: dropMenu 300ms ease-in-out;
-	text-align: center;
+	text-align: justify;
+	z-index: 3;
 }
-.instructions h1 {
+.instructions h1, h2 {
+	margin: 15px 0;
 	text-align: center;
 }
 .instructions p {

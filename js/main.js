@@ -41,6 +41,7 @@ function Tile(name) {
 	this.empty = true;
 }
 var messages = {
+	placeTileSomwhere: { title: 'You haven\'t placed your tile', text: 'You need to place it somehwere on the board'},
 	stayOffGrass : { title: 'Hey get off my Lawn!', text: 'No meeples allowed on the grass.',
  		timer: 2000, showConfirmButton: false },
 
@@ -223,13 +224,17 @@ $('document').ready(function() {
 		cardArr[cardCount].right = temp;
 	}
 	function submitBtn() {
-		logCurrentPlacement();
-		updateHTMLBoard();
-		monitorMeepPlacementOn(this);
+		if (!tileDroppedOn) {
+			swal(messages.placeTileSomwhere);
+		} else {
+			logCurrentPlacement();
+			updateHTMLBoard();
+			monitorMeepPlacementOn(this);
 
-		// changes what buttons are listening
-		btnListenersOff();
-		$('#meepleBtn').on('click', confirmMeeplePlacement);
+			// changes what buttons are listening
+			btnListenersOff();
+			$('#meepleBtn').on('click', confirmMeeplePlacement);
+		}
 	}
 	function logCurrentPlacement() {
 		arrId = tileDroppedOn.split('');
@@ -346,7 +351,7 @@ $('document').ready(function() {
 			if (pOneMeepsInCastle > 0) {
 				playerTwo.points += points;
 			}
-		} else if (pOneMeepsInCastle === pTwoMeepsInCastle) {
+		} else if (pOneMeepsInCastle > 0 && pOneMeepsInCastle === pTwoMeepsInCastle) {
 			playerOne.points += points;
 			playerTwo.points += points;
 		}
@@ -400,7 +405,9 @@ $('document').ready(function() {
 			var indexNum = []; 
 			checkedCastlesArr.push(indexOfTile);
 			convertStringToNumIndex(indexOfTile, indexNum)		
-			checkCastleSides(tile, indexNum); 
+			if (checkCastleSides(tile, indexNum) === false){
+				return false;
+			} 
 		}
 		return true
 	}
