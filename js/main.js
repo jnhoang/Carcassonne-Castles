@@ -161,7 +161,7 @@ $('document').ready(function() {
 	showNextCard();
 	btnListenersOn();
 	updatePlayerInfo();
-	
+	toggleInstructions();
 
 
 	// functions
@@ -196,6 +196,11 @@ $('document').ready(function() {
 		$('.nextBox > .tilePlaceHolder').append(displayTile);
 		$('.displayCard > .imgBox').css('background-image', cardArr[cardCount].img);
 		$('.draggable').draggable({ snap: ".square"});
+	}
+	function toggleInstructions() {
+		$('.instructToggle').on('click',function() {
+			$('.instructions').toggleClass('hide');
+		});
 	}
 	function btnListenersOn() {
 		$('#submitBtn').on('click', submitBtn);
