@@ -46,6 +46,9 @@ var messages = {
  		timer: 2000, showConfirmButton: false },
  	announcePlayerTurn : { title: 'Player ' + (playerTurn + 1), text: 'It\'s your turn',
 		timer: 1000, showConfirmButton: false },
+	playerOneWin: { title:'Player One Wins ' + playerOne.points + ' to' + playerTwo.points , showConfirmButton: true},
+	playerTwoWin: { title:'Player Two Wins', showConfirmButton: true},
+	draw: { title:'Game Tied!', showConfirmButton: true},
 
 }
 var cardArr = [
@@ -220,6 +223,7 @@ $('document').ready(function() {
 		updatePlayerInfo();
 	}
 	function rotateBtn() {
+		// HTML side
 		rotateDeg += 90;
 		$('.displayCard > .imgBox').css('transform', 'rotate(' + rotateDeg + 'deg)');
 
@@ -245,15 +249,16 @@ $('document').ready(function() {
 		$('#' + tileDroppedOn + ' > .left').off('click', verifyMeeplePlacement);
 	}
 	function verifyMeeplePlacement(event) {
- 		if (gameBoardArr[arrId[1]][arrId[2]][event.target.className].type === 'grass') {
+		//checks for illegal moves, else places a meeple on clicked location & turns off click listener
+		var userClick = gameBoardArr[arrId[1]][arrId[2]][event.target.className].type;
+ 		if (userClick === 'grass') {
  			swal(messages.stayOffGrass);
  		} else if ((playerTurn === 0 && playerOne.meeples < 1) || (playerTurn === 1 && playerTwo.meeples < 1)){
  			swal(messages.noMeeples);
  		} else {
 	 		reserveMeepSpace(event);
-	 		monitorMeepPlacementOff();
  		}
-	 	console.log(gameBoardArr)
+	 	monitorMeepPlacementOff();
 	}
 	function reserveMeepSpace() {
 		// removes any previously placed meeples on the board before placing a new one
@@ -266,17 +271,10 @@ $('document').ready(function() {
 		playerTurn === 0 ? $(tileToMeeple).append(meepleBlue) : $(tileToMeeple).append(meepleRed)
 	}
 	function confirmMeeplePlacement() {
-		// if (!tileToMeeple) {
-		// 	//updateGameState(); // can you just move this out of the if statement & remove other one?
-		// // } else {
-		// 	placeMeeple();
-		// 	updateGameState();
-		// }
 		if (tileToMeeple){
 			placeMeeple();
 		}
-			updateGameState();
-
+		updateGameState();
 		$('#meepleBtn').off('click', confirmMeeplePlacement);
 	}
 	function placeMeeple() {
@@ -301,14 +299,16 @@ $('document').ready(function() {
 			alotPoints();
 			returnMeeples();
 		}
-		if (cardCount === cardArr.length - 1) {
+
+		updatePlayerTurn();
+		updatePlayerInfo();
+		
+		if (cardCount === 2/*cardArr.length - 1*/) {
 			endGame();
 		} else {
 			cardCount += 1;
 
-			updatePlayerTurn();
-			updatePlayerInfo();
-			// $('#meepleBtn').off('click', confirmMeeplePlacement);
+			$('#meepleBtn').off('click', confirmMeeplePlacement);
 			resetGlobalVars();
 			showNextCard();
 			btnListenersOn();
@@ -320,8 +320,6 @@ $('document').ready(function() {
 	}
 	function alotPoints() {
 		var points = checkedCastlesArr.length;
-		console.log('playerOne: ' + pOneMeepsInCastle);
-		console.log('playerTwo: ' + pTwoMeepsInCastle);
 
 		// compare meeples, whoever has more meeples gets the points
 		/////////add message that points were given!
@@ -357,10 +355,13 @@ $('document').ready(function() {
 		arrId = '';
 	}
 	function endGame() {
+		playerOne.points > playerTwo.points ? swal(messages.playerOneWin) : swal(messages.playerTwoWin);
 		if (playerOne.points > playerTwo.points) {
-			swal({ title:'Player One Wins', showConfirmButton: true});
+			swal(messages.playerOneWin);
+		} else if (playerOne.points > playerTwo.points) {
+			swal(messages.playerTwoWin);
 		} else {
-			swal({ title:'Player Two Wins', showConfirmButton: true});
+			swal(messages.draw);
 		}
 	}
 	function updatePlayerInfo() {
