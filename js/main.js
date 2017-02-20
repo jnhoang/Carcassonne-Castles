@@ -7,6 +7,7 @@ var tileDroppedOn;
 
 // used to manipulate JS array
 var gameBoardArr = [];
+var jsArrayTile;
 var arrId;
 var tileToPlaceMeeple = '';
 
@@ -46,7 +47,10 @@ var messages = {
 	noMeeples : { title: 'I\'m sorry I can\'t do that.', text: 'You have no meepled left.',
  		timer: 2000, showConfirmButton: false },
 
- 	announcePlayerTurn : { title: 'Player ' + (playerTurn + 1), text: 'It\'s your turn',
+ 	announcePOneTurn : { title: 'Player 1', text: 'It\'s your turn',
+		timer: 1000, showConfirmButton: false },
+
+ 	announcePTwoTurn : { title: 'Player 2', text: 'It\'s your turn',
 		timer: 1000, showConfirmButton: false },
 
 	playerOneWin: { title:'Player One Wins ' + playerOne.points + ' to' + playerTwo.points , showConfirmButton: true},
@@ -215,7 +219,7 @@ $('document').ready(function() {
 	}
 	function submitBtn() {
 		logCurrentPlacement();
-		updateBoard();
+		updateHTMLBoard();
 		monitorMeepPlacementOn(this);
 
 		// changes what buttons are listening
@@ -227,7 +231,7 @@ $('document').ready(function() {
 		// updates JS board
 		gameBoardArr[arrId[1]][arrId[2]] = cardArr[cardCount];
 	}
-	function updateBoard() {
+	function updateHTMLBoard() {
 		//updates HTML board where tile was placed  
 		$('#' + tileDroppedOn + ' > .imgBox').css('background-image', cardArr[cardCount].img);
 		$('#' + tileDroppedOn + ' > .imgBox').css('transform', 'rotate(' + rotateDeg + 'deg)');
@@ -272,7 +276,7 @@ $('document').ready(function() {
 		tileToPlaceMeeple = event.target;
 
 		// places meeple to the html board
-		playerTurn === 0 ? $(tileToPlaceMeeple).append(meepleBlue) : $(tileToPlaceMeeple).append(meepleRed)
+		playerTurn === 0 ? $(tileToPlaceMeeple).append(meepleBlue) : $(tileToPlaceMeeple).append(meepleRed);
 	}
 	function confirmMeeplePlacement() {
 		// permanently places a meeple, if no meeple is placed, continues on
@@ -285,8 +289,9 @@ $('document').ready(function() {
 	function placeMeeple() {
 		// adds meeple to js board
 		tileMeepled = $(tileToPlaceMeeple).attr('class');
-		gameBoardArr[arrId[1]][arrId[2]][tileMeepled].occupied = true;
-		gameBoardArr[arrId[1]][arrId[2]][tileMeepled].occupant = playerTurn;
+		jsArrayTile = gameBoardArr[arrId[1]][arrId[2]][tileMeepled];
+		jsArrayTile.occupied = true;
+		jsArrayTile.occupant = playerTurn;
 		
 		//subtract from player meeple count
 		playerTurn === 0 ? playerOne.meeples -= 1 : playerTwo.meeples -= 1;
@@ -321,10 +326,6 @@ $('document').ready(function() {
 			returnMeeples();
 		}
 	}
-	function returnMeeples() {
-		playerOne.meeples += pOneMeepsInCastle;
-		playerTwo.meeples += pTwoMeepsInCastle;
-	}
 	function alotPoints() {
 		var points = checkedCastlesArr.length;
 
@@ -345,17 +346,19 @@ $('document').ready(function() {
 			playerTwo.points += points;
 		}
 	}
+	function returnMeeples() {
+		playerOne.meeples += pOneMeepsInCastle;
+		playerTwo.meeples += pTwoMeepsInCastle;
+	}
 	function updatePlayerTurn() { // needs to be fixed
-		console.log(playerTurn)
-		swal(messages.announcePlayerTurn);
-		console.log(playerTurn)
 		playerTurn = (playerTurn + 1) % 2;
-		console.log(playerTurn)
+		playerTurn === 0 ? swal(messages.announcePOneTurn) : swal(messages.announcePTwoTurn);
 	}
 	function resetGlobalVars() {
 		pOneMeepsInCastle = 0;
 		pTwoMeepsInCastle = 0;
 		checkedCastlesArr = [];
+		jsArrayTile = '';
 		rotateDeg = 0;
 		tileToPlaceMeeple = '';
 		tileDroppedOn = '';
@@ -378,72 +381,21 @@ $('document').ready(function() {
 		}
 	}
 
-
-
 	function checkCastleComplete(tile) {
+		// function will return true or false
 		var isBroken = false;
 		var indexOfTile = findTileInGameBoardArr(tile);
 
 		// check for endless loop
+		// accounts for the adjacent and connected tiles
+		// setup this way so that includes() is able to read the string value in indexOfTile
 		if (checkedCastlesArr.includes(indexOfTile)){
 			return;
 		} else {
-			// accounts for the adjacent and connected tiles
-			// setup this way so that includes is able to read the string value in indexOfTile
-			// indexNum is the number value, so the checks in the for-in loop may properly +/- values
 			var indexNum = []; 
 			checkedCastlesArr.push(indexOfTile);
-			indexOfTile = indexOfTile.split(',');
-			indexOfTile.forEach(function(index) {
-				indexNum.push(parseInt(index));
-			})
-			for (var side in tile) {
-				if (tile[side].type === 'castle') {
-					var adjacentTile;
-					var isConnected = false;
-
-					// refactor to clean this up (ex.)
-					// if (side === 'top') {
-					// 	adjacentTile = gameBoardArr[indexNum[0 -1]][indexNum[1]];
-					// 	if (adjacentTile && !adjacentTile.empty && adjacentTile.bottom.type === 'castle') {
-					// 		isConnected = true;
-					// 		changeOccupancy(tile, adjacentTile, 'top', 'bottom');
-					// 	}
-					// }
-					// checks that an adjacent tile exists, is not empty, and is connected
-					if (side === 'top' && !(indexNum[0] === 0) && !gameBoardArr[indexNum[0] - 1][indexNum[1]].empty) {
-						adjacentTile = gameBoardArr[indexNum[0] - 1][indexNum[1]];
-						if (adjacentTile && adjacentTile.bottom.type === 'castle') {
-							isConnected = true;
-							changeOccupancy(tile, adjacentTile, 'top', 'bottom');	
-						}
-					} else if (side === 'right' && !(indexNum[1] === ARRAYSIZE) && !gameBoardArr[indexNum[0]][indexNum[1] + 1].empty) {
-						adjacentTile = gameBoardArr[indexNum[0]][indexNum[1] + 1];
-						if (adjacentTile && adjacentTile.left.type === 'castle') {
-							isConnected = true;
-							changeOccupancy(tile, adjacentTile, 'right', 'left');
-						}
-					} else if (side === 'bottom' && !(indexNum[0] === ARRAYSIZE) && !gameBoardArr[indexNum[0] + 1][indexNum[1]].empty) {
-						adjacentTile = gameBoardArr[indexNum[0] + 1][indexNum[1]];
-						if (adjacentTile && adjacentTile.top.type === 'castle') {
-							isConnected = true;
-							changeOccupancy(tile, adjacentTile, 'bottom', 'top');
-						}
-					} else if (side === 'left' && !(indexNum[1] === 0) && !gameBoardArr[indexNum[0]][indexNum[1] - 1].empty) {
-						adjacentTile = gameBoardArr[indexNum[0]][indexNum[1] - 1];
-						if (adjacentTile && adjacentTile.right.type === 'castle') {
-							isConnected = true;
-							changeOccupancy(tile, adjacentTile, 'left', 'right');
-						}
-					}
-					if (isConnected) {
-						checkCastleComplete(adjacentTile);
-					}
-					if (!isConnected) {
-						return false
-					}
-				}
-			}
+			convertStringToNumIndex(indexOfTile, indexNum)		
+			checkCastleSides(tile, indexNum); 
 		}
 		return true
 	}
@@ -457,6 +409,62 @@ $('document').ready(function() {
 			}
 		}
 		return arrIndex;
+	}
+	function convertStringToNumIndex(indexOfTile, indexNum) {
+		// indexNum is the number value, so the checks in the for-in loop may properly +/- values
+		indexOfTile = indexOfTile.split(',');
+		indexOfTile.forEach(function(index) {
+			indexNum.push(parseInt(index));
+		})
+	}
+	function checkCastleSides(tile, indexNum) {
+		for (var side in tile) {
+			if (tile[side].type === 'castle') {
+				var adjacentTile;
+				var isConnected = false;
+
+				// refactor to clean this up (ex.)
+				// if (side === 'top') {
+				// 	adjacentTile = gameBoardArr[indexNum[0 -1]][indexNum[1]];
+				// 	if (adjacentTile && !adjacentTile.empty && adjacentTile.bottom.type === 'castle') {
+				// 		isConnected = true;
+				// 		changeOccupancy(tile, adjacentTile, 'top', 'bottom');
+				// 	}
+				// }
+				// checks that an adjacent tile exists, is not empty, and is connected
+				if (side === 'top' && !(indexNum[0] === 0) && !gameBoardArr[indexNum[0] - 1][indexNum[1]].empty) {
+					adjacentTile = gameBoardArr[indexNum[0] - 1][indexNum[1]];
+					if (adjacentTile && adjacentTile.bottom.type === 'castle') {
+						isConnected = true;
+						changeOccupancy(tile, adjacentTile, 'top', 'bottom');	
+					}
+				} else if (side === 'right' && !(indexNum[1] === ARRAYSIZE) && !gameBoardArr[indexNum[0]][indexNum[1] + 1].empty) {
+					adjacentTile = gameBoardArr[indexNum[0]][indexNum[1] + 1];
+					if (adjacentTile && adjacentTile.left.type === 'castle') {
+						isConnected = true;
+						changeOccupancy(tile, adjacentTile, 'right', 'left');
+					}
+				} else if (side === 'bottom' && !(indexNum[0] === ARRAYSIZE) && !gameBoardArr[indexNum[0] + 1][indexNum[1]].empty) {
+					adjacentTile = gameBoardArr[indexNum[0] + 1][indexNum[1]];
+					if (adjacentTile && adjacentTile.top.type === 'castle') {
+						isConnected = true;
+						changeOccupancy(tile, adjacentTile, 'bottom', 'top');
+					}
+				} else if (side === 'left' && !(indexNum[1] === 0) && !gameBoardArr[indexNum[0]][indexNum[1] - 1].empty) {
+					adjacentTile = gameBoardArr[indexNum[0]][indexNum[1] - 1];
+					if (adjacentTile && adjacentTile.right.type === 'castle') {
+						isConnected = true;
+						changeOccupancy(tile, adjacentTile, 'left', 'right');
+					}
+				}
+				if (isConnected) {
+					checkCastleComplete(adjacentTile);
+				}
+				if (!isConnected) {
+					return false
+				}
+			}
+		}
 	}
 	function changeOccupancy(objA, objB, sideA, sideB) {
 		if (objA[sideA].occupant === 0) {
