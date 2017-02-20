@@ -193,7 +193,7 @@ $('document').ready(function() {
 
 			// changes what buttons are listening
 			btnListenersOff();
-			$('#meepleBtn').on('click', determineMeepSpace);
+			$('#meepleBtn').on('click', confirmMeeplePlacement);
 	}
 	function logCurrentPlacement() {
 		arrId = tileDroppedOn.split('');
@@ -247,6 +247,7 @@ $('document').ready(function() {
 	 			timer: 2000, showConfirmButton: false });
 	 		} else{
 		 		reserveMeepSpace(event);
+		 		monitorMeepPlacementOff();
 	 		}
 	 	}
 	 	console.log(gameBoardArr)
@@ -261,19 +262,16 @@ $('document').ready(function() {
 		playerTurn === 0 ? $(tileToMeeple).append('<div class="meepleImage meepleBlue"></div>')
 			: $(tileToMeeple).append('<div class="meepleImage meepleRed"></div>')
 	}
-	function determineMeepSpace() {
+	function confirmMeeplePlacement() {
 		if (!tileToMeeple) {
 			updateGameState(); // can you just move this out of the if statement & remove other one?
 		} else {
 			placeMeeple();
-			$('#meepleBtn').off('click', determineMeepSpace);
-			checkCastleComplete(gameBoardArr[arrId[1]][arrId[2]]);
-
 			updateGameState();
 		}
 
+		$('#meepleBtn').off('click', confirmMeeplePlacement);
 		console.log(gameBoardArr)
-
 	}
 	function placeMeeple() {
 	// add to js board
@@ -294,17 +292,22 @@ $('document').ready(function() {
 		}});
 	}
 	function updateGameState() {
+		// check if last move allotted points
+		var complete = checkCastleComplete(gameBoardArr[arrId[1]][arrId[2]]);
+		console.log('castle is complete?', complete)
+		console.log(checkedCastlesArr)
+		console.log('completed castle points', checkedCastlesArr.length)
 		$('.nextBox > .tilePlaceHolder').append(displayTile);
 		if (cardCount === cardArr.length - 1) {
 			endGame();
 		} else {
 			cardCount += 1;
-			
+
 			updatePlayerTurn();
 			updatePlayerInfo();
 
 
-			$('#meepleBtn').off('click', determineMeepSpace);
+			// $('#meepleBtn').off('click', confirmMeeplePlacement);
 			resetGlobalVars();
 			showNextCard();
 			btnListenersOn();
@@ -341,6 +344,8 @@ $('document').ready(function() {
 		var pTwoMeepsInCastle = 0;
 	function checkCastleComplete(tile) {
 		var isBroken = false;
+		var arrIndex;
+		// get unique identifier of tile in 2d array
 		for (var i = 0; i < ARRAYSIZE; i++) {
 			for (var j = 0; j < ARRAYSIZE; j++) {
 				if (gameBoardArr[i][j] === tile) {
@@ -353,64 +358,74 @@ $('document').ready(function() {
 		if (checkedCastlesArr.includes(arrIndex)){
 			return;
 		} else {
-			if (checkedCastlesArr.length > 100) {
-				return
-			}
-			var indexNum = [];
+			var indexNum = []; 
 			checkedCastlesArr.push(arrIndex);
-			console.log(arrIndex)
 			arrIndex = arrIndex.split(',');
 			arrIndex.forEach(function(index) {
 				indexNum.push(parseInt(index));
 			})
-			console.log(indexNum)
 			console.log('checking castle piece at index', indexNum);
-		}
-		for (var side in tile) {
-			if (tile[side].type === 'castle') {
-				console.log('found castle side at ' + side);
+			for (var side in tile) {
+				if (tile[side].type === 'castle') {
+					console.log('found castle side at ' + side + ' of tile at ' + indexNum);
 
-				var adjacentTile;
-				var isConnected = false;
-				
-				if (side === 'top' && !(indexNum[0] === 0) && !gameBoardArr[indexNum[0] - 1][indexNum[1]].empty) {
-					adjacentTile = gameBoardArr[indexNum[0] - 1][indexNum[1]];
-					if (adjacentTile && adjacentTile.bottom.type === 'castle') {
-						console.log('top and bottom are connected')
-						isConnected = true;
-						changeOccupancy(tile, adjacentTile, 'top', 'bottom');
-						
+					var adjacentTile;
+					var isConnected = false;
+
+					// refactor to clean this up (ex.)
+					// if (side === 'top') {
+					// 	adjacentTile = gameBoardArr[indexNum[0 -1]][indexNum[1]];
+					// 	if (adjacentTile && !adjacentTile.empty && adjacentTile.bottom.type === 'castle') {
+					// 		isConnected = true;
+					// 		changeOccupancy(tile, adjacentTile, 'top', 'bottom');
+					// 	}
+					// }
+
+					if (side === 'top' && !(indexNum[0] === 0) && !gameBoardArr[indexNum[0] - 1][indexNum[1]].empty) {
+						adjacentTile = gameBoardArr[indexNum[0] - 1][indexNum[1]];
+						if (adjacentTile && adjacentTile.bottom.type === 'castle') {
+							console.log('top and bottom are connected')
+							isConnected = true;
+							changeOccupancy(tile, adjacentTile, 'top', 'bottom');	
+						}
+					} else if (side === 'right' && !(indexNum[1] === ARRAYSIZE) && !gameBoardArr[indexNum[0]][indexNum[1] + 1].empty) {
+						adjacentTile = gameBoardArr[indexNum[0]][indexNum[1] + 1];
+						if (adjacentTile && adjacentTile.left.type === 'castle') {
+							console.log('right and left are connected')
+							isConnected = true;
+							changeOccupancy(tile, adjacentTile, 'right', 'left');
+						}
+					} else if (side === 'bottom' && !(indexNum[0] === ARRAYSIZE) && !gameBoardArr[indexNum[0] + 1][indexNum[1]].empty) {
+						adjacentTile = gameBoardArr[indexNum[0] + 1][indexNum[1]];
+						if (adjacentTile && adjacentTile.top.type === 'castle') {
+							console.log('bottom and top are connected')
+							isConnected = true;
+							changeOccupancy(tile, adjacentTile, 'bottom', 'top');
+						}
+					} else if (side === 'left' && !(indexNum[1] === 0) && !gameBoardArr[indexNum[0]][indexNum[1] - 1].empty) {
+						adjacentTile = gameBoardArr[indexNum[0]][indexNum[1] - 1];
+						if (adjacentTile && adjacentTile.right.type === 'castle') {
+							console.log('left and right are connected')
+							isConnected = true;
+							changeOccupancy(tile, adjacentTile, 'left', 'right');
+						}
 					}
-				} else if (side === 'right' && !(indexNum[1] === ARRAYSIZE) && !gameBoardArr[indexNum[0]][indexNum[1] + 1].empty) {
-					adjacentTile = gameBoardArr[indexNum[0]][indexNum[1] + 1];
-					if (adjacentTile && adjacentTile.left.type === 'castle') {
-						console.log('right and left are connected')
-						isConnected = true;
-						changeOccupancy(tile, adjacentTile, 'right', 'left');
+					if (isConnected) {
+						console.log('is connected');
+						checkCastleComplete(adjacentTile);
 					}
-				} else if (side === 'bottom' && !(indexNum[0] === ARRAYSIZE) && !gameBoardArr[indexNum[0] + 1][indexNum[1]].empty) {
-					adjacentTile = gameBoardArr[indexNum[0] + 1][indexNum[1]];
-					if (adjacentTile && adjacentTile.top.type === 'castle') {
-						console.log('bottom and top are connected')
-						isConnected = true;
-						changeOccupancy(tile, adjacentTile, 'bottom', 'top');
-					}
-				} else if (side === 'left' && !(indexNum[1] === 0) && !gameBoardArr[indexNum[0]][indexNum[1] - 1].empty) {
-					adjacentTile = gameBoardArr[indexNum[0]][indexNum[1] - 1];
-					if (adjacentTile && adjacentTile.right.type === 'castle') {
-						console.log('left and right are connected')
-						isConnected = true;
-						changeOccupancy(tile, adjacentTile, 'left', 'right');
+					if (!isConnected) {
+						console.log('is broken');
+						return false
 					}
 				}
-
 			}
 		}
-		
-		console.log(checkedCastlesArr)
-		
+		return true
 	}
+	// for (var i = 0; i < checkedCastlesArr; i++) {
 
+	// }
 	// pointsAccrued += tile.top.pointValue + adjacentTile.bottom.pointValue;
 	// pointsAccrued += tile.right.pointValue + adjacentTile.left.pointValue;
 	// pointsAccrued += tile.bottom.pointValue + adjacentTile.top.pointValue;
