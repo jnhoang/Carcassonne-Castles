@@ -10,9 +10,10 @@ var tileDroppedOn;
 var checkedCastlesArr = [];
 var gameBoardArr = [];
 var arrId;
-var pointsAccrued = 0;
 var tileToMeeple = '';
 var rotateDeg = 0;
+var pOneMeepsInCastle = 0;
+var pTwoMeepsInCastle = 0;
 
 var displayTile = '<div class="tile draggable displayCard"><div class="imgBox"></div><div class="top"></div><div \
 				  class="left"></div><div class="right"></div><div class="bottom"></div></div>';
@@ -63,12 +64,6 @@ var cardArr = [
 	valueType: 'normal', sidesConnect: true, img: 'url("./img/rightLeftCastle.png")', empty: false},
 
 	{ top: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
-	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
-	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
-	left: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
-	valueType: 'normal', sidesConnect: false, img: 'url("./img/sepLeftBotCastle.png")', empty: false},
-
-	{ top: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
 	right: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
 	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
 	left: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
@@ -103,12 +98,6 @@ var cardArr = [
 	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
 	left: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
 	valueType: 'normal', sidesConnect: true, img: 'url("./img/leftTopBotCastle.png")', empty: false},
-
-	{ top: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
-	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
-	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 1, paired: false, complete: false}, 
-	left: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
-	valueType: 'normal', sidesConnect: false, img: 'url("./img/sepTopBotCastle.png")', empty: false},	
 
 	{ top: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
 	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0, paired: false, complete: false}, 
@@ -187,13 +176,13 @@ $('document').ready(function() {
 		$('#rotateBtn').off('click', rotateBtn);
 	}
 	function submitBtn() {
-			logCurrentPlacement();
-			updateBoard();
-			monitorMeepPlacementOn(this);
+		logCurrentPlacement();
+		updateBoard();
+		monitorMeepPlacementOn(this);
 
-			// changes what buttons are listening
-			btnListenersOff();
-			$('#meepleBtn').on('click', confirmMeeplePlacement);
+		// changes what buttons are listening
+		btnListenersOff();
+		$('#meepleBtn').on('click', confirmMeeplePlacement);
 	}
 	function logCurrentPlacement() {
 		arrId = tileDroppedOn.split('');
@@ -294,9 +283,23 @@ $('document').ready(function() {
 	function updateGameState() {
 		// check if last move allotted points
 		var complete = checkCastleComplete(gameBoardArr[arrId[1]][arrId[2]]);
+		var points = checkedCastlesArr.length * 2;
 		console.log('castle is complete?', complete)
 		console.log(checkedCastlesArr)
 		console.log('completed castle points', checkedCastlesArr.length)
+
+		// if castle complete, remove meeples
+
+
+
+		if (complete && pOneMeepsInCastle > pTwoMeepsInCastle) {
+			playerOne.points += points;
+			// compare meeples, whoever has more meeples gets the points
+		} else if (complete && pTwoMeepsInCastle > pOneMeepsInCastle) {
+			playerTwo.points += points;
+		}
+
+
 		$('.nextBox > .tilePlaceHolder').append(displayTile);
 		if (cardCount === cardArr.length - 1) {
 			endGame();
@@ -319,7 +322,6 @@ $('document').ready(function() {
 		timer: 1000, showConfirmButton: false });
 	}
 	function resetGlobalVars() {
-		pointsAccrued = 0;
 		checkedCastlesArr = [];
 		rotateDeg = 0;
 		tileToMeeple = '';
@@ -328,9 +330,9 @@ $('document').ready(function() {
 	}
 	function endGame() {
 		if (playerOne.points > playerTwo.points) {
-			swal({ title:'Player One Wins1', showConfirmButton: true});
+			swal({ title:'Player One Wins', showConfirmButton: true});
 		} else {
-			swal({ title:'Player Two Wins1', showConfirmButton: true});
+			swal({ title:'Player Two Wins', showConfirmButton: true});
 		}
 	}
 	function updatePlayerInfo() {
@@ -338,10 +340,9 @@ $('document').ready(function() {
 		$('#pOneMeeps').text(playerOne.meeples);
 		$('#pTwoScore').text(playerTwo.points);
 		$('#pTwoMeeps').text(playerTwo.meeples);
-
 	}
-		var pOneMeepsInCastle = 0;
-		var pTwoMeepsInCastle = 0;
+
+
 	function checkCastleComplete(tile) {
 		var isBroken = false;
 		var arrIndex;
@@ -423,35 +424,7 @@ $('document').ready(function() {
 		}
 		return true
 	}
-	// for (var i = 0; i < checkedCastlesArr; i++) {
 
-	// }
-	// pointsAccrued += tile.top.pointValue + adjacentTile.bottom.pointValue;
-	// pointsAccrued += tile.right.pointValue + adjacentTile.left.pointValue;
-	// pointsAccrued += tile.bottom.pointValue + adjacentTile.top.pointValue;
-	// pointsAccrued += tile.left.pointValue + adjacentTile.right.pointValue;
-	// console.log('points accrued:', pointsAccrued)
-
-	// if (isConnected) {
-	// 	console.log('points to give', pointsAccrued)
-	// 	console.log('is connected');
-	// 	checkCastleComplete(adjacentTile);
-	// }
-	// if (!isConnected) {
-	// 	console.log('is broken');
-	// }
-
-	// console.log(pOneMeepsInCastle);
-	// console.log(pTwoMeepsInCastle);
-	// console.log('pointsAccrued', pointsAccrued)
-	// if (pOneMeepsInCastle > pTwoMeepsInCastle) {
-	// 	playerOne.points += pointsAccrued;
-	// } else if (pTwoMeepsInCastle > pOneMeepsInCastle) {
-	// 	playerTwo.points += pointsAccrued;
-	// } else {
-	// 	playerOne.points += pointsAccrued;
-	// 	playerTwo.points += pointsAccrued;
-	// }
 
 
 
@@ -466,6 +439,8 @@ $('document').ready(function() {
 		} else if (objA[sideA].occupant === 1) {
 			pTwoMeepsInCastle += 1;
 		}
+		console.log(pOneMeepsInCastle)
+		console.log(pTwoMeepsInCastle)
 
 	}	
 
