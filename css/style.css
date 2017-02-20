@@ -1,5 +1,5 @@
 body {
-	background-image: url('./../img/fresno-wood.jpg');
+	background-image: url('./../img/med-wood.jpg');
 	background-repeat: no-repeat;
 	background-size: cover;
 	font-family: 'MedievalSharp', cursive;
@@ -56,6 +56,9 @@ body p {
 }
 .instructions p {
 	font-size: 24px;
+}
+.instructions .instructToggle {
+	margin-left: 37%;
 }
 .instructBtn {
 	height: 26px;
@@ -169,7 +172,7 @@ button {
 .tile {
 	height: 100px;
 	width: 100px;
-	margin: 2px;
+	margin: 3px;
 	display: flex;
 	flex-wrap: wrap;
 	box-sizing: border-box;
