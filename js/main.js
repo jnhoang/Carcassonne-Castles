@@ -277,25 +277,31 @@ $('document').ready(function() {
 	function activateDrop() {
 		$('.square').droppable({ drop: function(event, ui) {
 			tileDroppedOn = $(this).attr('id');
-			$(this).removeClass('boxShadow');
 		}});
 	}
 	function updateGameState() {
 		// check if last move allotted points
 		var complete = checkCastleComplete(gameBoardArr[arrId[1]][arrId[2]]);
-		var points = checkedCastlesArr.length * 2;
+		var points = checkedCastlesArr.length;
 		console.log('castle is complete?', complete)
 		console.log(checkedCastlesArr)
 		console.log('completed castle points', checkedCastlesArr.length)
 
 		// if castle complete, remove meeples
+		if (complete) {
+			playerOne.meeples += pOneMeepsInCastle;
+			playerTwo.meeples += pTwoMeepsInCastle;
+		}
 
 
-
+		// compare meeples, whoever has more meeples gets the points
+		/////////add message that points were given!
 		if (complete && pOneMeepsInCastle > pTwoMeepsInCastle) {
-			playerOne.points += points;
-			// compare meeples, whoever has more meeples gets the points
+			playerOne.points += points * 2;
 		} else if (complete && pTwoMeepsInCastle > pOneMeepsInCastle) {
+			playerTwo.points += points;
+		} else if (complete && pOneMeepsInCastle === pTwoMeepsInCastle) {
+			playerOne.points += points;
 			playerTwo.points += points;
 		}
 
@@ -322,6 +328,8 @@ $('document').ready(function() {
 		timer: 1000, showConfirmButton: false });
 	}
 	function resetGlobalVars() {
+		pOneMeepsInCastle = 0;
+		pTwoMeepsInCastle = 0;
 		checkedCastlesArr = [];
 		rotateDeg = 0;
 		tileToMeeple = '';
