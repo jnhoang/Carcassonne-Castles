@@ -10,7 +10,7 @@ var tileDroppedOn;
 var checkedCastlesArr = [];
 var gameBoardArr = [];
 var arrId;
-
+var pointsAccrued = 0;
 var tileToMeeple = '';
 var rotateDeg = 0;
 
@@ -224,28 +224,25 @@ $('document').ready(function() {
 
 	// meeple functions START
 	function monitorMeepPlacementOn() {
-		$('#' + tileDroppedOn + ' > .top').on('click', determineMeeplePlacement);
-		$('#' + tileDroppedOn + ' > .right').on('click', determineMeeplePlacement);
-		$('#' + tileDroppedOn + ' > .bottom').on('click', determineMeeplePlacement);
-		$('#' + tileDroppedOn + ' > .left').on('click', determineMeeplePlacement);			
+		$('#' + tileDroppedOn + ' > .top').on('click', verifyMeeplePlacement);
+		$('#' + tileDroppedOn + ' > .right').on('click', verifyMeeplePlacement);
+		$('#' + tileDroppedOn + ' > .bottom').on('click', verifyMeeplePlacement);
+		$('#' + tileDroppedOn + ' > .left').on('click', verifyMeeplePlacement);			
 	}
 	function monitorMeepPlacementOff() {
-		$('#' + tileDroppedOn + ' > .top').off('click', determineMeeplePlacement);
-		$('#' + tileDroppedOn + ' > .right').off('click', determineMeeplePlacement);
-		$('#' + tileDroppedOn + ' > .bottom').off('click', determineMeeplePlacement);
-		$('#' + tileDroppedOn + ' > .left').off('click', determineMeeplePlacement);
+		$('#' + tileDroppedOn + ' > .top').off('click', verifyMeeplePlacement);
+		$('#' + tileDroppedOn + ' > .right').off('click', verifyMeeplePlacement);
+		$('#' + tileDroppedOn + ' > .bottom').off('click', verifyMeeplePlacement);
+		$('#' + tileDroppedOn + ' > .left').off('click', verifyMeeplePlacement);
 	}
-	function determineMeeplePlacement(event) {
+	function verifyMeeplePlacement(event) {
 		if (playerTurn === 0 && playerOne.meeples < 1) {
 			monitorMeepPlacementOff();
 		} else if (playerTurn === 1 && playerTwo.meeples < 1){
 			monitorMeepPlacementOff();
 	 	} else {
 	 		// trying to target placement & check if occupied
-	 		if (gameBoardArr[arrId[1]][arrId[2]][event.target.className].occupied) {
-	 			swal({ title:'Already occupied!', text: 'Get your own place',
-	 			timer: 2000, showConfirmButton: false });
-	 		} else if (gameBoardArr[arrId[1]][arrId[2]][event.target.className].type === 'grass') {
+	 		if (gameBoardArr[arrId[1]][arrId[2]][event.target.className].type === 'grass') {
 	 			swal({ title: 'Hey get off my Lawn!', text: 'No meeples allowed on the grass.',
 	 			timer: 2000, showConfirmButton: false });
 	 		} else{
@@ -265,12 +262,12 @@ $('document').ready(function() {
 			: $(tileToMeeple).append('<div class="meepleImage meepleRed"></div>')
 	}
 	function determineMeepSpace() {
-		checkCastleComplete(gameBoardArr[arrId[1]][arrId[2]]);
 		if (!tileToMeeple) {
 			updateGameState(); // can you just move this out of the if statement & remove other one?
 		} else {
 			placeMeeple();
 			$('#meepleBtn').off('click', determineMeepSpace);
+			checkCastleComplete(gameBoardArr[arrId[1]][arrId[2]]);
 
 			updateGameState();
 		}
@@ -304,6 +301,7 @@ $('document').ready(function() {
 			cardCount += 1;
 			
 			updatePlayerTurn();
+			updatePlayerInfo();
 
 
 			$('#meepleBtn').off('click', determineMeepSpace);
@@ -318,6 +316,7 @@ $('document').ready(function() {
 		timer: 1000, showConfirmButton: false });
 	}
 	function resetGlobalVars() {
+		pointsAccrued = 0;
 		checkedCastlesArr = [];
 		rotateDeg = 0;
 		tileToMeeple = '';
@@ -338,8 +337,10 @@ $('document').ready(function() {
 		$('#pTwoMeeps').text(playerTwo.meeples);
 
 	}
+		var pOneMeepsInCastle = 0;
+		var pTwoMeepsInCastle = 0;
 	function checkCastleComplete(tile) {
-		console.log(tile)
+		var isBroken = false;
 		for (var i = 0; i < ARRAYSIZE; i++) {
 			for (var j = 0; j < ARRAYSIZE; j++) {
 				if (gameBoardArr[i][j] === tile) {
@@ -349,8 +350,6 @@ $('document').ready(function() {
 			}
 		}
 		console.log('check for arrIndex on checkedCastlesArr');
-		console.log('checkedCastlesArr:', checkedCastlesArr);
-		console.log('arrIndex:', arrIndex)
 		if (checkedCastlesArr.includes(arrIndex)){
 			return;
 		} else {
@@ -365,61 +364,94 @@ $('document').ready(function() {
 				indexNum.push(parseInt(index));
 			})
 			console.log(indexNum)
+			console.log('checking castle piece at index', indexNum);
 		}
 		for (var side in tile) {
 			if (tile[side].type === 'castle') {
 				console.log('found castle side at ' + side);
 
 				var adjacentTile;
-				console.log(indexNum)
+				var isConnected = false;
 				
 				if (side === 'top' && !(indexNum[0] === 0) && !gameBoardArr[indexNum[0] - 1][indexNum[1]].empty) {
 					adjacentTile = gameBoardArr[indexNum[0] - 1][indexNum[1]];
-					changeOccupancy(tile, adjacentTile, 'top', 'bottom');
+					if (adjacentTile && adjacentTile.bottom.type === 'castle') {
+						console.log('top and bottom are connected')
+						isConnected = true;
+						changeOccupancy(tile, adjacentTile, 'top', 'bottom');
+						
+					}
 				} else if (side === 'right' && !(indexNum[1] === ARRAYSIZE) && !gameBoardArr[indexNum[0]][indexNum[1] + 1].empty) {
 					adjacentTile = gameBoardArr[indexNum[0]][indexNum[1] + 1];
-					changeOccupancy(tile, adjacentTile, 'right', 'left');
+					if (adjacentTile && adjacentTile.left.type === 'castle') {
+						console.log('right and left are connected')
+						isConnected = true;
+						changeOccupancy(tile, adjacentTile, 'right', 'left');
+					}
 				} else if (side === 'bottom' && !(indexNum[0] === ARRAYSIZE) && !gameBoardArr[indexNum[0] + 1][indexNum[1]].empty) {
 					adjacentTile = gameBoardArr[indexNum[0] + 1][indexNum[1]];
-					changeOccupancy(tile, adjacentTile, 'bottom', 'top');
+					if (adjacentTile && adjacentTile.top.type === 'castle') {
+						console.log('bottom and top are connected')
+						isConnected = true;
+						changeOccupancy(tile, adjacentTile, 'bottom', 'top');
+					}
 				} else if (side === 'left' && !(indexNum[1] === 0) && !gameBoardArr[indexNum[0]][indexNum[1] - 1].empty) {
 					adjacentTile = gameBoardArr[indexNum[0]][indexNum[1] - 1];
-					changeOccupancy(tile, adjacentTile, 'left', 'right');
+					if (adjacentTile && adjacentTile.right.type === 'castle') {
+						console.log('left and right are connected')
+						isConnected = true;
+						changeOccupancy(tile, adjacentTile, 'left', 'right');
+					}
 				}
-				if (adjacentTile) {
-					checkCastleComplete(adjacentTile);
-				}
+
 			}
 		}
 		
 		console.log(checkedCastlesArr)
-
-		var pointCheckArr = []
-		
-		checkedCastlesArr.forEach(function(index) {
-			pointCheckArr.push(parseInt(index));
-		})
-
-		console.log('pointCheckArr', pointCheckArr)
 		
 	}
+
+	// pointsAccrued += tile.top.pointValue + adjacentTile.bottom.pointValue;
+	// pointsAccrued += tile.right.pointValue + adjacentTile.left.pointValue;
+	// pointsAccrued += tile.bottom.pointValue + adjacentTile.top.pointValue;
+	// pointsAccrued += tile.left.pointValue + adjacentTile.right.pointValue;
+	// console.log('points accrued:', pointsAccrued)
+
+	// if (isConnected) {
+	// 	console.log('points to give', pointsAccrued)
+	// 	console.log('is connected');
+	// 	checkCastleComplete(adjacentTile);
+	// }
+	// if (!isConnected) {
+	// 	console.log('is broken');
+	// }
+
+	// console.log(pOneMeepsInCastle);
+	// console.log(pTwoMeepsInCastle);
+	// console.log('pointsAccrued', pointsAccrued)
+	// if (pOneMeepsInCastle > pTwoMeepsInCastle) {
+	// 	playerOne.points += pointsAccrued;
+	// } else if (pTwoMeepsInCastle > pOneMeepsInCastle) {
+	// 	playerTwo.points += pointsAccrued;
+	// } else {
+	// 	playerOne.points += pointsAccrued;
+	// 	playerTwo.points += pointsAccrued;
+	// }
+
+
 
 	function changeOccupancy(objA, objB, sideA, sideB) {
 		console.log('about to pair side a,', sideA)
 		objA[sideA].paired = true;
-		console.log(objA)
 		console.log('about to pair side b,',sideB)
 		objB[sideB].paired = true;
-		console.log(objB)
-
-
-		if (objA[sideA].occupied) {
-			objB[sideB].occupied = objA[sideA].occupied;
-			objB[sideB].occupant = objA[sideA].occupant;
-		} else if (objB[sideB].occupied) {
-			objA[sideA].occupied = objB[sideB].occupied;
-			objA[sideA].occupant = objB[sideB].occupant;
+		console.log(objA[sideA].occupant)
+		if (objA[sideA].occupant === 0) {
+			pOneMeepsInCastle += 1;
+		} else if (objA[sideA].occupant === 1) {
+			pTwoMeepsInCastle += 1;
 		}
+
 	}	
 
 
