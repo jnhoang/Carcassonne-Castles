@@ -16,16 +16,18 @@ var tileToPlaceMeeple = '';
 var checkedCastlesArr = [];
 var pOneMeepsInCastle = 0;
 var pTwoMeepsInCastle = 0;
+
+
 var meepleBlue = '<div class="meepleImage meepleBlue"></div>';
 var meepleRed = '<div class="meepleImage meepleRed"></div>';
 var displayTile = '<div class="tile draggable displayCard"><div class="imgBox"></div><div class="top"></div><div \
 				  class="left"></div><div class="right"></div><div class="bottom"></div></div>';
 var playerOne = {
-	meeples: 4,
+	meeples: 3,
 	points: 0,
 }
 var playerTwo = {
-	meeples: 4,
+	meeples: 3,
 	points: 0,
 }
 function Tile(name) {
@@ -42,22 +44,20 @@ function Tile(name) {
 }
 var messages = {
 	placeTileSomwhere: { title: 'You haven\'t placed your tile', text: 'You need to place it somehwere on the board'},
-	tilePlaced : { title: 'Tile placed', timer: 500, showConfirmButton: false},
+	
 	stayOffGrass : { title: 'Hey get off my Lawn!', text: 'No meeples allowed on the grass.',
- 		timer: 1500, showConfirmButton: false },
+ 		timer: 1500, showConfirmButton: false, type: 'error'},
 
 	noMeeples : { title: 'I\'m sorry I can\'t do that.', text: 'You have no meepled left.',
  		timer: 1500, showConfirmButton: false },
 
  	announcePOneTurn : { title: 'Player 1', text: 'It\'s your turn',
-		timer: 800, showConfirmButton: false },
+		timer: 800, showConfirmButton: false, type: 'warning' },
 
  	announcePTwoTurn : { title: 'Player 2', text: 'It\'s your turn',
-		timer: 800, showConfirmButton: false },
+		timer: 800, showConfirmButton: false, type: 'warning' },
 
-	playerOneWin: { title:'Player One Wins ' + playerOne.points + ' to' + playerTwo.points , showConfirmButton: true},
-	playerTwoWin: { title:'Player Two Wins', showConfirmButton: true},
-	draw: { title:'Game Tied!', showConfirmButton: true},
+	draw: { title:'Game Tied!', timer: 15000, showConfirmButton: true},
 
 }
 var cardArr = [
@@ -165,7 +165,6 @@ $('document').ready(function() {
 	updatePlayerInfo();
 	toggleInstructions();
 
-
 	// functions
 	function initArrays() {
 		gameBoardArr = [];
@@ -206,11 +205,25 @@ $('document').ready(function() {
 	}
 	function btnListenersOn() {
 		$('#submitBtn').on('click', submitBtn);
+		$('#submitBtn').removeAttr('disabled')
+
 		$('#rotateBtn').on('click', rotateBtn);
+		$('#rotateBtn').removeAttr('disabled');
 	}
 	function btnListenersOff() {
 		$('#submitBtn').off('click', submitBtn);
+		$('#submitBtn').attr('disabled','disabled');
+
 		$('#rotateBtn').off('click', rotateBtn);
+		$('#rotateBtn').attr('disabled','disabled');
+	}
+	function meepleListenOn() {
+		$('#meepleBtn').on('click', confirmMeeplePlacement);
+		$('#meepleBtn').removeAttr('disabled');
+	}
+	function meepleListenOff() {
+		$('#meepleBtn').off('click', confirmMeeplePlacement);
+		$('#meepleBtn').attr('disabled','disabled');
 	}
 	function rotateBtn() {
 		// HTML side
@@ -228,14 +241,13 @@ $('document').ready(function() {
 		if (!tileDroppedOn) {
 			swal(messages.placeTileSomwhere);
 		} else {
-			swal(messages.tilePlaced);
 			logCurrentPlacement();
 			updateHTMLBoard();
 			monitorMeepPlacementOn(this);
 
 			// changes what buttons are listening
 			btnListenersOff();
-			$('#meepleBtn').on('click', confirmMeeplePlacement);
+			meepleListenOn();
 		}
 	}
 	function logCurrentPlacement() {
@@ -296,7 +308,7 @@ $('document').ready(function() {
 			placeMeeple();
 		}
 		updateGameState();
-		$('#meepleBtn').off('click', confirmMeeplePlacement);
+		meepleListenOff();
 	}
 	function placeMeeple() {
 		// adds meeple to js board
@@ -342,7 +354,6 @@ $('document').ready(function() {
 		var points = checkedCastlesArr.length;
 
 		// compare meeples, whoever has more meeples gets the points
-		/////////add message that points were given!
 		if (pOneMeepsInCastle > pTwoMeepsInCastle) {
 			playerOne.points += points * 2;
 			if (pTwoMeepsInCastle > 0) {
@@ -362,7 +373,7 @@ $('document').ready(function() {
 		playerOne.meeples += pOneMeepsInCastle;
 		playerTwo.meeples += pTwoMeepsInCastle;
 	}
-	function updatePlayerTurn() { // needs to be fixed
+	function updatePlayerTurn() {
 		playerTurn = (playerTurn + 1) % 2;
 		playerTurn === 0 ? swal(messages.announcePOneTurn) : swal(messages.announcePTwoTurn);
 	}
@@ -383,11 +394,13 @@ $('document').ready(function() {
 		$('#pTwoMeeps').text(playerTwo.meeples);
 	}
 	function endGame() {
-		playerOne.points > playerTwo.points ? swal(messages.playerOneWin) : swal(messages.playerTwoWin);
+		// had to leave win announcements out of messages object d/t dynamic points
 		if (playerOne.points > playerTwo.points) {
-			swal(messages.playerOneWin);
+			swal({ title:'Player One Wins ' + playerOne.points + ' to ' + playerTwo.points, 
+				timer: 15000, showConfirmButton: true });
 		} else if (playerOne.points > playerTwo.points) {
-			swal(messages.playerTwoWin);
+			swal({ title:'Player Two Wins ' + playerTwo.points + ' to ' + playerOne.points, 
+				timer: 15000, showConfirmButton: true });
 		} else {
 			swal(messages.draw);
 		}

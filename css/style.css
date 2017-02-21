@@ -1,3 +1,4 @@
+
 body {
 	background-image: url('./../img/med-wood.jpg');
 	background-repeat: no-repeat;
@@ -15,7 +16,7 @@ body {
 	background-clip: text;
 	font-size: 100px;
 	text-align: center;
-	margin: 0 0 25px 0;
+	margin: 25px 0 25px 0;
 }
 body p {
 	margin: 5px;	
@@ -23,12 +24,6 @@ body p {
 
 .hide {
 	display: none;
-	animation: hide 300ms ease-out;
-	animation-direction: reverse;
-}
-@keyframes hide {
- 0% { opacity: 100%; }
- 100% { opacity: 0%; }
 }
 @keyframes dropMenu {
 	0% { opacity: 0; }
@@ -188,6 +183,7 @@ button {
 	width: 50%;
 	height: auto;
 	padding: 10px;
+	align-self: center;
 }
 .boxShadow {
 	box-shadow: inset 0px 1px 10px black;	
@@ -221,5 +217,10 @@ button {
 }
 .meepleBlue {
 	background-image: url('./../img/meepleBlue.png');
+}
 
+footer {
+	margin: 25px 0;
+	text-align: center;
+	color: grey;
 }
