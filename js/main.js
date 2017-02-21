@@ -450,14 +450,6 @@ $('document').ready(function() {
 				var adjacentTile;
 				var isConnected = false;
 
-				// refactor to clean this up (ex.)
-				// if (side === 'top') {
-				// 	adjacentTile = gameBoardArr[indexNum[0 -1]][indexNum[1]];
-				// 	if (adjacentTile && !adjacentTile.empty && adjacentTile.bottom.type === 'castle') {
-				// 		isConnected = true;
-				// 		changeOccupancy(tile, adjacentTile, 'top', 'bottom');
-				// 	}
-				// }
 				// checks that an adjacent tile exists, is not empty, and is connected
 				if (side === 'top' && !(indexNum[0] === 0) && !gameBoardArr[indexNum[0] - 1][indexNum[1]].empty) {
 					adjacentTile = gameBoardArr[indexNum[0] - 1][indexNum[1]];
