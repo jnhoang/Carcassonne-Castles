@@ -51,7 +51,7 @@ Last change added darker background to complement the Title words.
 * Refactoring 
 
 ## Unsolved Problems
-*the algorithm that checks for connected castle pieces does not handle for two castles that are on a tile but are not connected. Because the algorithm returns on a broken castle, if one of the castles were not complete, the function would end before getting a chance to check the second castle.
+* the algorithm that checks for connected castle pieces does not handle for two castles that are on a tile but are not connected. Because the algorithm returns on a broken castle, if one of the castles were not complete, the function would end before getting a chance to check the second castle.
 
 ## Next Steps
 * alert user of points received
@@ -69,6 +69,6 @@ Last change added darker background to complement the Title words.
 * Wood backgrounds: https://pixabay.com/en/photos/?image_type=&cat=&min_width=&min_height=&q=wood+background&order=popular
 * background wood: https://pixabay.com/en/dark-marron-wood-smooth-clear-1932208/
 * dark wood: https://pixabay.com/en/funds-wood-smooth-clear-texture-1932210/
-* Tile set: http://russcon.org/RussCon/carcassonne/tiles.html - tiles
+* Tile set: http://russcon.org/RussCon/carcassonne/tiles.html
 * font: https://fonts.google.com/specimen/MedievalSharp
 * BGM: https://static.chronocompendium.com/Black/Music%20(Chrono%20Trigger)/Compendium/RPGamer/CorridorsofTime(MathewValente).mp3
