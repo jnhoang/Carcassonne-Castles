@@ -189,6 +189,7 @@ button {
 	width: 50%;
 	height: auto;
 	padding: 10px;
+	align-self: center;
 }
 .boxShadow {
 	box-shadow: inset 0px 1px 10px black;	
@@ -222,5 +223,10 @@ button {
 }
 .meepleBlue {
 	background-image: url('./../img/meepleBlue.png');
+}
 
+footer {
+	margin: 25px 0;
+	text-align: center;
+	color: grey;
 }

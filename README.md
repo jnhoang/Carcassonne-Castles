@@ -39,3 +39,5 @@ dark wood: https://pixabay.com/en/funds-wood-smooth-clear-texture-1932210/
 https://pixabay.com/en/photos/?image_type=&cat=&min_width=&min_height=&q=wood+background&order=popular
 
 Tile set: http://russcon.org/RussCon/carcassonne/tiles.html - tiles
+
+font: https://fonts.google.com/specimen/MedievalSharp
