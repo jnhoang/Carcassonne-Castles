@@ -16,7 +16,7 @@ body {
 	background-clip: text;
 	font-size: 100px;
 	text-align: center;
-	margin: 0 0 25px 0;
+	margin: 25px 0 25px 0;
 }
 body p {
 	margin: 5px;	
