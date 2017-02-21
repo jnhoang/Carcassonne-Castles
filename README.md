@@ -32,34 +32,46 @@ Last change added darker background to complement the Title words.
 ![final look](./img/progress-pics/2.20-final-style.png)
 
 
-## Technologies Used
+# Technologies Used
 * jquery
 * sweetalerts
 
-## Approach Taken
-* started by building a basic board
-* get a player turn locked down
+# Approach Taken
+* Started by building a basic board
+	* partial layout to look like markup
+* Get a player turn locked down
+	* New tiles & board dynamically generate
+	* Tiles rotate and representated on both HTML and JS side
+* Integrated graphics
+	* Rotation to correctly reflect rotation
+* Logic for castle completion
+	* Had to change how I executed the function, led to re-coding tile representations in code
 
 
-## Issues
+# Issues
 * Learning jquery
+* Getting rotations to reflect correctly, the tile is split into four divs that were rotating with the image rotation.
+* activating/deactivating event listeners
 * stuck on castle check for 3 days
 
 
-## Fun Stuff
+# Fun Stuff
 * Styling
 * Refactoring 
 
-## Unsolved Problems
+# Unsolved Problems
 * the algorithm that checks for connected castle pieces does not handle for two castles that are on a tile but are not connected. Because the algorithm returns on a broken castle, if one of the castles were not complete, the function would end before getting a chance to check the second castle.
+* Check for comleted castles is buggy, large castles seem to believe they are complete and assign points before they are actually complete.
 
-## Next Steps
+# Next Steps
 * alert user of points received
+* fix bugs
 * add roads
+* additional styling
 
 
 
-## Resources Used:
+# Resources Used:
 * Blue Meeples: https://www.thegamecrafter.com/parts/meeple-blue
 * Red Meeples: https://www.thegamecrafter.com/parts/meeple-red
 * Blue player background: https://pixabay.com/en/background-blue-1984434/
