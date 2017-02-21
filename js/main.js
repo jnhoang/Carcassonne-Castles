@@ -21,11 +21,11 @@ var meepleRed = '<div class="meepleImage meepleRed"></div>';
 var displayTile = '<div class="tile draggable displayCard"><div class="imgBox"></div><div class="top"></div><div \
 				  class="left"></div><div class="right"></div><div class="bottom"></div></div>';
 var playerOne = {
-	meeples: 4,
+	meeples: 3,
 	points: 0,
 }
 var playerTwo = {
-	meeples: 4,
+	meeples: 3,
 	points: 0,
 }
 function Tile(name) {
