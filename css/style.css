@@ -24,12 +24,6 @@ body p {
 
 .hide {
 	display: none;
-	animation: hide 300ms ease-out;
-	animation-direction: reverse;
-}
-@keyframes hide {
- 0% { opacity: 100%; }
- 100% { opacity: 0%; }
 }
 @keyframes dropMenu {
 	0% { opacity: 0; }

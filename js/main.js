@@ -46,16 +46,16 @@ var messages = {
 	placeTileSomwhere: { title: 'You haven\'t placed your tile', text: 'You need to place it somehwere on the board'},
 	
 	stayOffGrass : { title: 'Hey get off my Lawn!', text: 'No meeples allowed on the grass.',
- 		timer: 1500, showConfirmButton: false },
+ 		timer: 1500, showConfirmButton: false, type: 'error'},
 
 	noMeeples : { title: 'I\'m sorry I can\'t do that.', text: 'You have no meepled left.',
  		timer: 1500, showConfirmButton: false },
 
  	announcePOneTurn : { title: 'Player 1', text: 'It\'s your turn',
-		timer: 800, showConfirmButton: false },
+		timer: 800, showConfirmButton: false, type: 'warning' },
 
  	announcePTwoTurn : { title: 'Player 2', text: 'It\'s your turn',
-		timer: 800, showConfirmButton: false },
+		timer: 800, showConfirmButton: false, type: 'warning' },
 
 	draw: { title:'Game Tied!', timer: 15000, showConfirmButton: true},
 
@@ -164,7 +164,6 @@ $('document').ready(function() {
 	btnListenersOn();
 	updatePlayerInfo();
 	toggleInstructions();
-
 
 	// functions
 	function initArrays() {
@@ -333,7 +332,7 @@ $('document').ready(function() {
 		updatePlayerTurn();
 		updatePlayerInfo();
 		
-		if (cardCount === 2 cardArr.length - 1) {
+		if (cardCount === cardArr.length - 1) {
 			endGame();
 		} else {
 			cardCount += 1;
