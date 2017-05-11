@@ -156,8 +156,9 @@ var cardArr = [
 	bottom: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
 	left: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
 	img: 'url("./img/tiles/topCastle.png")'},
-  ]
+]
 $('document').ready(function() {
+
 
 	initArrays();
 	showNextCard();
@@ -166,6 +167,22 @@ $('document').ready(function() {
 	toggleInstructions();
 
 	// functions
+	function isMobile() {
+		if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+      return true;
+    }
+    return false;
+	}
+
+	function showMobileMessage() {
+		if(this.isMobile()){
+      $("#mobileMessage").show();
+      $('.mobileMessage').hide();
+    } else {
+      $("#mobileMessage").hide();
+    }
+	}
+
 	function initArrays() {
 		gameBoardArr = [];
 

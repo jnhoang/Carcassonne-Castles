@@ -1,65 +1,68 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<title></title>
-	<link rel='stylesheet' type='text/css' href='./css/style.css'>
-	<link rel='stylesheet' href='https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css'>
-	<link href='https://fonts.googleapis.com/css?family=MedievalSharp' rel='stylesheet'>
-	<link rel='stylesheet' type='text/css' href='./node_modules/sweetalert/dist/sweetalert.css'>
-</head>
-<body>
-	<h1 class='title'>Carcassonne Castles</h1>
+	<head>
+		<title></title>
+		<link rel='stylesheet' type='text/css' href='./css/style.css'>
+		<link rel='stylesheet' href='https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css'>
+		<link href='https://fonts.googleapis.com/css?family=MedievalSharp' rel='stylesheet'>
+		<link rel='stylesheet' type='text/css' href='./node_modules/sweetalert/dist/sweetalert.css'>
+	</head>
+	<body>
+		<div id="mobileMessage">
+	    In order to play, please view on a desktop.
+	  </div>
+		<h1 class='title'>Carcassonne Castles</h1>
 
-	<div class='instructions'>
-		<h1>Instructions</h1>
-			<p>The goal of the game is to make Castles! Two players will take turns trying to build their castle empire! Each turn consists of 2 phases.</p>
-		<h2>Phase 1</h2>
-			<p>Drag and drop your tile. Use the <span class='instructBtn btnBg'>Rotate</span> Button to best position your tile. Then press the <span class='instructBtn btnBg'>Place</span> Button to place your tile down.</p>
-		<h2>Phase 2</h2>
-			<p>Castles can be claimed by adding Meeples <span class='meepleImage meepleRed'></span><span class='meepleImage meepleBlue'></span> inside! Press the <span class='instructBtn btnBg'>Done</span> button to end your turn.</p>
-			<p>Once a castle is complete, the meeples inside will be returned to your meeple pool.</p>
-		<h2>Scoring</h2>
-			<p>Each time a castle is complete, points will be given! The person with the most Meeples in a castle will claim 2 points for every tile used in the construction of the castle.</p>
-			<p>The second player will receive just 1 point per tile.</p>
-			<button class='instructToggle btnBg'>Close</button>
-	</div>
-
-	<div id='container'>	
-		<div class='side'>
-			<button class='instructToggle btnBg'>Instructions</button>
-			<div id='playerInfo'>
-				<div id='playerOne' class='playersBox'>
-					<p>Player 1</p><br>
-					<p>Score:</p><span id='pOneScore'></span><br>
-					<p>Meeples: </p><span id='pOneMeeps'></span>
-				</div>
-				<div id='playerTwo' class='playersBox'>
-					<p>Player 2</p><br>
-					<p>Score:</p><span id='pTwoScore'></span><br>
-					<p>Meeples: </p><span id='pTwoMeeps'></span>
-				</div>
-			</div>
-
-			<h2>Tile to Place</h2>
-			<div class='nextBox'>
-				<div class='tilePlaceHolder'>
-				</div>
-			</div>
-			<div id='buttonBox'>
-				<button id='rotateBtn' class='btnBg'>Rotate</button>
-				<button id='submitBtn' class='btnBg'>Place</button>
-				<button id='meepleBtn' class='btnBg'>Done</button>
-			</div>
+		<div class='instructions'>
+			<h1>Instructions</h1>
+				<p>The goal of the game is to make Castles! Two players will take turns trying to build their castle empire! Each turn consists of 2 phases.</p>
+			<h2>Phase 1</h2>
+				<p>Drag and drop your tile. Use the <span class='instructBtn btnBg'>Rotate</span> Button to best position your tile. Then press the <span class='instructBtn btnBg'>Place</span> Button to place your tile down.</p>
+			<h2>Phase 2</h2>
+				<p>Castles can be claimed by adding Meeples <span class='meepleImage meepleRed'></span><span class='meepleImage meepleBlue'></span> inside! Press the <span class='instructBtn btnBg'>Done</span> button to end your turn.</p>
+				<p>Once a castle is complete, the meeples inside will be returned to your meeple pool.</p>
+			<h2>Scoring</h2>
+				<p>Each time a castle is complete, points will be given! The person with the most Meeples in a castle will claim 2 points for every tile used in the construction of the castle.</p>
+				<p>The second player will receive just 1 point per tile.</p>
+				<button class='instructToggle btnBg'>Close</button>
 		</div>
-		<div id='gameBoard'></div>
-	</div>
 
-	<footer>A game by Justin Hoang. Based on the board game Carcassonne designed by Klaus-Jürgen Wrede. Music from Chrono Trigger, remixed by Mathew Valente</footer>
-	<audio src='./audio/CorridorsofTime(MathewValente).mp3' autoplay='true'></audio>
+		<div id='container'>	
+			<div class='side'>
+				<button class='instructToggle btnBg'>Instructions</button>
+				<div id='playerInfo'>
+					<div id='playerOne' class='playersBox'>
+						<p>Player 1</p><br>
+						<p>Score:</p><span id='pOneScore'></span><br>
+						<p>Meeples: </p><span id='pOneMeeps'></span>
+					</div>
+					<div id='playerTwo' class='playersBox'>
+						<p>Player 2</p><br>
+						<p>Score:</p><span id='pTwoScore'></span><br>
+						<p>Meeples: </p><span id='pTwoMeeps'></span>
+					</div>
+				</div>
 
-	<script src='https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js'></script>
-	<script src='https://code.jquery.com/ui/1.12.1/jquery-ui.js'></script>
-	<script src='./node_modules/sweetalert/dist/sweetalert.min.js'></script>
-	<script type='text/javascript' src='./js/main.js'></script>
-</body>
+				<h2>Tile to Place</h2>
+				<div class='nextBox'>
+					<div class='tilePlaceHolder'>
+					</div>
+				</div>
+				<div id='buttonBox'>
+					<button id='rotateBtn' class='btnBg'>Rotate</button>
+					<button id='submitBtn' class='btnBg'>Place</button>
+					<button id='meepleBtn' class='btnBg'>Done</button>
+				</div>
+			</div>
+			<div id='gameBoard'></div>
+		</div>
+
+		<footer><p>A game by Justin Hoang.</p><p>Based on the board game Carcassonne designed by Klaus-Jürgen Wrede.</p> <p>Music from Chrono Trigger, remixed by Mathew Valente.</p></footer>
+		<audio src='./audio/CorridorsofTime(MathewValente).mp3' autoplay='true'></audio>
+
+		<script src='https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js'></script>
+		<script src='https://code.jquery.com/ui/1.12.1/jquery-ui.js'></script>
+		<script src='./node_modules/sweetalert/dist/sweetalert.min.js'></script>
+		<script type='text/javascript' src='./js/main.js'></script>
+	</body>
 </html>
