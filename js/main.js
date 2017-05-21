@@ -60,103 +60,7 @@ var messages = {
 	draw: { title:'Game Tied!', timer: 15000, showConfirmButton: true},
 
 }
-var cardArr = [
-	{ top: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
-	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
-	bottom: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
-	left: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
-	img: 'url("./img/tiles/topCastle.png")'},
 
-	{ top: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
-	right: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
-	bottom: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
-	left: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
-	img: 'url("./img/tiles/rightCastle.png")'},
-
-	{ top: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
-	right: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
-	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
-	left: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
-	img: 'url("./img/tiles/rightLeftBotCastle.png")'},
-
-	{ top: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
-	right: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
-	bottom: { type: 'grass', occupied: false, occupant: '', pointValue: 0},
-	left: { type: 'castle', occupied: false, occupant: '', pointValue: 1},
-	img: 'url("./img/tiles/rightLeftCastle.png")'},
-
-	{ top: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
-	right: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
-	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
-	left: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
-	img: 'url("./img/tiles/rightBotCastle.png")'},
-
-	{ top: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
-	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
-	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
-	left: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
-	img: 'url("./img/tiles/leftBotCastle.png")'},
-
-	{ top: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
-	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
-	bottom: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
-	left: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
-	img: 'url("./img/tiles/leftCastle.png")'},
-
-	{ top: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
-	right: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
-	bottom: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
-	left: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
-	img: 'url("./img/tiles/topRightCastle.png")'},
-
-	{ top: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
-	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
-	bottom: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
-	left: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
-	img: 'url("./img/tiles/leftCastle.png")'},
-
-	{ top: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
-	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
-	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
-	left: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
-	img: 'url("./img/tiles/leftTopBotCastle.png")'},
-
-	{ top: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
-	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
-	bottom: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
-	left: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
-	img: 'url("./img/tiles/topCastle.png")'},
-
-	{ top: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
-	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
-	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
-	left: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
-	img: 'url("./img/tiles/leftTopBotCastle.png")'},
-
-	{ top: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
-	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
-	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
-	left: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
-	img: 'url("./img/tiles/botCastle.png")'},
-
-	{ top: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
-	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
-	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
-	left: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
-	img: 'url("./img/tiles/leftBotCastle.png")'},
-
-	{ top: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
-	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
-	bottom: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
-	left: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
-	img: 'url("./img/tiles/topBotCastle.png")'},
-
-	{ top: { type: 'castle', occupied: false, occupant: '', pointValue: 1}, 
-	right: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
-	bottom: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
-	left: { type: 'grass', occupied: false, occupant: '', pointValue: 0}, 
-	img: 'url("./img/tiles/topCastle.png")'},
-]
 $('document').ready(function() {
 
 
@@ -167,17 +71,26 @@ $('document').ready(function() {
 	toggleInstructions();
 
 	// functions
-	function isMobile() {
-		if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
-      return true;
-    }
-    return false;
+	function detectmob() { 
+	 if( navigator.userAgent.match(/Android/i)
+	 	|| navigator.userAgent.match(/webOS/i)
+	 	|| navigator.userAgent.match(/iPhone/i)
+	 	|| navigator.userAgent.match(/iPad/i)
+	 	|| navigator.userAgent.match(/iPod/i)
+	 	|| navigator.userAgent.match(/BlackBerry/i)
+	 	|| navigator.userAgent.match(/Windows Phone/i)
+	 ){
+	    return true;
+	  }
+	 else {
+	    return false;
+	  }
 	}
 
 	function showMobileMessage() {
-		if(this.isMobile()){
+		if (detectMob()) {
       $("#mobileMessage").show();
-      $('.mobileMessage').hide();
+      $('.instructToggle').attr("disabled","disabled");
     } else {
       $("#mobileMessage").hide();
     }

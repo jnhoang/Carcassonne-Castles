@@ -229,7 +229,7 @@ footer {
   font-size: 3em;
   border-radius: 10px;
   padding: 20px;
-  display: inline-block;
+  display: none;
   margin: 15px;
   vertical-align: top;
   text-align: center;
