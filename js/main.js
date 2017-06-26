@@ -219,10 +219,9 @@ $('document').ready(function() {
  			swal(messages.noMeeples);
  		} else {
 	 		reserveMeepSpace(event);
-		 	monitorMeepPlacementOff();
  		}
 	}
-	function reserveMeepSpace() {
+	function reserveMeepSpace(event) {
 		// removes any previously placed meeples on the board before placing a new one
 		if (tileToPlaceMeeple != '') {
 			$(tileToPlaceMeeple).text($(tileToPlaceMeeple).text());
@@ -236,6 +235,7 @@ $('document').ready(function() {
 		// permanently places a meeple, if no meeple is placed, continues on
 		if (tileToPlaceMeeple){
 			placeMeeple();
+			monitorMeepPlacementOff();
 		}
 		updateGameState();
 		meepleListenOff();
