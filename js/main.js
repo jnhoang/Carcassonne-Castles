@@ -1,8 +1,8 @@
 var ARRAYSIZE = 5;
 
-var cardCount = 0;
-var playerTurn = 0;
-var rotateDeg = 0;
+var cardCount   = 0;
+var playerTurn  = 0;
+var rotateDeg   = 0;
 var tileDroppedOn;
 
 // used to manipulate JS array
@@ -18,29 +18,29 @@ var pOneMeepsInCastle = 0;
 var pTwoMeepsInCastle = 0;
 
 
-var meepleBlue = '<div class="meepleImage meepleBlue"></div>';
-var meepleRed = '<div class="meepleImage meepleRed"></div>';
+var meepleBlue  = '<div class="meepleImage meepleBlue"></div>';
+var meepleRed   = '<div class="meepleImage meepleRed"></div>';
 var displayTile = '<div class="tile draggable displayCard"><div class="imgBox"></div><div class="top"></div><div \
 				  class="left"></div><div class="right"></div><div class="bottom"></div></div>';
-var playerOne = {
+var playerOne   = {
 	meeples: 3,
 	points: 0,
 }
-var playerTwo = {
+var playerTwo   = {
 	meeples: 3,
 	points: 0,
 }
 function Tile(name) {
-	this.id = name;
-	this.type = '';
-	this.top = {};
-	this.right = {};
-	this.bottom = {};
-	this.left = {};
-	this.valueType = '';
-	this.sidesConnected = null;
-	this.paired = false;
-	this.empty = true;
+  this.id               = name;
+  this.type             = '';
+  this.top              = {};
+  this.right            = {};
+  this.bottom           = {};
+  this.left             = {};
+  this.valueType        = '';
+  this.sidesConnected   = null;
+  this.paired           = false;
+  this.empty            = true;
 }
 var messages = {
 	placeTileSomwhere: { title: 'You haven\'t placed your tile', text: 'You need to place it somehwere on the board'},
@@ -162,10 +162,10 @@ $('document').ready(function() {
 
 		// JS side
 		var temp = cardArr[cardCount].top;
-		cardArr[cardCount].top = cardArr[cardCount].left;
-		cardArr[cardCount].left = cardArr[cardCount].bottom;
-		cardArr[cardCount].bottom = cardArr[cardCount].right;
-		cardArr[cardCount].right = temp;
+    cardArr[cardCount].top      = cardArr[cardCount].left;
+    cardArr[cardCount].left     = cardArr[cardCount].bottom;
+    cardArr[cardCount].bottom   = cardArr[cardCount].right;
+    cardArr[cardCount].right    = temp;
 	}
 	function submitBtn() {
 		if (!tileDroppedOn) {
